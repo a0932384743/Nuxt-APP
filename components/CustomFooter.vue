@@ -10,16 +10,18 @@
             target="_blank"
             rel="noopener"
           >
-            Jr-Wei Chen
+            by Jr-Wei Chen
           </a>
         </span>
-        <span class="d-inline-block float-sm-right">v{{ version }}</span>
+        <span class="d-inline-block float-sm-right"> v{{ version }}</span>
       </p>
     </div>
   </footer>
 </template>
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'CustomFooter',
   data () {
     return {
@@ -27,6 +29,6 @@ export default {
       version: this.$config.APP_VERSION,
     };
   },
-};
+});
 </script>
 <style></style>

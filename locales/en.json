@@ -1,0 +1,7 @@
+{
+  "app" : "App",
+  "home" : "Home",
+  "register" : "Register",
+  "login" : "Login",
+  "language" : "Language"
+}

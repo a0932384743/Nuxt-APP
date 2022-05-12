@@ -11,39 +11,27 @@
       class="navbar-horizontal navbar-main"
       expand="lg"
     >
-      <ul class="navbar-nav ms-auto my-2 my-lg-0">
-        <li
+      <b-navbar-nav class="ml-auto my-2 my-lg-0">
+        <b-nav-item
           v-for="menu in baseMenu"
           :key="menu.name"
-          class="nav-item"
+          :to="menu.url"
         >
-          <nuxt-link
-            :to="menu.url"
-            class="nav-link"
-          >
-            <span>{{ menu.name }}</span>
-          </nuxt-link>
-        </li>
-      </ul>
-      <hr class="d-lg-none">
-      <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-        <li
-          v-for="menu in socialMenu"
-          :key="menu.name"
-          class="nav-item"
+          <span>{{ $t(menu.name.toLowerCase()) }}</span>
+        </b-nav-item>
+        <b-nav-item-dropdown
+          :text="$t('language')"
+          right
+          menu-class="border-0"
         >
-          <a
-            class="nav-link nav-link-icon"
-            :href="menu.url"
-            target="_blank"
-            rel="noopener"
-            :aria-label="menu.name"
-          >
-            <font-awesome-icon :icon="menu.icon" />
-            <span class="d-lg-none">{{ menu.name }}</span>
-          </a>
-        </li>
-      </ul>
+          <b-dropdown-item href="#">
+            EN
+          </b-dropdown-item>
+          <b-dropdown-item href="#">
+            ZH
+          </b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
     </custom-header>
     <main
       class="bg-primary flex-grow-1"
@@ -56,15 +44,11 @@
     <custom-footer />
   </div>
 </template>
-<script>
-import CustomHeader from '../components/CustomHeader';
-import CustomFooter from '../components/CustomFooter';
+<script lang="ts">
 
-export default {
-  components: {
-    CustomHeader,
-    CustomFooter,
-  },
+import Vue from 'vue';
+
+export default Vue.extend({
   layout: 'BaseLayout',
   props: {
     backgroundColor: {
@@ -88,35 +72,13 @@ export default {
           url: '/login',
           name: 'Login',
         },
-      ],
-      socialMenu: [
-        {
-          url: 'https://www.instagram.com/creativetimofficial',
-          name: 'Instagram',
-          icon: 'fa-brands fa-instagram',
-        },
-        {
-          url: 'https://www.facebook.com/creativetim',
-          name: 'Facebook',
-          icon: 'fa-brands fa-facebook',
-        },
-        {
-          url: 'https://twitter.com/creativetim',
-          name: 'Twitter',
-          icon: 'fa-brands fa-twitter',
-        },
-        {
-          url: 'https://github.com/creativetimofficial',
-          name: 'Github',
-          icon: 'fa-brands fa-github',
-        },
-      ],
+      ]
     };
   },
   computed: {
     layoutClass () {
       const exceptions = ['index', 'home'];
-      if (!exceptions.includes(this.$route.name)) {
+      if (this.$route && this.$route.name && !exceptions.includes(`${this.$route.name}`)) {
         return 'bg-default';
       } else {
         return '';
@@ -130,13 +92,16 @@ export default {
       }
     },
   },
+  mounted () {
+    console.log(this);
+  },
   methods: {
     closeMenu () {
       document.body.classList.remove('nav-open');
       this.showMenu = false;
     },
   },
-};
+});
 </script>
 <style lang="scss">
 .auth-layout {

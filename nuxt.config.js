@@ -59,7 +59,7 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['~/asserts/scss/styles.scss'],
 
-  plugins: ['~/plugins/directives', '~/plugins/font-awesome'],
+  plugins: ['~/plugins/directives', '~/plugins/font-awesome', '~/plugins/i18n'],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -95,7 +95,6 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
   ],
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extend (config, ctx) {},

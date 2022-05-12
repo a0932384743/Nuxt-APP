@@ -4,13 +4,14 @@ const createStore = () => {
   return new Vuex.Store({
     state: () => {
       return {
-        result: '尚未查詢',
+        locales: ['en', 'zh-tw'],
+        lang: 'zh-tw'
       };
     },
     mutations: {
-      setResult(state, { result }) {
-        state.result = result;
-      },
+      setLang (state, lang) {
+        state.lang = lang;
+      }
     },
   });
 };

@@ -1,73 +1,56 @@
 <template>
-  <nav
+  <b-navbar
     :class="classes"
-    class="header-nav navbar navbar-expand-lg navbar-light fixed-top py-3"
+    class="header-nav g navbar-light fixed-top  px-4 px-lg-5"
+    toggleable="lg"
   >
-    <div
-      :class="containerClasses"
-      class="container px-4 px-lg-5"
+    <b-navbar-brand href="/">
+      <img
+        src="/img/brand/logo.png"
+        alt="Logo"
+        width="50"
+        height="50"
+      >
+    </b-navbar-brand>
+    <b-navbar-toggle target="nav-collapse" />
+    <b-collapse
+      id="nav-collapse"
+      is-nav
     >
-      <nuxt-link
-        class="navbar-brand"
-        to="/dashboard"
-      >
-        <img
-          src="/img/brand/logo.png"
-          alt="Logo"
-          width="50"
-          height="50"
-        >
-      </nuxt-link>
-      <button
-        class="navbar-toggler"
-        @click.stop="toggleMenu"
-      >
-        <span class="navbar-toggler-icon" />
-      </button>
-      <div
-        v-show="show"
-        v-click-outside="closeMenu"
-        class="navbar-collapse collapse show"
-        :class="menuClasses"
-      >
-        <slot :close-menu="closeMenu" />
-      </div>
-    </div>
-  </nav>
+      <slot />
+    </b-collapse>
+  </b-navbar>
 </template>
 <script>
-export default {
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'CustomHeader',
   model: {
     prop: 'show',
-    event: 'change',
+    event: 'change'
   },
   props: {
     show: {
       type: Boolean,
       default: false,
-      description: 'Whether navbar menu is shown (valid for viewports < specified by `expand` prop)',
+      description: 'Whether navbar menu is shown (valid for viewports < specified by `expand` prop)'
     },
     transparent: {
       type: Boolean,
       default: false,
-      description: 'Whether navbar is transparent',
+      description: 'Whether navbar is transparent'
     },
     expand: {
       type: String,
       default: 'lg',
-      description: 'Breakpoint where nav should expand',
-    },
-    menuClasses: {
-      type: [String, Object, Array],
-      default: '',
-      description: 'Navbar menu (items) classes. Can be used to align menu items to the right/left',
+      description: 'Breakpoint where nav should expand'
     },
     containerClasses: {
       type: [String, Object, Array],
       default: 'container',
       description:
-        'Container classes. Can be used to control container classes (contains both navbar brand and menu items)',
+        'Container classes. Can be used to control container classes (contains both navbar brand and menu items)'
     },
     type: {
       type: String,
@@ -75,8 +58,8 @@ export default {
       validator (value) {
         return ['', 'dark', 'success', 'danger', 'warning', 'white', 'primary', 'light', 'info', 'vue'].includes(value);
       },
-      description: 'Navbar color type',
-    },
+      description: 'Navbar color type'
+    }
   },
   computed: {
     classes () {
@@ -92,16 +75,8 @@ export default {
     },
     hasMenu () {
       return this.$slots.default;
-    },
+    }
   },
-  methods: {
-    toggleMenu () {
-      this.$emit('change', !this.show);
-    },
-    closeMenu () {
-      this.$emit('change', false);
-    },
-  },
-};
+});
 </script>
 <style></style>
