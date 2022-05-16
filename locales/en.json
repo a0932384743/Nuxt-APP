@@ -1,7 +1,16 @@
 {
-  "app" : "App",
-  "home" : "Home",
-  "register" : "Register",
-  "login" : "Login",
-  "language" : "Language"
+  "app": "App",
+  "home": "Home",
+  "register": "Register",
+  "login": "Login",
+  "language": "Language",
+  "find.more": "Find More",
+  "lang.zh-tw": "Tradition Chinese",
+  "lang.en": "English",
+  "login.below": "Please login with below",
+  "login.credential": "Or login with credentials",
+  "feedback.format.error": "{e} Format Error",
+  "remember.me": "Remember Me",
+  "forgot.password" : "Forgot Password",
+  "create.account" : "Create Account"
 }

@@ -1,0 +1,10 @@
+// Transitions
+
+$transition-base-time:          .15s;
+$transition-base:               all $transition-base-time ease !default;
+$transition-fade:               opacity $transition-base-time linear !default;
+$transition-collapse:           height $transition-base-time * 2 ease !default;
+$transition-cubic-bezier:       all $transition-base-time cubic-bezier(.68, -0.55, .265, 1.55) !default;
+$transition-bg:                 background-color $transition-base-time * 2 linear !default;
+$transition-ease-in-out:        all $transition-base-time ease-in-out !default;
+

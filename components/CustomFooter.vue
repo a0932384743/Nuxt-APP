@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-light py-4">
+  <footer class="bg-light py-3">
     <div class="container px-4 px-lg-5">
       <p class="small text-center text-muted">
         <span class="d-inline-block">Copyright © {{ year }}</span>

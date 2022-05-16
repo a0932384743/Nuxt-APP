@@ -1,18 +1,16 @@
-// 
+//
 // Masthead
-// 
+//
 
-header.masthead {
+.masthead {
+    padding-top: 120px;
     position: relative;
-    margin-bottom: 3rem;
-    padding-top: calc(8rem + 57px);
-    padding-bottom: 8rem;
-
     // TIP: Background images are set within the HTML using inline CSS!
-    background: no-repeat center center;
-    background-color: $gray-600;
-    background-size: cover;
+    background: linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(static/img/background/bg-masthead.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
     background-attachment: scroll;
+    background-size: cover;
 
     // Create the overlay for the masthead
     // Modify the overlay color and opacity in src/variables/overlay.scss
@@ -89,10 +87,7 @@ header.masthead {
 
     // Desktop styling for headings
 
-    @include media-breakpoint-up(lg) {
-        padding-top: 12.5rem;
-        padding-bottom: 12.5rem;
-
+    @include media-breakpoint-up(md) {
         .page-heading,
         .site-heading {
             h1 {

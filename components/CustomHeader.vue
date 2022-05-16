@@ -1,8 +1,9 @@
 <template>
   <b-navbar
     :class="classes"
-    class="header-nav g navbar-light fixed-top  px-4 px-lg-5"
-    toggleable="lg"
+    class="header-nav px-4 px-lg-5"
+    toggleable="md"
+    variant="faded"
   >
     <b-navbar-brand href="/">
       <img
@@ -26,57 +27,30 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'CustomHeader',
-  model: {
-    prop: 'show',
-    event: 'change'
+  data () {
+    return {
+      classes: []
+    };
   },
-  props: {
-    show: {
-      type: Boolean,
-      default: false,
-      description: 'Whether navbar menu is shown (valid for viewports < specified by `expand` prop)'
-    },
-    transparent: {
-      type: Boolean,
-      default: false,
-      description: 'Whether navbar is transparent'
-    },
-    expand: {
-      type: String,
-      default: 'lg',
-      description: 'Breakpoint where nav should expand'
-    },
-    containerClasses: {
-      type: [String, Object, Array],
-      default: 'container',
-      description:
-        'Container classes. Can be used to control container classes (contains both navbar brand and menu items)'
-    },
-    type: {
-      type: String,
-      default: '',
-      validator (value) {
-        return ['', 'dark', 'success', 'danger', 'warning', 'white', 'primary', 'light', 'info', 'vue'].includes(value);
-      },
-      description: 'Navbar color type'
-    }
+  mounted () {
+    window.addEventListener('scroll', this.onScroll);
+
+    this.onScroll();
   },
-  computed: {
-    classes () {
-      const color = `bg-${this.type}`;
-      const classes = [{ 'navbar-transparent': this.transparent }, { [`navbar-expand-${this.expand}`]: this.expand }];
-      if (this.position) {
-        classes.push(`navbar-${this.position}`);
+
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.onScroll);
+  },
+
+  methods: {
+    onScroll () {
+      if (window.scrollY > 150) {
+        this.classes = ['is-fixed', 'is-visible'];
+      } else {
+        this.classes = [];
       }
-      if (!this.transparent) {
-        classes.push(color);
-      }
-      return classes;
-    },
-    hasMenu () {
-      return this.$slots.default;
     }
-  },
+  }
 });
 </script>
 <style></style>

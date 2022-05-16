@@ -1,17 +1,11 @@
 <template>
   <div
-    :class="layoutClass"
     class="auth-layout d-flex flex-column"
   >
-    <custom-header
-      v-model="showMenu"
-      type="light"
-      :transparent="true"
-      menu-classes="justify-content-end"
-      class="navbar-horizontal navbar-main"
-      expand="lg"
-    >
-      <b-navbar-nav class="ml-auto my-2 my-lg-0">
+    <custom-header>
+      <b-navbar-nav
+        class="ml-auto my-2 my-lg-0"
+      >
         <b-nav-item
           v-for="menu in baseMenu"
           :key="menu.name"
@@ -21,25 +15,30 @@
         </b-nav-item>
         <b-nav-item-dropdown
           :text="$t('language')"
-          right
-          menu-class="border-0"
+          :right="isLocaleDropdownMenuRight"
+          menu-class="position-absolute"
         >
-          <b-dropdown-item href="#">
-            EN
-          </b-dropdown-item>
-          <b-dropdown-item href="#">
-            ZH
+          <b-dropdown-item
+            v-for="locale in locales"
+            :key="locale"
+            href="#"
+            :active="locale === currentLang"
+            @click="setLang(locale)"
+          >
+            <i
+              class="lang-flag"
+              :class="locale"
+            />
+            <small class="align-text-top">{{ $t('lang.' + locale) }}</small>
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </custom-header>
     <main
-      class="bg-primary flex-grow-1"
-      :style="{ paddingTop: '120px', paddingBottom: '100px' }"
+      class="bg-primary flex-grow-1 masthead"
+      :style="{ paddingTop: '80px', paddingBottom: '80px' }"
     >
-      <div class="container">
-        <nuxt />
-      </div>
+      <nuxt />
     </main>
     <custom-footer />
   </div>
@@ -58,7 +57,7 @@ export default Vue.extend({
   },
   data () {
     return {
-      showMenu: false,
+      isLocaleDropdownMenuRight: false,
       baseMenu: [
         {
           url: '/',
@@ -76,31 +75,37 @@ export default Vue.extend({
     };
   },
   computed: {
-    layoutClass () {
-      const exceptions = ['index', 'home'];
-      if (this.$route && this.$route.name && !exceptions.includes(`${this.$route.name}`)) {
-        return 'bg-default';
-      } else {
-        return '';
-      }
+    locales () {
+      return this.$store.getters['common/getLocales'];
     },
-  },
-  watch: {
-    '$route.path' () {
-      if (this.showMenu) {
-        this.closeMenu();
-      }
+    currentLang () {
+      return this.$store.getters['common/getLang'];
     },
   },
   mounted () {
-    console.log(this);
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+    });
+    this.onResize();
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('resize', this.onResize);
   },
   methods: {
-    closeMenu () {
-      document.body.classList.remove('nav-open');
-      this.showMenu = false;
+    setLang (lang: string = 'en') {
+      this.$i18n.locale = lang;
+      this.$store.dispatch('common/setLang', lang);
     },
-  },
+    onResize () {
+      if (window.innerWidth > 768) {
+        this.isLocaleDropdownMenuRight = true;
+      } else {
+        this.isLocaleDropdownMenuRight = false;
+      }
+    }
+  }
+
 });
 </script>
 <style lang="scss">

@@ -1,7 +1,16 @@
 {
-  "app" : "應用程式",
-  "home" : "首頁",
-  "register" : "註冊",
-  "login" : "登入",
-  "language" : "語系"
+  "app": "應用程式",
+  "home": "首頁",
+  "register": "註冊",
+  "login": "登入",
+  "language": "語系",
+  "find.more": "更多",
+  "lang.zh-tw": "繁體中文",
+  "lang.en": "英文",
+  "login.below": "請使用以下方式登入",
+  "login.credential": "或使用帳號密碼登入",
+  "feedback.format.error": "{e}格式錯誤",
+  "remember.me": "記住帳號密碼",
+  "forgot.password" : "忘記密碼",
+  "create.account" : "創建新帳號"
 }

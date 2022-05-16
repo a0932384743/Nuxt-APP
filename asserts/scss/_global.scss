@@ -1,6 +1,6 @@
-// 
+//
 // Global theme styling
-// 
+//
 
 // Increase base font styling in the body only
 
@@ -28,4 +28,28 @@ p {
 blockquote {
     font-style: italic;
     color: $gray-600;
+}
+
+.lang-flag {
+  background-image: url(static/img/flag/flag-icon.png);
+  background-repeat: no-repeat;
+  background-size: auto;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  display: inline-block;
+  height: 15px;
+  margin-right: 5px;
+  width: 20px;
+
+  &.ch {
+    background-position: -6px -9px;
+  }
+  &.en {
+    background-position: -6px -43px;
+  }
+  &.jp {
+    background-position: -50.5px -9.5px;
+  }
+  &.zh-tw {
+    background-position: -48px -42px;
+  }
 }
