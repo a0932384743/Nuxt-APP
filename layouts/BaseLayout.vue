@@ -36,7 +36,6 @@
     </custom-header>
     <main
       class="bg-primary flex-grow-1 masthead"
-      :style="{ paddingTop: '80px', paddingBottom: '80px' }"
     >
       <nuxt />
     </main>

@@ -2,12 +2,13 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
   server: {
-    port: 3000,
+    port: 3000
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     base: '/',
     linkExactActiveClass: 'active',
+    middleware: ['router-auth']
   },
   meta: {
     ogType: false,
@@ -16,45 +17,45 @@ export default {
     ogTitle: false,
     description: false,
     viewport: false,
-    charset: false,
+    charset: false
   },
   head: {
     title: 'vue-app',
     htmlAttrs: {
-      lang: 'en',
+      lang: 'en'
     },
     meta: [
       { charset: 'utf-8' },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        content: 'width=device-width, initial-scale=1'
       },
       {
         hid: 'description',
         name: 'description',
-        content: '',
+        content: ''
       },
       {
         name: 'format-detection',
-        content: 'telephone=no',
+        content: 'telephone=no'
       },
       {
         name: 'locale',
-        content: 'zh_TW',
-      },
+        content: 'zh_TW'
+      }
     ],
     link: [
       {
         rel: 'icon',
         type: 'image/x-icon',
-        href: '/img/shortIcon/favicon.ico',
-      },
+        href: '/img/shortIcon/favicon.ico'
+      }
     ],
     bodyAttrs: {
-      className: 'bg-default h-100',
-    },
+      className: 'bg-default h-100'
+    }
   },
-  loading: { color: '#fff' },
+  loading: { color: '#005ffc' },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['~/asserts/scss/styles.scss'],
@@ -62,6 +63,8 @@ export default {
   plugins: ['~/plugins/directives', '~/plugins/font-awesome', '~/plugins/i18n'],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
+
+  pageTransition: 'fade',
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -79,13 +82,13 @@ export default {
           storageBucket: process.env.APP_STORAGE_BUCKET,
           messagingSenderId: process.env.APP_MESSAGING_SENDERID,
           appId: process.env.APP_ID,
-          measurementId: process.env.APP_MEASUREMENT_ID,
+          measurementId: process.env.APP_MEASUREMENT_ID
         },
         services: {
-          auth: true, // Just as example. Can be any other service.
-        },
-      },
-    ],
+          auth: true
+        }
+      }
+    ]
   ],
   publicRuntimeConfig: {
     APP_VERSION: process.env.APP_VERSION,
@@ -93,11 +96,12 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap
-    'bootstrap-vue/nuxt',
+    'bootstrap-vue/nuxt'
   ],
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend (config, ctx) {},
-    extractCSS: process.env.NODE_ENV === 'production',
-  },
+    extend (config, ctx) {
+    },
+    extractCSS: process.env.NODE_ENV === 'production'
+  }
 };

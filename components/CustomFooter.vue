@@ -1,7 +1,7 @@
 <template>
-  <footer class="bg-light py-3">
-    <div class="container px-4 px-lg-5">
-      <p class="small text-center text-muted">
+  <footer class="bg-light">
+    <div class="container">
+      <div class="small text-center text-muted">
         <span class="d-inline-block">Copyright © {{ year }}</span>
         <span class="d-inline-block">
           <a
@@ -14,7 +14,7 @@
           </a>
         </span>
         <span class="d-inline-block float-sm-right"> v{{ version }}</span>
-      </p>
+      </div>
     </div>
   </footer>
 </template>

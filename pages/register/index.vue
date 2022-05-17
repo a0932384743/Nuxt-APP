@@ -6,7 +6,7 @@
         md="7"
       >
         <h4 class="text-center text-light mb-3">
-          {{ $t('app.welcome') }}
+          {{ $t('signup.below') }}
         </h4>
         <b-card class="bg-light border-0 mb-0">
           <b-card-header class="bg-transparent pb-3 text-center">
@@ -19,41 +19,43 @@
               tag="vue-app"
             >
             <div class="text-muted text-center mt-2 mb-3">
-              <small>{{ $t('login.below') }}</small>
-            </div>
-            <div class="btn-wrapper text-center">
-              <b-button
-                variant="outline-secondary"
-                size="sm"
-                @click.prevent="loginByGithub"
-              >
-                <img
-                  src="/img/brand/github.svg"
-                  height="20"
-                >
-                Github
-              </b-button>
-              <b-button
-                variant="outline-secondary"
-                size="sm"
-                @click.prevent="loginByGoogle"
-              >
-                <img
-                  src="/img/brand/google.svg"
-                  height="20"
-                >
-                Google
-              </b-button>
+              <small>{{ $t('app.sign.message') }}</small>
             </div>
           </b-card-header>
           <b-card-body class="px-lg-3 py-lg-3">
-            <div class="text-center text-muted mb-3">
-              <small>{{ $t('login.credential') }}</small>
-            </div>
             <b-form
               autocomplete="off"
-              @submit.stop.prevent="loginByEmail()"
+              @submit.stop.prevent="onSubmit()"
             >
+              <b-form-group
+                label-for="username-input"
+              >
+                <b-input-group>
+                  <template #prepend>
+                    <div class="input-group-text bg-light">
+                      <font-awesome-icon icon="fa-solid fa-user" />
+                    </div>
+                  </template>
+                  <b-form-input
+                    id="username-input"
+                    v-model="form.username"
+                    autofocus
+                    autocomplete="off"
+                    type="text"
+                    name="username"
+                    :placeholder="$t('username')"
+                    :state="!userNameValidate"
+                    aria-describedby="username-invalid-feedback"
+                  />
+                </b-input-group>
+                <b-form-invalid-feedback
+                  id="username-invalid-feedback"
+                  class="text-right"
+                  :state="!userNameValidate"
+                >
+                  {{ userNameValidate }}
+                </b-form-invalid-feedback>
+              </b-form-group>
               <b-form-group
                 label-for="email-input"
               >
@@ -67,6 +69,7 @@
                     id="email-input"
                     v-model="form.email"
                     autocomplete="off"
+                    type="email"
                     name="email"
                     :placeholder="$t('email')"
                     :state="!emailValidate"
@@ -138,13 +141,13 @@
               </b-form-group>
               <b-form-group>
                 <b-form-checkbox
-                  id="rememberMe"
-                  v-model="form.remember"
-                  name="rememberMe"
+                  id="Agreement"
+                  v-model="form.agreement"
+                  name="Agreement"
                   value="true"
                   unchecked-value="false"
                 >
-                  <small class="align-text-top">{{ $t('remember.me') }}</small>
+                  <small class="align-text-top">{{ $t('signup.agree') }}</small>
                 </b-form-checkbox>
               </b-form-group>
 
@@ -153,9 +156,9 @@
                   class="px-5"
                   type="submit"
                   variant="primary"
-                  :disabled="passwordScore<20 || !!emailValidate"
+                  :disabled="passwordScore<20 || !!emailValidate || !!userNameValidate"
                 >
-                  {{ $t('login') }}
+                  {{ $t('signup') }}
                   <font-awesome-icon icon="fa-solid fa-arrow-right-to-bracket" />
                 </b-button>
               </div>
@@ -163,23 +166,15 @@
           </b-card-body>
         </b-card>
         <b-row>
-          <b-col cols="6">
-            <router-link
-              to="/password/reset"
-              class="text-light"
-            >
-              <small>{{ $t('forgot.password') }}</small>
-            </router-link>
-          </b-col>
           <b-col
-            cols="6"
+            cols="12"
             class="text-right"
           >
             <router-link
-              to="/register"
+              to="/login"
               class="text-light"
             >
-              <small>{{ $t('create.account') }}</small>
+              <small>{{ $t('app.has.account') }}</small>
             </router-link>
           </b-col>
         </b-row>
@@ -190,22 +185,30 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { GithubAuthProvider, GoogleAuthProvider } from 'firebase/auth';
+
 export default Vue.extend({
-  name: 'Login',
+  name: 'Register',
   layout: 'BaseLayout',
   data () {
     return {
       passwordType: true,
       form: {
+        username: '',
         email: '',
         password: '',
-        remember: false,
+        agreement: false,
       }
     };
   },
   computed: {
-
+    userNameValidate (): any {
+      if (!this.form.username) {
+        return this.$i18n.t('feedback.require', { e: this.$i18n.t('username') });
+      } else if (this.form.username.length < 5) {
+        return this.$i18n.t('feedback.length.error', { e: 5 });
+      }
+      return false;
+    },
     emailValidate (): any {
       if (!this.form.email) {
         return this.$i18n.t('feedback.require', { e: this.$i18n.t('email') });
@@ -225,24 +228,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    loginByEmail () {
+    onSubmit () {
 
-    },
-    async loginByGoogle () {
-      try {
-        const user = await this.$store.$fire.auth.signInWithPopup(new GoogleAuthProvider());
-        console.log(user);
-      } catch (e) {
-
-      }
-    },
-    async loginByGithub () {
-      try {
-        const user = await this.$store.$fire.auth.signInWithPopup(new GithubAuthProvider());
-        console.log(user);
-      } catch (e) {
-
-      }
     }
   }
 });

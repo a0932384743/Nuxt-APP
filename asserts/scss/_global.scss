@@ -5,29 +5,29 @@
 // Increase base font styling in the body only
 
 body {
-    font-size: $font-size-lg;
+  font-size: $font-size-lg;
 }
 
 // Set horizontal rule color to border color
 
 hr {
-    background-color: $border-color;
-    opacity: 1;
+  background-color: $border-color;
+  opacity: 1;
 }
 
 // Set defaults for the paragraph element
 
 p {
-    margin: 2rem 0;
+  margin: 2rem 0;
 
-    a {
-        text-decoration: underline;
-    }
+  a {
+    text-decoration: underline;
+  }
 }
 
 blockquote {
-    font-style: italic;
-    color: $gray-600;
+  font-style: italic;
+  color: $gray-600;
 }
 
 .lang-flag {
@@ -43,13 +43,26 @@ blockquote {
   &.ch {
     background-position: -6px -9px;
   }
+
   &.en {
     background-position: -6px -43px;
   }
+
   &.jp {
     background-position: -50.5px -9.5px;
   }
+
   &.zh-tw {
     background-position: -48px -42px;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
 }
