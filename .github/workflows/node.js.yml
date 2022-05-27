@@ -28,6 +28,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - name: Install package
-      run: cd app && npm install
-    - name: Build
-      run: cd app && npm build
+    - run: npm install
+    - run: npm run build
+    - run: npm run generate
+
