@@ -1,13 +1,16 @@
 <template>
-  <div>
-    Dashbaord
-  </div>
+  <div>Dashbaord</div>
 </template>
 <script lang="ts">
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'Dashboard'
+  name: 'Dashboard',
+  layout: 'DashboardLayout',
+  data() {
+    return {
+      name: 'Dashboard',
+    };
+  }
 });
-
 </script>

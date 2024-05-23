@@ -1,5 +1,5 @@
 {
-  "app.welcome": "Welcome to Vue-App",
+  "app.welcome": "",
   "app.has.account": "Already have an account?",
   "app.sign.message": "Make your app management easy and fun!",
   "home": "Home",
@@ -25,5 +25,10 @@
   "feedback.password.success": "Strong",
   "remember.me": "Remember Me",
   "forgot.password" : "Forgot Password",
-  "create.account" : "Create Account"
+  "create.account" : "Create Account",
+  "condition.filter": "Condition Filter",
+  "start.date": "Start",
+  "end.date": "End",
+  "companies": "Companies",
+  "harbors": "Harbors"
 }

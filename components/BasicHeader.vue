@@ -1,19 +1,22 @@
 <template>
   <b-navbar
     :class="classes"
-    class="header-nav px-4 px-lg-5"
+    class="header-nav px-2 px-lg-3"
     toggleable="md"
     variant="faded"
   >
     <b-navbar-brand href="/">
       <img
-        src="/img/brand/logo.png"
+        src="/img/brand/logo-2.png"
         alt="Logo"
-        width="50"
         height="50"
       >
     </b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse" />
+    <b-navbar-toggle target="nav-collapse">
+      <template #default>
+        <font-awesome-icon icon="bars" />
+      </template>
+    </b-navbar-toggle>
     <b-collapse
       id="nav-collapse"
       is-nav
@@ -26,31 +29,31 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'CustomHeader',
-  data () {
+  name: 'BasicHeader',
+  data() {
     return {
-      classes: []
+      classes: [],
     };
   },
-  mounted () {
+  mounted() {
     window.addEventListener('scroll', this.onScroll);
 
     this.onScroll();
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     window.removeEventListener('scroll', this.onScroll);
   },
 
   methods: {
-    onScroll () {
+    onScroll() {
       if (window.scrollY > 150) {
         this.classes = ['is-fixed', 'is-visible'];
       } else {
         this.classes = [];
       }
-    }
-  }
+    },
+  },
 });
 </script>
 <style></style>

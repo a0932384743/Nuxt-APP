@@ -8,7 +8,7 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
-  extends: ['eslint:recommended', 'plugin:vue/recommended', 'standard'],
+  extends: ['eslint:recommended', 'plugin:vue/recommended'],
   plugins: ['vue'],
   rules: {
     'object-shorthand': 'warn',

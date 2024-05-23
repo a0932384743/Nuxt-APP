@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="auth-layout d-flex flex-column"
-  >
-    <custom-header>
-      <b-navbar-nav
-        class="ml-auto my-2 my-lg-0"
-      >
+  <div class="auth-layout d-flex flex-column">
+    <basic-header>
+      <b-navbar-nav class="ml-auto my-2 my-lg-0">
         <b-nav-item
           v-for="menu in baseMenu"
           :key="menu.name"
@@ -33,17 +29,14 @@
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
-    </custom-header>
-    <main
-      class="bg-primary flex-grow-1 masthead"
-    >
+    </basic-header>
+    <main class="bg-primary flex-grow-1 masthead">
       <nuxt />
     </main>
-    <custom-footer />
+    <basic-footer />
   </div>
 </template>
 <script lang="ts">
-
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -54,7 +47,7 @@ export default Vue.extend({
       default: 'black',
     },
   },
-  data () {
+  data() {
     return {
       isLocaleDropdownMenuRight: false,
       baseMenu: [
@@ -70,41 +63,40 @@ export default Vue.extend({
           url: '/login',
           name: 'Login',
         },
-      ]
+      ],
     };
   },
   computed: {
-    locales () {
+    locales() {
       return this.$store.getters['common/getLocales'];
     },
-    currentLang () {
+    currentLang() {
       return this.$store.getters['common/getLang'];
     },
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
     });
     this.onResize();
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {
-    setLang (lang: string = 'en') {
+    setLang(lang: string = 'en') {
       this.$i18n.locale = lang;
       this.$store.dispatch('common/setLang', lang);
     },
-    onResize () {
+    onResize() {
       if (window.innerWidth > 768) {
         this.isLocaleDropdownMenuRight = true;
       } else {
         this.isLocaleDropdownMenuRight = false;
       }
-    }
-  }
-
+    },
+  },
 });
 </script>
 <style lang="scss">

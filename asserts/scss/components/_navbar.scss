@@ -10,8 +10,8 @@
   left: 0;
   right: 0;
   z-index: $zindex-fixed;
-  border-bottom: $border-width solid $border-color;
-  background-color: $white;
+  border-bottom: $border-width solid $headings-color;
+  background-color: $headings-color;
   font-family: $headings-font-family;
 
   .navbar-brand {
@@ -23,12 +23,13 @@
     font-weight: $headings-font-weight;
     padding: 0.75rem;
     text-transform: uppercase;
+    color: $white;
   }
 
   .navbar-nav {
     > li.nav-item {
       > a.nav-link {
-        font-size: 0.75rem;
+        font-size: 1rem;
         font-weight: $headings-font-weight;
         letter-spacing: 0.0625em;
         text-transform: uppercase;
@@ -41,7 +42,7 @@
 
   @include media-breakpoint-up(md) {
     border-bottom: $border-width solid transparent;
-    background: transparent;
+    background: $headings-color;
 
     .navbar-brand {
       color: $white;

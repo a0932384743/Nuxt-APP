@@ -22,4 +22,3 @@ library.add(fab);
 /* add font awesome icon component */
 Vue.component('FontAwesomeIcon', FontAwesomeIcon);
 
-Vue.config.productionTip = false;

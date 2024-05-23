@@ -1,5 +1,5 @@
 {
-  "app.welcome": "歡迎使用Vue-App",
+  "app.welcome": "",
   "app.has.account": "已有帳號請登入",
   "app.sign.message": "讓您的應用管理變得輕鬆有趣！",
   "home": "首頁",
@@ -25,5 +25,10 @@
   "feedback.password.success": "密碼強度強",
   "remember.me": "記住帳號密碼",
   "forgot.password" : "忘記密碼",
-  "create.account" : "創建新帳號"
+  "create.account" : "創建新帳號",
+  "condition.filter": "條件篩選",
+  "start.date": "起始",
+  "end.date": "結束",
+  "companies": "各分公司",
+  "harbors": "各港口"
 }

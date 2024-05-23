@@ -1,70 +1,79 @@
 import { Module, GetterTree, MutationTree, ActionTree } from 'vuex';
 
-const getters: GetterTree<any, any> = {
-  getLocales (state) {
+interface StateInterface {
+  prop: boolean;
+}
+
+type State = {
+  locales: string[];
+  lang: string;
+  user:
+    | any
+    | {
+        email: string;
+        password: string;
+      };
+};
+
+const getters: GetterTree<State, StateInterface> = {
+  getLocales(state) {
     return state.locales;
   },
-  getLang (state) {
+  getLang(state) {
     return state.lang;
   },
-  getUser (state) {
+  getUser(state) {
     return state.user;
   },
-  isLoggedIn (state) {
+  isLoggedIn(state) {
     return !!state.user;
-  }
+  },
 };
 
-const mutations: MutationTree<any> = {
-  'SET_LANG' (state, lang) {
+const mutations: MutationTree<State> = {
+  SET_LANG(state, lang) {
     state.lang = lang;
   },
-  'SET_USER' (state, user) {
+  SET_USER(state, user) {
+    localStorage.setItem('user', JSON.stringify(user));
     state.user = user;
-  }
+  },
 };
 
-const actions: ActionTree<any, any> = {
-  setLang ({ commit, dispatch }, lang) {
+const actions: ActionTree<State, StateInterface> = {
+  setLang({ commit }, lang) {
     commit('SET_LANG', lang);
   },
-  setUser ({ commit, dispatch }, user) {
+  setUser({ commit }, user) {
     commit('SET_USER', user);
   },
-  loginByEmail ({ commit, dispatch }, { email, password }) {
-    console.log(password, email);
-  },
-
-  async onAuthStateChangedAction (state, { user }) {
+  async onAuthStateChangedAction(state, { user }) {
     if (!user) {
       state.commit('SET_USER', null);
     } else {
       state.commit('SET_USER', {
-        user
+        user,
       });
     }
   },
-
-  async nuxtServerInit ({ dispatch, commit }, { res }) {
+  async nuxtServerInit({ dispatch }, { res }) {
     if (res && res.locals && res.locals.user) {
       const { allClaims: claims, idToken: token, ...user } = res.locals.user;
       await dispatch('onAuthStateChangedAction', {
         user,
         claims,
-        token
+        token,
       });
     }
-  }
+  },
 };
 
-const commonModule: Module<any, any> = {
+const commonModule: Module<State, StateInterface> = {
   namespaced: true,
-  state: () => {
-    return {
-      locales: ['en', 'zh-tw'],
-      lang: 'zh-tw',
-      user: null,
-    };
+  state: {
+    locales: ['en', 'zh-tw'],
+    lang: 'zh-tw',
+    user: JSON.parse(String(localStorage.getItem('user'))),
   },
   getters,
   mutations,

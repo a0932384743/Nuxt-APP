@@ -1,5 +1,6 @@
 {
-  "name": "vue-app",
+  "name": "ibi-project",
+  "author": "cht",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -11,21 +12,22 @@
     "generate:production": "nuxt generate --dotenv .env.production"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.1.1",
-    "@fortawesome/free-brands-svg-icons": "^6.1.1",
-    "@fortawesome/free-regular-svg-icons": "^6.1.1",
-    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-brands-svg-icons": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^2.0.6",
     "axios": "^0.27.2",
-    "bootstrap": "^4.6.1",
+    "bootstrap": "^4.6.2",
     "bootstrap-vue": "^2.21.2",
-    "core-js": "^3.19.3",
-    "firebase": "^9.8.1",
+    "core-js": "^3.22.7",
+    "firebase": "^9.20.0",
     "nuxt": "^2.15.8",
-    "vue": "^2.6.14",
-    "vue-i18n": "^8.27.1",
-    "vue-server-renderer": "^2.6.14",
-    "vue-template-compiler": "^2.6.14"
+    "nuxt-property-decorator": "^2.9.1",
+    "vue": "^2.7.14",
+    "vue-i18n": "^8.28.2",
+    "vue-server-renderer": "^2.7.14",
+    "vue-template-compiler": "^2.7.14"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
@@ -35,7 +37,7 @@
     "@nuxtjs/eslint-module": "^3.1.0",
     "@nuxtjs/firebase": "^8.2.2",
     "@nuxtjs/fontawesome": "^1.1.2",
-    "@nuxtjs/i18n": "^7.2.2",
+    "@nuxtjs/i18n": "^8.3.1",
     "@nuxtjs/style-resources": "^1.2.1",
     "@stylelint/postcss-css-in-js": "^0.38.0",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
@@ -50,7 +52,6 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "^7.4.1",
-    "node-sass": "^5.0.0",
     "pre-commit": "^1.2.2",
     "sass": "^1.51.0",
     "sass-loader": "^10.2.1",
