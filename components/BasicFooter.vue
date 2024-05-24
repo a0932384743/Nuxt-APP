@@ -23,7 +23,7 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'BasicFooter',
-  data () {
+  data() {
     return {
       year: '2022',
       version: this.$config.APP_VERSION,

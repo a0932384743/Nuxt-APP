@@ -20,7 +20,8 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@nuxt/types", "@types/node"]
+    "types": ["@nuxt/types", "@types/node", "vue", "vue-i18n"]
   },
-  "exclude": ["node_modules", ".nuxt", "dist", "**/*.ts", "**/*.vue"]
+  "exclude": ["node_modules", ".nuxt", "dist"],
+  "include": ["types/*.d.ts", "**/*.ts", "**/*.vue"]
 }

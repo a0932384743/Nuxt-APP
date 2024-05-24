@@ -1,10 +1,7 @@
 <template>
-  <b-container>
+  <b-container class="h-100">
     <b-row class="align-items-center justify-content-center h-100">
-      <b-col
-        lg="5"
-        md="7"
-      >
+      <b-col lg="5" md="7">
         <h4 class="text-center text-light mb-3">
           {{ $t('signup.below') }}
         </h4>
@@ -17,19 +14,14 @@
               width="50"
               alt="Logo"
               tag="vue-app"
-            >
+            />
             <div class="text-muted text-center mt-2 mb-3">
               <small>{{ $t('app.sign.message') }}</small>
             </div>
           </b-card-header>
           <b-card-body class="px-lg-3 py-lg-3">
-            <b-form
-              autocomplete="off"
-              @submit.stop.prevent="onSubmit()"
-            >
-              <b-form-group
-                label-for="username-input"
-              >
+            <b-form autocomplete="off" @submit.stop.prevent="onSubmit()">
+              <b-form-group label-for="username-input">
                 <b-input-group>
                   <template #prepend>
                     <div class="input-group-text bg-light">
@@ -56,9 +48,7 @@
                   {{ userNameValidate }}
                 </b-form-invalid-feedback>
               </b-form-group>
-              <b-form-group
-                label-for="email-input"
-              >
+              <b-form-group label-for="email-input">
                 <b-input-group>
                   <template #prepend>
                     <div class="input-group-text bg-light">
@@ -84,16 +74,20 @@
                   {{ emailValidate }}
                 </b-form-invalid-feedback>
               </b-form-group>
-              <b-form-group
-                label-for="password-input"
-              >
+              <b-form-group label-for="password-input">
                 <b-input-group>
                   <template #prepend>
                     <div
                       class="input-group-text bg-light btn"
                       @click="passwordType = !passwordType"
                     >
-                      <font-awesome-icon :icon="passwordType? 'fa-solid fa-lock' : 'fa-solid fa-unlock'" />
+                      <font-awesome-icon
+                        :icon="
+                          passwordType
+                            ? 'fa-solid fa-lock'
+                            : 'fa-solid fa-unlock'
+                        "
+                      />
                     </div>
                   </template>
                   <b-form-input
@@ -112,10 +106,7 @@
                   class="text-right"
                   :state="passwordScore >= 20"
                 >
-                  <span
-                    v-if="passwordScore === 0"
-                    class="text-danger"
-                  >
+                  <span v-if="passwordScore === 0" class="text-danger">
                     {{ $t('feedback.require', { e: $t('password') }) }}
                   </span>
                   <span
@@ -156,24 +147,22 @@
                   class="px-5"
                   type="submit"
                   variant="primary"
-                  :disabled="passwordScore<20 || !!emailValidate || !!userNameValidate"
+                  :disabled="
+                    passwordScore < 20 || !!emailValidate || !!userNameValidate
+                  "
                 >
                   {{ $t('signup') }}
-                  <font-awesome-icon icon="fa-solid fa-arrow-right-to-bracket" />
+                  <font-awesome-icon
+                    icon="fa-solid fa-arrow-right-to-bracket"
+                  />
                 </b-button>
               </div>
             </b-form>
           </b-card-body>
         </b-card>
         <b-row>
-          <b-col
-            cols="12"
-            class="text-right"
-          >
-            <router-link
-              to="/login"
-              class="text-light"
-            >
+          <b-col cols="12" class="text-right">
+            <router-link to="/login" class="text-light">
               <small>{{ $t('app.has.account') }}</small>
             </router-link>
           </b-col>
@@ -189,35 +178,43 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Register',
   layout: 'BaseLayout',
-  data () {
+  data() {
     return {
       passwordType: true,
       form: {
         username: '',
         email: '',
         password: '',
-        agreement: false,
+        agreement: false
       }
     };
   },
   computed: {
-    userNameValidate (): any {
+    userNameValidate(): any {
       if (!this.form.username) {
-        return this.$i18n.t('feedback.require', { e: this.$i18n.t('username') });
+        return this.$i18n.t('feedback.require', {
+          e: this.$i18n.t('username')
+        });
       } else if (this.form.username.length < 5) {
         return this.$i18n.t('feedback.length.error', { e: 5 });
       }
       return false;
     },
-    emailValidate (): any {
+    emailValidate(): any {
       if (!this.form.email) {
         return this.$i18n.t('feedback.require', { e: this.$i18n.t('email') });
-      } else if (!/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.test(this.form.email)) {
-        return this.$i18n.t('feedback.format.error', { e: this.$i18n.t('email') });
+      } else if (
+        !/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.test(
+          this.form.email
+        )
+      ) {
+        return this.$i18n.t('feedback.format.error', {
+          e: this.$i18n.t('email')
+        });
       }
       return false;
     },
-    passwordScore (): number {
+    passwordScore(): number {
       const password = this.form.password;
       let score = password.length;
       if (/[A-Z]/.test(this.form.password)) score *= 1.25;
@@ -225,13 +222,10 @@ export default Vue.extend({
       if (/[0-9]/.test(this.form.password)) score *= 1.25;
       if (/[A-Z]/.test(this.form.password)) score *= 1.25;
       return score;
-    },
+    }
   },
   methods: {
-    onSubmit () {
-
-    }
+    onSubmit() {}
   }
 });
-
 </script>

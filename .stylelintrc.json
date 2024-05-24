@@ -1,0 +1,17 @@
+{
+  "ignoreFiles": [
+    "./node_modules/**/*.{css,scss,sass}",
+    "./dist/**/*.{css,scss,sass}"
+  ],
+  "plugins": [
+    "stylelint-scss",
+    "stylelint-order"
+  ],
+  "rules": {
+    "at-rule-no-unknown": null,
+    "order/properties-alphabetical-order": true,
+    "scss/at-rule-no-unknown": true,
+    "scss/dollar-variable-pattern": "^foo",
+    "scss/selector-no-redundant-nesting-selector": true
+  }
+}

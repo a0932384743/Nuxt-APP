@@ -8,9 +8,23 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
-  extends: ['eslint:recommended', 'plugin:vue/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/recommended',
+    'plugin:nuxt/recommended',
+    'standard'
+  ],
+  globals: {
+    moment: 'readonly'
+  },
   plugins: ['vue'],
   rules: {
+    'space-before-function-paren': ['error', {
+      anonymous: 'always', // 匿名函数需要空格
+      named: 'never', // 命名函数不允许空格
+      asyncArrow: 'never' // 异步箭头函数需要空格
+    }],
+    'sort-imports': 1,
     'object-shorthand': 'warn',
     semi: [2, 'always'],
     quotes: [2, 'single'],

@@ -1,10 +1,8 @@
 //
 // Styles
 //
-
 // Import variables
 @import './variables';
-
 // Import Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
@@ -12,11 +10,9 @@
 @import './global';
 
 // Components
+@import './components/grid';
+@import './components/breadcrumb';
 @import './components/buttons';
 @import './components/forms';
 @import './components/navbar';
 @import './components/dropdown';
-
-// Sections
-@import './sections/footer';
-@import './sections/masthead';

@@ -49,7 +49,7 @@
 
       &:focus,
       &:hover {
-        color: fade-out($white, .2);
+        color: fade-out($white, 0.2);
       }
     }
 
@@ -60,7 +60,7 @@
 
           &:focus,
           &:hover {
-            color: fade-out($white, .2);
+            color: fade-out($white, 0.2);
           }
         }
       }
@@ -68,7 +68,7 @@
 
     &.is-fixed {
       /* when the user scrolls down, we hide the header right above the viewport */
-      border-bottom: 1px solid darken($white, .05);
+      border-bottom: 1px solid darken($white, 0.05);
       background-color: $white;
 
       .navbar-brand {

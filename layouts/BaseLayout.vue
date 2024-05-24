@@ -2,11 +2,7 @@
   <div class="auth-layout d-flex flex-column">
     <basic-header>
       <b-navbar-nav class="ml-auto my-2 my-lg-0">
-        <b-nav-item
-          v-for="menu in baseMenu"
-          :key="menu.name"
-          :to="menu.url"
-        >
+        <b-nav-item v-for="menu in baseMenu" :key="menu.name" :to="menu.url">
           <span>{{ $t(menu.name.toLowerCase()) }}</span>
         </b-nav-item>
         <b-nav-item-dropdown
@@ -21,31 +17,32 @@
             :active="locale === currentLang"
             @click="setLang(locale)"
           >
-            <i
-              class="lang-flag"
-              :class="locale"
-            />
+            <i class="lang-flag" :class="locale" />
             <small class="align-text-top">{{ $t('lang.' + locale) }}</small>
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </basic-header>
-    <main class="bg-primary flex-grow-1 masthead">
+    <main
+      class="flex-grow-1"
+    >
       <nuxt />
     </main>
-    <basic-footer />
+    <basic-footer/>
   </div>
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import BasicFooter from '~/components/BasicFooter.vue';
 
 export default Vue.extend({
+  components: { BasicFooter },
   layout: 'BaseLayout',
   props: {
     backgroundColor: {
       type: String,
-      default: 'black',
-    },
+      default: 'black'
+    }
   },
   data() {
     return {
@@ -53,17 +50,17 @@ export default Vue.extend({
       baseMenu: [
         {
           url: '/',
-          name: 'Home',
+          name: 'Home'
         },
         {
           url: '/register',
-          name: 'Register',
+          name: 'Register'
         },
         {
           url: '/login',
-          name: 'Login',
-        },
-      ],
+          name: 'Login'
+        }
+      ]
     };
   },
   computed: {
@@ -72,7 +69,7 @@ export default Vue.extend({
     },
     currentLang() {
       return this.$store.getters['common/getLang'];
-    },
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -95,8 +92,8 @@ export default Vue.extend({
       } else {
         this.isLocaleDropdownMenuRight = false;
       }
-    },
-  },
+    }
+  }
 });
 </script>
 <style lang="scss">

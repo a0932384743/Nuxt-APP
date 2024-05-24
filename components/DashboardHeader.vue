@@ -1,5 +1,6 @@
 <template>
   <b-navbar
+    tag="header"
     :class="classes"
     class="header-nav px-2 px-lg-3"
     toggleable="lg"
@@ -40,7 +41,8 @@
           menu-class="position-absolute"
         >
           <template #button-content>
-            <font-awesome-icon icon="user-circle" />   <span>{{ currentUser?.email || '-' }} | </span>
+            <font-awesome-icon icon="user-circle" />
+            <span>{{ currentUser?.email || '-' }} | </span>
           </template>
           <b-dropdown-header> {{ $t('language') }} </b-dropdown-header>
           <b-dropdown-item
@@ -54,7 +56,19 @@
               class="lang-flag"
               :class="locale"
             />
-            <small class="align-text-top">{{ $t('lang.' + locale) }}</small>
+            <small class="align-text-top">
+              {{ $t('lang.' + locale) }}
+            </small>
+          </b-dropdown-item>
+          <b-dropdown-divider />
+          <b-dropdown-item
+            href="#"
+            @click="logout()"
+          >
+            <font-awesome-icon icon="sign-out" />
+            <small class="align-text-top">
+              {{ $t('logout') }}
+            </small>
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
@@ -69,7 +83,7 @@ export default Vue.extend({
   data() {
     return {
       classes: [],
-      isLocaleDropdownMenuRight: false,
+      isLocaleDropdownMenuRight: false
     };
   },
   computed: {
@@ -81,7 +95,7 @@ export default Vue.extend({
     },
     currentUser() {
       return this.$store.getters['common/getUser'];
-    },
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.onScroll);
@@ -96,6 +110,15 @@ export default Vue.extend({
     window.removeEventListener('resize', this.onResize);
   },
   methods: {
+    async logout() {
+      try {
+        await this.$fire.auth.signOut();
+        this.$store.dispatch('common/setUser', null);
+        this.$router.push('/');
+      } catch (e) {
+        console.warn('logout', e);
+      }
+    },
     onScroll() {
       if (window.scrollY > 150) {
         this.classes = ['is-fixed', 'is-visible'];
@@ -113,8 +136,8 @@ export default Vue.extend({
       } else {
         this.isLocaleDropdownMenuRight = false;
       }
-    },
-  },
+    }
+  }
 });
 </script>
 <style></style>

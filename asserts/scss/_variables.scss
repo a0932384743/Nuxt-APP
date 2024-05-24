@@ -5,8 +5,11 @@
 // Import variables from src/scss/variables
 @import './variables/colors';
 @import './variables/options';
+@import './variables/breadcrumb';
 @import './variables/typography';
 @import './variables/buttons';
 @import './variables/overlay';
 @import './variables/forms';
 @import './variables/transitions';
+
+$header-height: 100px;

@@ -1,4 +1,4 @@
-import { Module, GetterTree, MutationTree, ActionTree } from 'vuex';
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex';
 
 interface StateInterface {
   prop: boolean;
@@ -35,7 +35,11 @@ const mutations: MutationTree<State> = {
     state.lang = lang;
   },
   SET_USER(state, user) {
-    localStorage.setItem('user', JSON.stringify(user));
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
     state.user = user;
   },
 };
@@ -46,15 +50,6 @@ const actions: ActionTree<State, StateInterface> = {
   },
   setUser({ commit }, user) {
     commit('SET_USER', user);
-  },
-  async onAuthStateChangedAction(state, { user }) {
-    if (!user) {
-      state.commit('SET_USER', null);
-    } else {
-      state.commit('SET_USER', {
-        user,
-      });
-    }
   },
   async nuxtServerInit({ dispatch }, { res }) {
     if (res && res.locals && res.locals.user) {

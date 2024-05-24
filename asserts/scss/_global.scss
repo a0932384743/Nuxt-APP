@@ -1,7 +1,6 @@
 //
 // Global theme styling
 //
-
 // Increase base font styling in the body only
 
 body {
@@ -18,23 +17,22 @@ hr {
 // Set defaults for the paragraph element
 
 p {
-  margin: 2rem 0;
+  margin-bottom: 0.8rem;
 
   a {
-    text-decoration: underline;
+    text-decoration: none;
   }
 }
 
-blockquote {
-  font-style: italic;
-  color: $gray-600;
+small {
+  font-size: 70%;
 }
 
 .lang-flag {
-  background-image: url(static/img/flag/flag-icon.png);
+  background-image: url('static/img/flag/flag-icon.png');
   background-repeat: no-repeat;
   background-size: auto;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgb(0 0 0 / 15%);
   display: inline-block;
   height: 15px;
   margin-right: 5px;
@@ -65,4 +63,57 @@ blockquote {
 .fade-enter,
 .fade-leave-active {
   opacity: 0;
+}
+
+.auth-layout {
+  height: 100vh;
+}
+
+.auth-layout > main {
+  /* Permalink - use to edit and share this gradient. 固定鏈接 - 用於編輯和分享此漸變： https://colorzilla.com/gradient-editor/#042510+1,272243+63,373240+100 */
+  background: linear-gradient(
+    to bottom,
+    #000000 10%,
+    #272243 63%,
+    #373240 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  padding-top: $header-height;
+  padding-bottom: 20px;
+}
+
+.auth-layout > header {
+  background: #000000;
+  min-height: $header-height;
+
+  &.is-fixed {
+    background: #000000;
+    border-bottom: 1px solid #393939;
+  }
+}
+
+aside.side-menu {
+  background: linear-gradient(
+    to bottom,
+    #000000 1%,
+    #272243 63%,
+    #373240 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  border: 1px solid #363636;
+  color: white;
+  flex: 350px 0 0;
+  font-size: 1rem;
+  height: calc(100% - $header-height);
+  margin: 0px;
+  min-width: 350px;
+  overflow-y: auto;
+  padding: 20px 10px;
+
+  position: fixed;
+  transition: margin 0.5s ease-in-out;
+  width: 350px;
+  z-index: 1000;
+
+  @include media-breakpoint-up(md) {
+    position: initial;
+  }
 }
