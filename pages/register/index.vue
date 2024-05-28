@@ -1,175 +1,189 @@
 <template>
-  <b-container class="h-100">
-    <b-row class="align-items-center justify-content-center h-100">
-      <b-col lg="5" md="7">
-        <h4 class="text-center text-light mb-3">
-          {{ $t('signup.below') }}
-        </h4>
-        <b-card class="bg-light border-0 mb-0">
-          <b-card-header class="bg-transparent pb-3 text-center">
+  <div class="d-flex align-content-center justify-content-center h-100">
+    <div
+      class="d-none d-sm-block h-100"
+      style="flex: 1 1 calc(100% - 400px)"
+    >
+      <img
+        src="/img/background/system-bg.png"
+        class="bg-image"
+        alt="Logo"
+        tag="vue-app"
+      >
+    </div>
+    <div style="flex: 1 1 400px">
+      <b-card class="h-100 rounded-0">
+        <b-card-body class="px-lg-3 py-lg-5">
+          <h5 class="text-center">
+            <strong>{{ $t('app.welcome') }}</strong>
+          </h5>
+          <div class="text-center">
             <img
-              src="/img/brand/logo.png"
-              class="m-auto"
-              height="50"
-              width="50"
+              src="/img/brand/logo-3.png"
+              height="80"
               alt="Logo"
-              tag="vue-app"
-            />
-            <div class="text-muted text-center mt-2 mb-3">
-              <small>{{ $t('app.sign.message') }}</small>
+            >
+          </div>
+          <div
+            class="text-muted d-flex flex-wrap mb-4 justify-content-center align-content-center flex-row mb-2 mt-3 flex-sm-column"
+          >
+            <div class="text-nowrap">
+              <small> {{ $t('signup.below') }}</small>
             </div>
-          </b-card-header>
-          <b-card-body class="px-lg-3 py-lg-3">
-            <b-form autocomplete="off" @submit.stop.prevent="onSubmit()">
-              <b-form-group label-for="username-input">
-                <b-input-group>
-                  <template #prepend>
-                    <div class="input-group-text bg-light">
-                      <font-awesome-icon icon="fa-solid fa-user" />
-                    </div>
-                  </template>
-                  <b-form-input
-                    id="username-input"
-                    v-model="form.username"
-                    autofocus
-                    autocomplete="off"
-                    type="text"
-                    name="username"
-                    :placeholder="$t('username')"
-                    :state="!userNameValidate"
-                    aria-describedby="username-invalid-feedback"
-                  />
-                </b-input-group>
-                <b-form-invalid-feedback
-                  id="username-invalid-feedback"
-                  class="text-right"
+          </div>
+          <b-form
+            autocomplete="off"
+            @submit.stop.prevent="onSubmit()"
+          >
+            <b-form-group label-for="username-input">
+              <b-input-group>
+                <template #prepend>
+                  <div class="input-group-text bg-light">
+                    <font-awesome-icon icon="fa-solid fa-user" />
+                  </div>
+                </template>
+                <b-form-input
+                  id="username-input"
+                  v-model="form.username"
+                  autofocus
+                  autocomplete="off"
+                  type="text"
+                  name="username"
+                  :placeholder="$t('username')"
                   :state="!userNameValidate"
-                >
-                  {{ userNameValidate }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-              <b-form-group label-for="email-input">
-                <b-input-group>
-                  <template #prepend>
-                    <div class="input-group-text bg-light">
-                      <font-awesome-icon icon="fa-solid fa-envelope" />
-                    </div>
-                  </template>
-                  <b-form-input
-                    id="email-input"
-                    v-model="form.email"
-                    autocomplete="off"
-                    type="email"
-                    name="email"
-                    :placeholder="$t('email')"
-                    :state="!emailValidate"
-                    aria-describedby="email-invalid-feedback"
-                  />
-                </b-input-group>
-                <b-form-invalid-feedback
-                  id="email-invalid-feedback"
-                  class="text-right"
+                  aria-describedby="username-invalid-feedback"
+                />
+              </b-input-group>
+              <b-form-invalid-feedback
+                id="username-invalid-feedback"
+                class="text-right"
+                :state="!userNameValidate"
+              >
+                {{ userNameValidate }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group label-for="email-input">
+              <b-input-group>
+                <template #prepend>
+                  <div class="input-group-text bg-light">
+                    <font-awesome-icon icon="fa-solid fa-envelope" />
+                  </div>
+                </template>
+                <b-form-input
+                  id="email-input"
+                  v-model="form.email"
+                  autocomplete="off"
+                  type="email"
+                  name="email"
+                  :placeholder="$t('email')"
                   :state="!emailValidate"
-                >
-                  {{ emailValidate }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-              <b-form-group label-for="password-input">
-                <b-input-group>
-                  <template #prepend>
-                    <div
-                      class="input-group-text bg-light btn"
-                      @click="passwordType = !passwordType"
-                    >
-                      <font-awesome-icon
-                        :icon="
-                          passwordType
-                            ? 'fa-solid fa-lock'
-                            : 'fa-solid fa-unlock'
-                        "
-                      />
-                    </div>
-                  </template>
-                  <b-form-input
-                    id="password-input"
-                    v-model="form.password"
-                    autocomplete="off"
-                    :type="passwordType ? 'password' : 'text'"
-                    name="password"
-                    :placeholder="$t('password')"
-                    :state="passwordScore >= 20"
-                    aria-describedby="password-invalid-feedback"
-                  />
-                </b-input-group>
-                <b-form-invalid-feedback
-                  id="password-invalid-feedback"
-                  class="text-right"
-                  :state="passwordScore >= 20"
-                >
-                  <span v-if="passwordScore === 0" class="text-danger">
-                    {{ $t('feedback.require', { e: $t('password') }) }}
-                  </span>
-                  <span
-                    v-if="passwordScore < 10 && passwordScore > 0"
-                    class="text-danger"
+                  aria-describedby="email-invalid-feedback"
+                />
+              </b-input-group>
+              <b-form-invalid-feedback
+                id="email-invalid-feedback"
+                class="text-right"
+                :state="!emailValidate"
+              >
+                {{ emailValidate }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group label-for="password-input">
+              <b-input-group>
+                <template #prepend>
+                  <div
+                    class="input-group-text bg-light btn"
+                    @click="passwordType = !passwordType"
                   >
-                    {{ $t('feedback.password.danger') }}
-                  </span>
-                  <span
-                    v-if="passwordScore < 20 && passwordScore >= 10"
-                    class="text-warning"
-                  >
-                    {{ $t('feedback.password.warning') }}
-                  </span>
-                </b-form-invalid-feedback>
-                <b-form-valid-feedback
-                  id="password-valid-feedback"
-                  class="text-right"
+                    <font-awesome-icon
+                      :icon="
+                        passwordType ? 'fa-solid fa-lock' : 'fa-solid fa-unlock'
+                      "
+                    />
+                  </div>
+                </template>
+                <b-form-input
+                  id="password-input"
+                  v-model="form.password"
+                  autocomplete="off"
+                  :type="passwordType ? 'password' : 'text'"
+                  name="password"
+                  :placeholder="$t('password')"
                   :state="passwordScore >= 20"
+                  aria-describedby="password-invalid-feedback"
+                />
+              </b-input-group>
+              <b-form-invalid-feedback
+                id="password-invalid-feedback"
+                class="text-right"
+                :state="passwordScore >= 20"
+              >
+                <span
+                  v-if="passwordScore === 0"
+                  class="text-danger"
                 >
-                  {{ $t('feedback.password.success') }}
-                </b-form-valid-feedback>
-              </b-form-group>
-              <b-form-group>
-                <b-form-checkbox
-                  id="Agreement"
-                  v-model="form.agreement"
-                  name="Agreement"
-                  value="true"
-                  unchecked-value="false"
+                  {{ $t('feedback.require', { e: $t('password') }) }}
+                </span>
+                <span
+                  v-if="passwordScore < 10 && passwordScore > 0"
+                  class="text-danger"
                 >
-                  <small class="align-text-top">{{ $t('signup.agree') }}</small>
-                </b-form-checkbox>
-              </b-form-group>
+                  {{ $t('feedback.password.danger') }}
+                </span>
+                <span
+                  v-if="passwordScore < 20 && passwordScore >= 10"
+                  class="text-warning"
+                >
+                  {{ $t('feedback.password.warning') }}
+                </span>
+              </b-form-invalid-feedback>
+              <b-form-valid-feedback
+                id="password-valid-feedback"
+                class="text-right"
+                :state="passwordScore >= 20"
+              >
+                {{ $t('feedback.password.success') }}
+              </b-form-valid-feedback>
+            </b-form-group>
+            <b-form-group>
+              <b-form-checkbox
+                id="Agreement"
+                v-model="form.agreement"
+                name="Agreement"
+                value="true"
+                unchecked-value="false"
+              >
+                <small class="align-text-top">{{ $t('signup.agree') }}</small>
+              </b-form-checkbox>
+            </b-form-group>
 
-              <div class="text-center">
-                <b-button
-                  class="px-5"
-                  type="submit"
-                  variant="primary"
-                  :disabled="
-                    passwordScore < 20 || !!emailValidate || !!userNameValidate
-                  "
-                >
-                  {{ $t('signup') }}
-                  <font-awesome-icon
-                    icon="fa-solid fa-arrow-right-to-bracket"
-                  />
-                </b-button>
-              </div>
-            </b-form>
-          </b-card-body>
-        </b-card>
-        <b-row>
-          <b-col cols="12" class="text-right">
-            <router-link to="/login" class="text-light">
-              <small>{{ $t('app.has.account') }}</small>
-            </router-link>
-          </b-col>
-        </b-row>
-      </b-col>
-    </b-row>
-  </b-container>
+            <div class="text-center my-2">
+              <b-button
+                class="px-5"
+                type="submit"
+                variant="primary"
+                :disabled="
+                  passwordScore < 20 || !!emailValidate || !!userNameValidate
+                "
+              >
+                {{ $t('signup') }}
+                <font-awesome-icon icon="fa-solid fa-arrow-right-to-bracket" />
+              </b-button>
+            </div>
+            <div class="d-flex justify-content-end">
+              <router-link
+                to="/login"
+                class="text-secondary"
+              >
+                <small>{{ $t('app.has.account') }}</small>
+              </router-link>
+            </div>
+          </b-form>
+
+        </b-card-body>
+      </b-card>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -229,3 +243,12 @@ export default Vue.extend({
   }
 });
 </script>
+<style lang="scss">
+@import 'asserts/scss/_variables.scss';
+.bg-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  max-height: calc(100vh - $header-height);
+}
+</style>

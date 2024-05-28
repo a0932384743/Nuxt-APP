@@ -3,8 +3,9 @@
     :class="classes"
     tag="header"
     class="header-nav px-2 px-lg-3"
-    toggleable="md"
     variant="faded"
+    toggleable="lg"
+    type="dark"
   >
     <b-navbar-brand href="/">
       <img

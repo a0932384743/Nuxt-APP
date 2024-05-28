@@ -52,11 +52,11 @@
         <b-form-checkbox
           :checked="
             companies?.length > 0 &&
-            form.selectedCompanies
-              .map(c => c.name)
-              .filter(c => c)
-              .sort()
-              .join(',') ===
+              form.selectedCompanies
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
               companies
                 .map(c => c.name)
                 .filter(c => c)
@@ -65,7 +65,7 @@
           "
           @change="toggleAllCompanies"
         >
-          全選
+          {{ $t('select.all') }}
         </b-form-checkbox>
       </div>
     </div>
@@ -92,11 +92,11 @@
         <b-form-checkbox
           :checked="
             harbors?.length > 0 &&
-            form.selectedHarbor
-              .map(c => c.name)
-              .filter(c => c)
-              .sort()
-              .join(',') ===
+              form.selectedHarbor
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
               harbors
                 .map(c => c.name)
                 .filter(c => c)
@@ -124,8 +124,16 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
-    <div class="d-flex" style="gap: 0.5rem">
-      <b-button variant="info" pill class="flex-grow-1" @click="onApply">
+    <div
+      class="d-flex"
+      style="gap: 0.5rem"
+    >
+      <b-button
+        variant="info"
+        pill
+        class="flex-grow-1"
+        @click="onApply"
+      >
         {{ $t('apply') }}
       </b-button>
       <b-button
@@ -157,7 +165,7 @@ export default Vue.extend({
         startDate: moment().subtract(7, 'day').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         selectedCompanies: [],
-        selectedHarbor: []
+        selectedHarbor: [{ name: '臺北港' }]
       },
       companies: [],
       harbors: []
@@ -171,30 +179,45 @@ export default Vue.extend({
   created() {
     this.loadCompanies();
     this.loadHarbors();
+    this.loadLoader();
     this.onApply();
   },
   methods: {
-    onReset() {
+    async onReset() {
       this.form = {
         startDate: moment().subtract(7, 'day').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         selectedCompanies: [],
-        selectedHarbor: []
+        selectedHarbor: [{ name: '臺北港' }]
       };
       this.$store.dispatch('dashboard/setLoading', true);
-      const res = this.$fire.database.ref('dashboard');
-      res.once('value', snapshot => {
-        const data = snapshot.val();
-        this.$store.dispatch('dashboard/setList', data);
-      });
+      await Promise.all([
+        this.loadLoaders(
+          moment(this.form.startDate).year(),
+          moment(this.form.endDate).year()
+        ),
+        this.loadLoaderSummary(moment(this.form.endDate).year()),
+        this.loadLoadersByHarbor(
+          this.form.selectedHarbor,
+          moment(this.form.endDate).year()
+        )
+      ]);
+      this.$store.dispatch('dashboard/setLoading', false);
     },
-    onApply() {
+    async onApply() {
       this.$store.dispatch('dashboard/setLoading', true);
-      const res = this.$fire.database.ref('dashboard');
-      res.once('value', snapshot => {
-        const data = snapshot.val();
-        this.$store.dispatch('dashboard/setList', data);
-      });
+      await Promise.all([
+        this.loadLoaders(
+          moment(this.form.startDate).year(),
+          moment(this.form.endDate).year()
+        ),
+        this.loadLoaderSummary(moment(this.form.endDate).year()),
+        this.loadLoadersByHarbor(
+          this.form.selectedHarbor,
+          moment(this.form.endDate).year()
+        )
+      ]);
+      this.$store.dispatch('dashboard/setLoading', false);
     },
     toggleAllCompanies() {
       if (
@@ -247,6 +270,55 @@ export default Vue.extend({
       } catch (e) {
         console.warn('loadHarbors', e);
       }
+    },
+    async loadLoaderSummary(year: number) {
+      const ref = await this.$fire.database
+        .ref(`loaderSummary/${year}`)
+        .once('value');
+      this.$store.dispatch('dashboard/setLoaderSummary', ref.val());
+      return ref.val();
+    },
+    async loadLoader() {
+      const y = moment().year();
+      const ref = await this.$fire.database.ref(`loader/${y}`).once('value');
+      this.$store.dispatch('dashboard/setLoader', ref.val());
+      return ref.val();
+    },
+    async loadLoaders(startDate: number, endDate: number) {
+      const years = Array.from(
+        {
+          length: endDate - startDate + 1
+        },
+        (_, i) => startDate + i
+      );
+      const loaderList = await Promise.all(
+        years.map(y => {
+          return this.$fire.database.ref(`loader/${y}`).once('value');
+        })
+      );
+      const loaderHistory = {};
+      const loaderHistoryArray = loaderList.map(l => l.val());
+      years.forEach((y, index) => {
+        loaderHistory[String(y)] = loaderHistoryArray[index] || {};
+      });
+      this.$store.dispatch('dashboard/setLoaderHistory', loaderHistory);
+      return loaderHistory;
+    },
+    async loadLoadersByHarbor(harbors: Array<{ name: string }>, year: number) {
+      const loaderList = await Promise.all(
+        harbors.map(harbor => {
+          return this.$fire.database
+            .ref(`loaderByHarbor/${harbor.name}/${year}`)
+            .once('value');
+        })
+      );
+      const loaderByHarbor = {};
+      const loaderByHarborArray = loaderList.map(l => l.val());
+      harbors.forEach((harbor, index) => {
+        loaderByHarbor[String(harbor.name)] = loaderByHarborArray[index] || {};
+      });
+      this.$store.dispatch('dashboard/setLoaderByHarbor', loaderByHarbor);
+      return loaderByHarbor;
     }
   }
 });
@@ -262,7 +334,7 @@ export default Vue.extend({
   border-radius: 0px;
 }
 .custom-datepicker label,
-.custom-datepicker svg {
+.custom-datepicker svg[aria-label='calendar'] {
   color: white;
 }
 </style>

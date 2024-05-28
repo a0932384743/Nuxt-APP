@@ -36,8 +36,14 @@
               'text-success': d < 0
             }"
           >
-            <font-awesome-icon v-if="d > 0" icon="sort-asc" />
-            <font-awesome-icon v-if="d < 0" icon="sort-desc" />
+            <font-awesome-icon
+              v-if="d > 0"
+              icon="sort-asc"
+            />
+            <font-awesome-icon
+              v-if="d < 0"
+              icon="sort-desc"
+            />
 
             {{ d }}
           </strong>
@@ -56,9 +62,6 @@ export default Vue.extend({
       type: Array,
       required: true
     }
-  },
-  updated() {
-    console.log(this.datas);
   }
 });
 </script>

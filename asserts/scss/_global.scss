@@ -77,8 +77,8 @@ small {
     #272243 63%,
     #373240 100%
   ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  padding-top: $header-height;
   padding-bottom: 20px;
+  padding-top: $header-height;
 }
 
 .auth-layout > header {
@@ -107,13 +107,18 @@ aside.side-menu {
   min-width: 350px;
   overflow-y: auto;
   padding: 20px 10px;
-
   position: fixed;
   transition: margin 0.5s ease-in-out;
   width: 350px;
   z-index: 1000;
+}
 
-  @include media-breakpoint-up(md) {
-    position: initial;
+.dashboard-main {
+  margin-left: auto;
+  transition: width 0.5s ease-in-out;
+  width: 100%;
+
+  @include media-breakpoint-down(lg) {
+    width: 100% !important;
   }
 }

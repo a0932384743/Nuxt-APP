@@ -1,7 +1,7 @@
 {
   "app.has.account": "Already have an account?",
   "app.sign.message": "Make your app management easy and fun!",
-  "app.welcome": "",
+  "app.welcome": "智慧商情平台",
   "apply": "Apply",
   "companies": "Companies",
   "condition.filter": "Condition Filter",
@@ -27,15 +27,16 @@
   "logout": "Logout",
   "password": "Password",
   "period": "Period",
+  "period.compare": "Compare",
+  "rate.compare": "Rate",
   "register": "Register",
   "remember.me": "Remember Me",
   "reset": "Reset",
+  "select.all": "Select ALL",
   "signup": "Sign Up",
   "signup.agree": "I agree with the Privacy Policy",
   "signup.below": "Create an account",
   "start.date": "Start",
   "unit": "Unit",
-  "username": "User Name",
-  "period.compare": "Compare",
-  "rate.compare": "Rate"
+  "username": "User Name"
 }

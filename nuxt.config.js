@@ -95,7 +95,7 @@ export default {
           auth: true,
           firestore: true,
           storage: true,
-          database: true,
+          database: true
         }
       }
     ]
@@ -108,5 +108,8 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extractCSS: process.env.NODE_ENV === 'production'
-  }
+  },
+  typescript: {
+    typeCheck:  process.env.NODE_ENV === 'development'
+  },
 };

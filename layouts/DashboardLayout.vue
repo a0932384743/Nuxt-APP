@@ -20,19 +20,20 @@
       </template>
     </dashboard-header>
     <main class="flex-grow-1 masthead">
-      <div class="d-flex flex-row h-100">
-        <dashboard-side-menu :is-show-menu="isShowMenu" />
-        <div class="flex-grow-1 d-flex flex-column">
-          <div class="d-flex justify-content-between">
-            <b-breadcrumb>
-              <b-breadcrumb-item href="/">
-                {{ $t('home') }}
-              </b-breadcrumb-item>
-            </b-breadcrumb>
-          </div>
-          <div class="flex-grow-1 overflow-auto">
-            <nuxt />
-          </div>
+      <dashboard-side-menu :is-show-menu="isShowMenu" />
+      <div
+        class="dashboard-main d-flex flex-column"
+        :style="{
+          width: isShowMenu ? 'calc( 100% - 350px)' : '100%'
+        }"
+      >
+        <b-breadcrumb>
+          <b-breadcrumb-item href="/">
+            {{ $t('home') }}
+          </b-breadcrumb-item>
+        </b-breadcrumb>
+        <div class="flex-grow-1 overflow-auto w-100">
+          <nuxt />
         </div>
       </div>
     </main>
