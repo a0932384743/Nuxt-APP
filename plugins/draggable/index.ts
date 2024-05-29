@@ -1,4 +1,5 @@
 import Vue from 'vue';
-import draggable from 'vuedraggable';
+import VueGridLayout from 'vue-grid-layout';
 
-Vue.component('Draggable', draggable);
+Vue.component('GridLayout', VueGridLayout.GridLayout);
+Vue.component('GridItem', VueGridLayout.GridItem);

@@ -33,6 +33,11 @@ type State = {
       [key: string]: number;
     };
   };
+  shipCount: {
+    [key: string]: {
+      [key: string]: number;
+    };
+  };
   topTenLoaderHistory: {
     [key: string]: number;
   };
@@ -55,6 +60,9 @@ const getters: GetterTree<State, StateInterface> = {
   getLoaderByHarbor(state) {
     return state.loaderByHarbor;
   },
+  getShipCount(state) {
+    return state.shipCount;
+  },
   getLoading(state) {
     return state.loading;
   }
@@ -75,6 +83,9 @@ const mutations: MutationTree<State> = {
   },
   SET_LOADING(state, loading: boolean = false) {
     state.loading = loading;
+  },
+  SET_SHIP_COUNT(state, shipCount = {}) {
+    state.shipCount = shipCount;
   },
   SET_LOADER_HARBOR(state, loader = {}) {
     state.loaderByHarbor = loader;
@@ -97,6 +108,9 @@ const actions: ActionTree<State, StateInterface> = {
   setLoaderSummary({ commit }, summary = {}) {
     commit('SET_LOADER_SUMMARY', summary);
   },
+  setShipCount({ commit }, shipCount = {}) {
+    commit('SET_SHIP_COUNT', shipCount);
+  },
   setLoaderByHarbor({ commit }, loader = {}) {
     commit('SET_LOADER_HARBOR', loader);
   }
@@ -110,6 +124,7 @@ const dashboardModule: Module<State, StateInterface> = {
     topTenLoaderHistory: {},
     loaderSummary: {},
     loaderByHarbor: {},
+    shipCount: {},
     loading: false
   },
   getters,

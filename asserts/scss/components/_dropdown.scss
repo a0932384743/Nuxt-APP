@@ -5,3 +5,18 @@
 .dropdown-header {
   font-size: 1rem;
 }
+
+.custom-dropdown-menu {
+  background-color: #1d1933;
+  border: 1px solid #bbbbbb;
+  border-radius: 0px;
+  color: white;
+
+  .dropdown-item {
+    color: white;
+
+    &:hover {
+      background-color: #363356;
+    }
+  }
+}

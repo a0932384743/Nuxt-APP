@@ -8,25 +8,15 @@
     variant="faded"
   >
     <slot name="menu-btn" />
-    <b-navbar-brand
-      href="/"
-      class="mr-auto"
-    >
-      <img
-        src="/img/brand/logo-2.png"
-        alt="Logo"
-        height="50"
-      >
+    <b-navbar-brand href="/" class="mr-auto">
+      <img src="/img/brand/logo-2.png" alt="Logo" height="50" />
     </b-navbar-brand>
     <b-navbar-toggle target="nav-collapse">
       <template #default>
         <font-awesome-icon icon="bars" />
       </template>
     </b-navbar-toggle>
-    <b-collapse
-      id="nav-collapse"
-      is-nav
-    >
+    <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav class="mx-3 my-2 my-lg-0 ml-lg-auto">
         <b-nav-item :to="'/'">
           <span><font-awesome-icon icon="home" /></span>
@@ -52,23 +42,15 @@
             :active="locale === currentLang"
             @click="setLang(locale)"
           >
-            <i
-              class="lang-flag"
-              :class="locale"
-            />
+            <i class="lang-flag" :class="locale" />
             <small class="align-text-top">
               {{ $t('lang.' + locale) }}
             </small>
           </b-dropdown-item>
           <b-dropdown-divider />
-          <b-dropdown-item
-            href="#"
-            @click="logout()"
-          >
+          <b-dropdown-item href="#" @click="logout()">
             <font-awesome-icon icon="sign-out" />
-            <small class="align-text-top">
-              {{ $t('logout') }}
-            </small>
+            {{ $t('logout') }}
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>

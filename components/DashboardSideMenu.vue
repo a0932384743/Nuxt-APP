@@ -179,7 +179,6 @@ export default Vue.extend({
   created() {
     this.loadCompanies();
     this.loadHarbors();
-    this.loadLoader();
     this.onApply();
   },
   methods: {
@@ -200,7 +199,9 @@ export default Vue.extend({
         this.loadLoadersByHarbor(
           this.form.selectedHarbor,
           moment(this.form.endDate).year()
-        )
+        ),
+        this.loadLoader(moment(this.form.startDate).year()),
+        this.loadShipCount(moment(this.form.startDate).year())
       ]);
       this.$store.dispatch('dashboard/setLoading', false);
     },
@@ -215,7 +216,9 @@ export default Vue.extend({
         this.loadLoadersByHarbor(
           this.form.selectedHarbor,
           moment(this.form.endDate).year()
-        )
+        ),
+        this.loadLoader(moment(this.form.startDate).year()),
+        this.loadShipCount(moment(this.form.startDate).year())
       ]);
       this.$store.dispatch('dashboard/setLoading', false);
     },
@@ -278,10 +281,14 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setLoaderSummary', ref.val());
       return ref.val();
     },
-    async loadLoader() {
-      const y = moment().year();
+    async loadLoader(y: number) {
       const ref = await this.$fire.database.ref(`loader/${y}`).once('value');
       this.$store.dispatch('dashboard/setLoader', ref.val());
+      return ref.val();
+    },
+    async loadShipCount(y: number) {
+      const ref = await this.$fire.database.ref(`shipCount/${y}`).once('value');
+      this.$store.dispatch('dashboard/setShipCount', ref.val());
       return ref.val();
     },
     async loadLoaders(startDate: number, endDate: number) {

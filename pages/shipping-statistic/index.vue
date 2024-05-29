@@ -2,7 +2,7 @@
   <grid-layout
     :show="!loading"
     :layout="dashboardList"
-    :col-num="3"
+    :col-num="4"
     :row-num="12"
     :row-height="150"
     :is-draggable="true"
@@ -27,9 +27,8 @@
 <script lang="ts">
 import DashboardWidget from '~/components/DashboardWidget.vue';
 import Vue from 'vue';
-
 export default Vue.extend({
-  name: 'Dashboard',
+  name: 'ShippingStatistic',
   components: { DashboardWidget },
   layout: 'DashboardLayout',
   data() {
@@ -47,10 +46,10 @@ export default Vue.extend({
   },
   methods: {
     onLayoutUpdated(list) {
-      this.$fire.database.ref('loaderWidgets').update(list);
+      this.$fire.database.ref('shippingStaticsWidgets').update(list);
     },
     async onLoadDashboard() {
-      const res = this.$fire.database.ref('loaderWidgets');
+      const res = this.$fire.database.ref('shippingStaticsWidgets');
       res.once('value', snapshot => {
         const data = snapshot.val();
         this.dashboardList = data
@@ -66,8 +65,3 @@ export default Vue.extend({
   }
 });
 </script>
-<style>
-.vue-grid-layout {
-  min-height: 50px;
-}
-</style>

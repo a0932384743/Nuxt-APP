@@ -1993,6 +1993,158 @@
   "resolved" "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   "version" "1.2.1"
 
+"@interactjs/actions@1.10.2":
+  "integrity" "sha512-BHJcW84WCMf/LsKmha/1Yog7aH3+QBXbLvowvZvwYvgjdUIb3xCa1a7FUYXuWAeKNMyKPVjFun+WPce75B+1tA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/actions/-/actions-1.10.2.tgz"
+  "version" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/arrange@1.10.2":
+  "integrity" "sha512-pPLA9o4RWMFN0VfalklOFSRLL4WqqXcD9no4XEuqV00goZPCxLBbMTztaWwnutlRy7evtOhUjUH+pZVsS+dZ4Q=="
+  "resolved" "https://registry.npmjs.org/@interactjs/arrange/-/arrange-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/auto-scroll@1.10.2":
+  "integrity" "sha512-yYqzOawwvWd1NNnlqZdzrXoOMFafQ2/ws85erpJqdaNMQE221z2uP+QYhFRLQRgYUlTbHFfmjDpzhuJgq4uA8Q=="
+  "resolved" "https://registry.npmjs.org/@interactjs/auto-scroll/-/auto-scroll-1.10.2.tgz"
+  "version" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/auto-start@1.10.2":
+  "integrity" "sha512-nZudj8VzJzz+uEyDHqXwtKpvUYr+Oj1+xBrJEu21CywroHQWM2J4fCIiCgeCo3d5/p/TrzFk5b+YfAWePKiLxA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/auto-start/-/auto-start-1.10.2.tgz"
+  "version" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/clone@1.10.2":
+  "integrity" "sha512-XzA8BRHSCwvysOegZ1kopg+IJF3erh4qzY6DRoZsIJovKAXawoa176E58IAzDbgYPJ2yoaSGT+XyzT2C0wa3pQ=="
+  "resolved" "https://registry.npmjs.org/@interactjs/clone/-/clone-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/core@1.10.2":
+  "integrity" "sha512-SA5KRGo+gFJOhBj1Z2dLHhAf0/2nyHNd4SQ460aIQ3jj/QhqbJW6kGzmh7hBa2FzVGgxLhcQu7NZaP4rnDfUNw=="
+  "resolved" "https://registry.npmjs.org/@interactjs/core/-/core-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/dev-tools@1.10.2":
+  "integrity" "sha512-aAd9NgTAGA3yVdFCYcAAYrM4TYQFuVqEvsF+xj+g5SlGyrJ7+GTjPZ2rScOyAsABY4Tz64L2pXvWmXMG87dncA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/dev-tools/-/dev-tools-1.10.2.tgz"
+  "version" "1.10.2"
+  dependencies:
+    "@interactjs/utils" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/feedback@1.10.2":
+  "integrity" "sha512-XlcoICGrFeUwwRtDgOpstOOvlU42WZoEg7gJHK3LwF7j0IctPd1+3blXofFlBeVvodle8MvUMepm5CRXz741fA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/feedback/-/feedback-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/inertia@1.10.2":
+  "integrity" "sha512-ZmN1joN6J36Q6SOp3V0iZOisXZOBMSAUj0STo8wbwCKy7K8IrC9vjUBbO2JM52cT6o7hg5ebHsp5c8FrebSHlg=="
+  "resolved" "https://registry.npmjs.org/@interactjs/inertia/-/inertia-1.10.2.tgz"
+  "version" "1.10.2"
+  dependencies:
+    "@interactjs/offset" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/interact@1.10.2":
+  "integrity" "sha512-Ms5uVCY9IobVYpQyBnBdkP6Bk6iDY7TkC7GupsdUPUxzAvYSQCTEAGr/1PwxSrSS6dN/8O8TuyUWPbCaylr/JA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/interact/-/interact-1.10.2.tgz"
+  "version" "1.10.2"
+  dependencies:
+    "@interactjs/core" "1.10.2"
+    "@interactjs/types" "1.10.2"
+    "@interactjs/utils" "1.10.2"
+
+"@interactjs/interactjs@1.10.2":
+  "integrity" "sha512-OwLl70af6lfZOOg/bvWKSNm1DS1nDI72QnzDYljSKfc2D8stqLIGDO1wPY2rhZudUG5q3t50EhmMUQF76yll/g=="
+  "resolved" "https://registry.npmjs.org/@interactjs/interactjs/-/interactjs-1.10.2.tgz"
+  "version" "1.10.2"
+  dependencies:
+    "@interactjs/actions" "1.10.2"
+    "@interactjs/arrange" "1.10.2"
+    "@interactjs/auto-scroll" "1.10.2"
+    "@interactjs/auto-start" "1.10.2"
+    "@interactjs/clone" "1.10.2"
+    "@interactjs/core" "1.10.2"
+    "@interactjs/dev-tools" "1.10.2"
+    "@interactjs/feedback" "1.10.2"
+    "@interactjs/inertia" "1.10.2"
+    "@interactjs/interact" "1.10.2"
+    "@interactjs/modifiers" "1.10.2"
+    "@interactjs/multi-target" "1.10.2"
+    "@interactjs/offset" "1.10.2"
+    "@interactjs/pointer-events" "1.10.2"
+    "@interactjs/react" "1.10.2"
+    "@interactjs/reflow" "1.10.2"
+    "@interactjs/utils" "1.10.2"
+    "@interactjs/vue" "1.10.2"
+
+"@interactjs/modifiers@1.10.2":
+  "integrity" "sha512-3wYEucvZF2NTIslnVIKw5MWhkn9LM42cGCQaC19o3LZeWnbps7NnHJCyQp6zylJrCbwt7f+CSt4Oj2/s0f6XEA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/modifiers/-/modifiers-1.10.2.tgz"
+  "version" "1.10.2"
+  dependencies:
+    "@interactjs/snappers" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/multi-target@1.10.2":
+  "integrity" "sha512-O2GiIqgZBzjAVTOpL8doTnAcM9AtM3+H/Bb+An12wWKtNutVK7JbqUAO2nYueOk55/PP3yDLY9Qdr15RJns3lQ=="
+  "resolved" "https://registry.npmjs.org/@interactjs/multi-target/-/multi-target-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/offset@1.10.2":
+  "integrity" "sha512-xLgQqinFUY7ZqSX9d9on7XRcxvQdHNEAktj2QFwxMsEwrA6zbKROpPVwt8WQ1yBAeJSFjgYGcmCMPW5K41dT0w=="
+  "resolved" "https://registry.npmjs.org/@interactjs/offset/-/offset-1.10.2.tgz"
+  "version" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/pointer-events@1.10.2":
+  "integrity" "sha512-O8s3N399hkGIzWGlcJVy0LJyDn5YWDh6XKjyowh/QivtlZSWPY8eglmlN2uZX0lmiqUYghbKI4CpQYP/cE0ZDA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/pointer-events/-/pointer-events-1.10.2.tgz"
+  "version" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/react@1.10.2":
+  "integrity" "sha512-JXzPdANft+W2vq3SCSzprCwom5UuC8TaiAAhVdt8R+/P6xHbOeAX93XLS5YmDwT8e0Zh9J9jYvz55tkTdwjFZQ=="
+  "resolved" "https://registry.npmjs.org/@interactjs/react/-/react-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/reflow@1.10.2":
+  "integrity" "sha512-pc6o6RRhSCYQC4auZexRb7z5FQkdSVev5HzlRfUAjfw4C076qgbcs63ESRKy4YXdSBtUTvARQZxpuWUNGquzJw=="
+  "resolved" "https://registry.npmjs.org/@interactjs/reflow/-/reflow-1.10.2.tgz"
+  "version" "1.10.2"
+  optionalDependencies:
+    "@interactjs/interact" "1.10.2"
+
+"@interactjs/snappers@1.10.2":
+  "integrity" "sha512-wQ41Vn5GRn6VavjIEUtTkd9d5QgdKgC4+CPW0fjKkiQclLBmaic7VibNETO8twN0Jx5e73EoPj9K2nAVHIA0hA=="
+  "resolved" "https://registry.npmjs.org/@interactjs/snappers/-/snappers-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/types@1.10.2":
+  "integrity" "sha512-l0T1bU8OHRv716ztQOYwP+K7b/lA76C0T3r/cdabbUv6CKeAFdFRRFlmNxYOM36SxMGWAiq5VWrN3SeXlB7Fow=="
+  "resolved" "https://registry.npmjs.org/@interactjs/types/-/types-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/utils@1.10.2":
+  "integrity" "sha512-sOr+pu7XGAN4qv+ikajMo3RJygbkbMLegmx0Tv5Qf6e80sF42FjkmHeMGuV7fL98nwat0VmDiWerOFBnKctXow=="
+  "resolved" "https://registry.npmjs.org/@interactjs/utils/-/utils-1.10.2.tgz"
+  "version" "1.10.2"
+
+"@interactjs/vue@1.10.2":
+  "integrity" "sha512-msLdc42DFsCPQZt6YBGZrw8Ro23kQcNnj+iLz2OUQcOrp/lma7WjorUuAwwfyFna2DevLtiYlMLbT0dpO/cVhg=="
+  "resolved" "https://registry.npmjs.org/@interactjs/vue/-/vue-1.10.2.tgz"
+  "version" "1.10.2"
+
 "@intlify/shared@^9.0.0":
   "integrity" "sha512-u3b6BKGhE6j/JeRU6C/RL2FgyJfy6LakbtfeVF8fJXURpZZTzfh3e05J0bu0XPw447Q6/WUp3C4ajv4TMS4YsQ=="
   "resolved" "https://registry.npmjs.org/@intlify/shared/-/shared-9.13.1.tgz"
@@ -3857,6 +4009,11 @@
   "resolved" "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
   "version" "1.5.1"
 
+"batch-processor@1.0.0":
+  "integrity" "sha512-xoLQD8gmmR32MeuBHgH0Tzd5PuSZx71ZsbhVxOCRbgktZEPe4SQy7s9Z50uPp0F/f7iw2XmkHN2xkgbMfckMDA=="
+  "resolved" "https://registry.npmjs.org/batch-processor/-/batch-processor-1.0.0.tgz"
+  "version" "1.0.0"
+
 "big.js@^5.2.2":
   "integrity" "sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ=="
   "resolved" "https://registry.npmjs.org/big.js/-/big.js-5.2.2.tgz"
@@ -5329,6 +5486,13 @@
   "integrity" "sha512-bT0jEz/Xz1fahQpbZ1D7LgmPYZ3iHVY39NcWWro1+hA2IvjiPeaXtfSqrQ+nXjApMvQRE2ASt1itSLRrebHMRQ=="
   "resolved" "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.783.tgz"
   "version" "1.4.783"
+
+"element-resize-detector@^1.2.1":
+  "integrity" "sha512-Fl5Ftk6WwXE0wqCgNoseKWndjzZlDCwuPTcoVZfCP9R3EHQF8qUtr3YUPNETegRBOKqQKPW3n4kiIWngGi8tKg=="
+  "resolved" "https://registry.npmjs.org/element-resize-detector/-/element-resize-detector-1.2.4.tgz"
+  "version" "1.2.4"
+  dependencies:
+    "batch-processor" "1.0.0"
 
 "elliptic@^6.5.3", "elliptic@^6.5.5":
   "integrity" "sha512-7EjbcmUm17NQFu4Pmgmq2olYMj8nwMnpcddByChSUjArp8F5DQWcIcpriwO4ZToLNAJig0yiyjswfyGNje/ixw=="
@@ -10752,11 +10916,6 @@
   dependencies:
     "is-plain-obj" "^1.0.0"
 
-"sortablejs@1.10.2":
-  "integrity" "sha512-YkPGufevysvfwn5rfdlGyrGjt7/CRHwvRPogD/lC+TnvcN29jDpCifKP+rBqf+LRldfXSTh+0CGLcSg0VIxq3A=="
-  "resolved" "https://registry.npmjs.org/sortablejs/-/sortablejs-1.10.2.tgz"
-  "version" "1.10.2"
-
 "source-list-map@^2.0.0":
   "integrity" "sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw=="
   "resolved" "https://registry.npmjs.org/source-list-map/-/source-list-map-2.0.1.tgz"
@@ -11893,6 +12052,19 @@
   "resolved" "https://registry.npmjs.org/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz"
   "version" "3.1.0"
 
+"vue-grid-layout@^2.4.0":
+  "integrity" "sha512-MRQVt1BdWDaPN4gKGEKOVVwiTyucqJhrGEyjiY9Muor+dzFFq4Hm0geSpYJpLvC1GLlTL8KWUwy0suKrHm+mqg=="
+  "resolved" "https://registry.npmjs.org/vue-grid-layout/-/vue-grid-layout-2.4.0.tgz"
+  "version" "2.4.0"
+  dependencies:
+    "@interactjs/actions" "1.10.2"
+    "@interactjs/auto-scroll" "1.10.2"
+    "@interactjs/auto-start" "1.10.2"
+    "@interactjs/dev-tools" "1.10.2"
+    "@interactjs/interactjs" "1.10.2"
+    "@interactjs/modifiers" "1.10.2"
+    "element-resize-detector" "^1.2.1"
+
 "vue-hot-reload-api@^2.3.0":
   "integrity" "sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog=="
   "resolved" "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
@@ -11973,13 +12145,6 @@
   dependencies:
     "@vue/compiler-sfc" "2.7.16"
     "csstype" "^3.1.0"
-
-"vuedraggable@^2.24.3":
-  "integrity" "sha512-6/HDXi92GzB+Hcs9fC6PAAozK1RLt1ewPTLjK0anTYguXLAeySDmcnqE8IC0xa7shvSzRjQXq3/+dsZ7ETGF3g=="
-  "resolved" "https://registry.npmjs.org/vuedraggable/-/vuedraggable-2.24.3.tgz"
-  "version" "2.24.3"
-  dependencies:
-    "sortablejs" "1.10.2"
 
 "vuex@^3.6.2":
   "integrity" "sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw=="

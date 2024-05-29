@@ -27,14 +27,12 @@
           width: isShowMenu ? 'calc( 100% - 350px)' : '100%'
         }"
       >
-        <b-breadcrumb>
+        <b-breadcrumb class="position-absolute" style="top: -10px">
           <b-breadcrumb-item href="/">
             {{ $t('home') }}
           </b-breadcrumb-item>
         </b-breadcrumb>
-        <div class="flex-grow-1 overflow-auto w-100">
-          <nuxt />
-        </div>
+        <nuxt />
       </div>
     </main>
   </div>

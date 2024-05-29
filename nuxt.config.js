@@ -1,3 +1,6 @@
+import en from './locales/en.js';
+import zhTW from './locales/zh-tw.js';
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -53,7 +56,14 @@ export default {
     ],
     bodyAttrs: {
       className: 'bg-default h-100'
-    }
+    },
+    script: [
+      {
+        src: 'https://assets.pyecharts.org/assets/maps/world.js',
+        async: true,
+        defer: true
+      }
+    ]
   },
   loading: { color: '#005ffc' },
 
@@ -63,7 +73,6 @@ export default {
   plugins: [
     '~/plugins/directives',
     '~/plugins/font-awesome',
-    '~/plugins/i18n',
     '~/plugins/echart',
     '~/plugins/draggable'
   ],
@@ -79,26 +88,7 @@ export default {
     '@nuxt/typescript-build',
     '@nuxtjs/eslint-module',
     '@nuxtjs/style-resources',
-    [
-      '@nuxtjs/firebase',
-      {
-        config: {
-          apiKey: process.env.APP_API_KEY,
-          authDomain: process.env.APP_AUTH_DOMAIN,
-          projectId: process.env.APP_PROJECT_ID,
-          storageBucket: process.env.APP_STORAGE_BUCKET,
-          messagingSenderId: process.env.APP_MESSAGING_SENDERID,
-          appId: process.env.APP_ID,
-          measurementId: process.env.APP_MEASUREMENT_ID
-        },
-        services: {
-          auth: true,
-          firestore: true,
-          storage: true,
-          database: true
-        }
-      }
-    ]
+    '@nuxtjs/firebase'
   ],
   publicRuntimeConfig: {
     APP_VERSION: process.env.APP_VERSION
@@ -110,6 +100,46 @@ export default {
     extractCSS: process.env.NODE_ENV === 'production'
   },
   typescript: {
-    typeCheck:  process.env.NODE_ENV === 'development'
+    typeCheck: false
   },
+  i18n: {
+    locales: [
+      {
+        code: 'en',
+        iso: 'en',
+        name: 'English'
+      },
+      {
+        code: 'zh-tw',
+        iso: 'zh-tw',
+        name: '中文'
+      }
+    ],
+    defaultLocale: 'zh-tw',
+    vueI18n: {
+      fallbackLocale: 'zh-tw',
+      messages: {
+        en,
+        'zh-tw': zhTW
+      }
+    }
+  },
+  firebase: {
+    config: {
+      apiKey:
+        process.env.APP_API_KEY || 'AIzaSyAEZhEXkBo332UMUaVX7hKDy1r1WOqcOyU',
+      authDomain: process.env.APP_AUTH_DOMAIN,
+      projectId: process.env.APP_PROJECT_ID,
+      storageBucket: process.env.APP_STORAGE_BUCKET,
+      messagingSenderId: process.env.APP_MESSAGING_SENDERID,
+      appId: process.env.APP_ID,
+      measurementId: process.env.APP_MEASUREMENT_ID
+    },
+    services: {
+      auth: true,
+      firestore: true,
+      storage: true,
+      database: true
+    }
+  }
 };

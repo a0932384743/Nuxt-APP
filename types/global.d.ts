@@ -6,9 +6,29 @@ declare module 'vue-echarts' {
   export default VueECharts;
 }
 
+declare module 'vue-grid-layout' {
+  import { PluginFunction } from 'vue';
 
-declare module 'vuedraggable' {
-  import draggable from 'vuedraggable';
-  const Draggable: draggable;
-  export default Draggable;
+  export const VueGridLayout: PluginFunction<{}>;
+
+  export interface GridItemProps {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    i?: string;
+    [key: string]: any;
+  }
+
+  export interface GridLayoutProps {
+    layout: GridItemProps[];
+    colNum?: number;
+    rowHeight?: number;
+    isDraggable?: boolean;
+    isResizable?: boolean;
+    [key: string]: any;
+  }
+
+  export const GridLayout: any;
+  export const GridItem: any;
 }
