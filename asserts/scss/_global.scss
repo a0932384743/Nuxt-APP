@@ -67,6 +67,7 @@ small {
 
 .auth-layout {
   height: 100vh;
+  overflow: auto;
 }
 
 .auth-layout > main {
@@ -77,6 +78,7 @@ small {
     #272243 63%,
     #373240 100%
   ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  min-height: 100%;
   padding-bottom: 20px;
   padding-top: $header-height;
 }

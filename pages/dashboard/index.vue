@@ -2,26 +2,21 @@
   <grid-layout
     :show="!loading"
     :layout="dashboardList"
-    :col-num="3"
+    :col-num="4"
     :row-num="12"
     :row-height="150"
-    :is-draggable="true"
-    :is-resizable="true"
-    :vertical-compact="true"
-    :use-css-transforms="true"
+    is-draggable
+    is-resizable
+    vertical-compact
+    use-css-transforms
+    :draggable-handle="'.vue-grid-item'"
     @layout-updated="onLayoutUpdated"
   >
-    <grid-item
+    <dashboard-widget
       v-for="item in dashboardList"
-      :key="JSON.stringify(item)"
-      :x="item.x"
-      :y="item.y"
-      :w="item.w"
-      :h="item.h"
-      :i="item.i"
-    >
-      <dashboard-widget :item="item" />
-    </grid-item>
+      :key="item.name"
+      :item="item"
+    />
   </grid-layout>
 </template>
 <script lang="ts">

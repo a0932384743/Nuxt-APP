@@ -1,106 +1,176 @@
 <template>
-  <b-card
+  <grid-item
+    :x="item.x"
+    :y="item.y"
+    :w="item.w"
+    :h="item.h"
+    :i="item.i"
     :class="{
       enlarge: isEnlarge
     }"
-    text-variant="white"
-    header-class="py-1 px-2"
-    body-class="p-0"
-    class="bg-transparent h-100"
-    border-variant="secondary"
   >
-    <template #header>
-      <div class="d-flex pr-5 position-relative">
-        <div><font-awesome-icon icon="chart-bar" /> {{ item.name }}</div>
-        <b-dropdown
-          variant="link"
-          toggle-class="text-decoration-none"
-          no-caret
-          menu-class="custom-dropdown-menu"
-          class="position-absolute"
-          style="right: 0px; top: 0px"
-          :dropright="isEnlarge"
-          right
-        >
-          <template #button-content>
-            <font-awesome-icon
-              icon="ellipsis-v"
-              class="text-white"
-            />
-          </template>
-          <b-dropdown-item
-            tag="div"
-            role="button"
-            @click="downloadPic"
+    <b-card
+      text-variant="white"
+      header-class="py-1 px-2"
+      body-class="p-0"
+      class="bg-transparent h-100"
+      border-variant="secondary"
+    >
+      <template #header>
+        <div class="d-flex pr-5 position-relative">
+          <div><font-awesome-icon icon="chart-bar" /> {{ item.name }}</div>
+          <b-dropdown
+            variant="link"
+            toggle-class="text-decoration-none"
+            no-caret
+            menu-class="custom-dropdown-menu"
+            class="position-absolute"
+            style="right: 0px; top: 0px"
+            :dropright="isEnlarge"
+            right
           >
-            <font-awesome-icon icon="download" />
-            {{ $t('download.pic') }}
-          </b-dropdown-item>
-          <b-dropdown-item
-            tag="div"
-            role="button"
-            @click="enlargePic"
-          >
-            <font-awesome-icon :icon="!isEnlarge ? 'expand' : 'compress'" />
-            {{ $t(!isEnlarge ? 'expand.pic' : 'compress.pic') }}
-          </b-dropdown-item>
-        </b-dropdown>
-      </div>
-      <p>
-        <small
-          v-if="item.period"
-          class="d-block"
-        >({{ $t('period') }}: -)</small>
-        <small
-          v-if="item.unit"
-          class="d-block"
-        >({{ $t('unit') }}: {{ item.unit }})</small>
-      </p>
-    </template>
-    <dashboard-summary
-      v-if="item?.chartType === 'summary'"
-      :datas="dataSource[item.dataSource]?.series || []"
-    />
-    <v-chart
-      v-else
-      ref="chart"
-      class="w-100"
-      :options="{
-        ...option,
-        ...item,
-        xAxis: dataSource[item.dataSource]?.xAxis || item.xAxis,
-        yAxis: dataSource[item.dataSource]?.yAxis || item.yAxis,
-        series: (dataSource[item.dataSource]?.series || []).map(d => {
-          return {
-            ...d,
-            ...item.seriesProps
-          };
-        })
-      }"
-      autoresize
-    />
-  </b-card>
+            <template #button-content>
+              <font-awesome-icon
+                icon="ellipsis-v"
+                class="text-white"
+              />
+            </template>
+            <b-dropdown-item
+              tag="div"
+              role="button"
+              @click="enableFavorites"
+            >
+              <font-awesome-icon
+                icon="star"
+                :style="{
+                  color: isFavorite ? 'orange' : 'transparent',
+                  stroke: isFavorite ? 'transparent' : 'white'
+                }"
+                style="stroke-width: 20px"
+              />
+              {{ $t('favorite') }}
+            </b-dropdown-item>
+            <b-dropdown-item
+              v-if="
+                item?.chartType !== 'summary' && item?.chartType !== 'growth'
+              "
+              tag="div"
+              role="button"
+              @click="downloadPic"
+            >
+              <font-awesome-icon icon="download" />
+              {{ $t('download.pic') }}
+            </b-dropdown-item>
+            <b-dropdown-item
+              v-if="
+                item?.chartType !== 'summary' && item?.chartType !== 'growth'
+              "
+              tag="div"
+              role="button"
+              @click="enlargePic"
+            >
+              <font-awesome-icon :icon="!isEnlarge ? 'expand' : 'compress'" />
+              {{ $t(!isEnlarge ? 'expand.pic' : 'compress.pic') }}
+            </b-dropdown-item>
+            <b-dropdown-item
+              tag="div"
+              role="button"
+              @click="exportCSV"
+            >
+              <font-awesome-icon icon="file-export" />
+              {{ $t('export.csv') }}
+            </b-dropdown-item>
+          </b-dropdown>
+        </div>
+        <p>
+          <small
+            v-if="item.period"
+            class="d-block"
+          >({{ $t('period') }}: -)</small>
+          <small
+            v-if="item.unit"
+            class="d-block"
+          >({{ $t('unit') }}: {{ item.unit }})</small>
+        </p>
+      </template>
+      <dashboard-summary
+        v-if="item?.chartType === 'summary'"
+        :datas="dataSource[item.dataSource]?.series || []"
+      />
+      <dashboard-growth
+        v-else-if="item?.chartType === 'growth'"
+        :datas="dataSource[item.dataSource]?.series || []"
+      />
+      <v-chart
+        v-else
+        ref="chart"
+        class="w-100"
+        :options="{
+          ...option,
+          ...item,
+          xAxis: dataSource[item.dataSource]?.xAxis || item.xAxis,
+          yAxis: dataSource[item.dataSource]?.yAxis || item.yAxis,
+          series: (dataSource[item.dataSource]?.series || []).map(d => {
+            return {
+              ...d,
+              ...item.seriesProps
+            };
+          })
+        }"
+        autoresize
+      />
+    </b-card>
+  </grid-item>
 </template>
 <script lang="ts">
-import DashboardSummary from '~/components/DashbaordSummary.vue';
 import Vue, { PropOptions } from 'vue';
-import { DashboardType } from '~/store/dashboard';
+import DashboardGrowth from '~/components/DashbaordGrowth.vue';
+import DashboardSummary from '~/components/DashbaordSummary.vue';
+import { WidgetType } from '~/store/dashboard';
 
-const item: PropOptions<DashboardType> = {
+const item: PropOptions<WidgetType> = {
   type: Object,
   required: true
 };
 
 export default Vue.extend({
   name: 'DashboardWidget',
-  components: { DashboardSummary },
+  components: { DashboardGrowth, DashboardSummary },
   props: {
     item
   },
   data() {
     return {
       isEnlarge: false,
+      isFavorite: false,
       option: {
+        toolbox: {
+          show: true,
+          feature: {
+            dataView: {
+              show: true,
+              readOnly: false,
+              title: '表格',
+              lang: ['表格', '關閉', '刷新'],
+              textareaColor: '#131022',
+              backgroundColor: '#131022',
+              textColor: 'white',
+              buttonColor: '#17a2b8',
+            },
+            magicType: {
+              show: this.item.chartType !== 'pie',
+              type: ['line', 'bar'],
+              title: {
+                line: '折線圖',
+                bar: '柱狀圖'
+              }
+            },
+
+          },
+          iconStyle: {
+            color: 'white'
+          }
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -123,6 +193,8 @@ export default Vue.extend({
       const summary = this.$store.getters['dashboard/getLoaderSummary'];
       const byHarbor = this.$store.getters['dashboard/getLoaderByHarbor'];
       const ships = this.$store.getters['dashboard/getShipCount'];
+      const growth = this.$store.getters['dashboard/getProductGrowth'];
+
       const shipCount = {
         series: []
       };
@@ -190,6 +262,7 @@ export default Vue.extend({
           topTenLoaderHistory.series[index].data.push(history[key][type].data1);
         });
       });
+
       const loaderSummary = {
         series: []
       };
@@ -203,6 +276,37 @@ export default Vue.extend({
           ]
         };
       });
+
+      const productGrowth = {
+        series: []
+      };
+
+      Object.keys(growth).forEach((key, index) => {
+        productGrowth.series[index] = {
+          name: key,
+          data: [
+            growth[key].current,
+            growth[key].change,
+            growth[key].growthRate
+          ]
+        };
+      });
+
+      const top3ProductGrowth = {
+        series: productGrowth.series
+          .sort((a, b) => {
+            return a.data[0] - b.data[0];
+          })
+          .slice(0, 3)
+      };
+
+      const last3ProductGrowth = {
+        series: productGrowth.series
+          .sort((a, b) => {
+            return b.data[0] - a.data[0];
+          })
+          .slice(0, 3)
+      };
 
       const keys = Object.keys(byHarbor);
       const loaderByHarbor = {
@@ -236,7 +340,9 @@ export default Vue.extend({
         topTenLoaderHistory,
         loaderSummary,
         loaderByHarbor,
-        shipCount
+        shipCount,
+        top3ProductGrowth,
+        last3ProductGrowth
       };
     }
   },
@@ -250,6 +356,25 @@ export default Vue.extend({
     }
   },
   methods: {
+    enableFavorites() {
+      this.isFavorite = !this.isFavorite;
+    },
+    exportCSV() {
+      let csvContent = '';
+      const series = this.dataSource[this.item.dataSource]?.series;
+      // Add the data rows
+      series.forEach(s => {
+        const row = `,${s.data.join(',')}`;
+        csvContent += `${row}\n`;
+      });
+      // Create a download link and trigger the download
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `${this.item.name}.csv`);
+      document.body.appendChild(link); // Required for FF
+      link.click();
+    },
     enlargePic() {
       this.isEnlarge = !this.isEnlarge;
       const chart: {
@@ -282,17 +407,20 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 .enlarge {
-  position: fixed;
-  top: 0px;
-  left: 0px;
+  position: fixed !important;
+  top: 0px !important;
+  left: 0px !important;
   width: 100% !important;
   min-width: 100% !important;
   height: 100% !important;
-  z-index: 99999;
+  z-index: 99999 !important;
   background-color: rgb(43 38 66) !important;
-  transition:
-    top 300ms ease-in,
-    left 300ms ease-in;
+  transform: translate3d(0px, 0px, 0px) !important;
+
+  .card {
+    height: 100%;
+    width: 100%;
+  }
 
   .echarts {
     height: 100% !important;

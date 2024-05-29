@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-layout d-flex flex-column">
+  <div class="auth-layout">
     <dashboard-header>
       <template #menu-btn>
         <b-button
@@ -19,15 +19,18 @@
         </b-nav-item>
       </template>
     </dashboard-header>
-    <main class="flex-grow-1 masthead">
+    <main class="masthead">
       <dashboard-side-menu :is-show-menu="isShowMenu" />
       <div
-        class="dashboard-main d-flex flex-column"
+        class="dashboard-main"
         :style="{
           width: isShowMenu ? 'calc( 100% - 350px)' : '100%'
         }"
       >
-        <b-breadcrumb class="position-absolute" style="top: -10px">
+        <b-breadcrumb
+          class="position-absolute"
+          style="top: -10px"
+        >
           <b-breadcrumb-item href="/">
             {{ $t('home') }}
           </b-breadcrumb-item>

@@ -29,6 +29,8 @@ export default {
   period: '期間',
   'period.compare': '同期增減',
   'rate.compare': '成長率',
+  'period.compare.rate': '同期增長量',
+  'period.compare.value': '同期增長率',
   register: '註冊',
   'remember.me': '記住帳號密碼',
   reset: '重置',
@@ -41,5 +43,8 @@ export default {
   username: '帳戶名稱',
   'download.pic': '下載圖片',
   'expand.pic': '圖片放大',
-  'compress.pic': '圖片縮小'
+  'compress.pic': '圖片縮小',
+  'product.name': '貨品名稱',
+  'export.csv': '匯出CSV',
+  favorite: '我的最愛',
 };

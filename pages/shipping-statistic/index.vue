@@ -5,15 +5,16 @@
     :col-num="4"
     :row-num="12"
     :row-height="150"
-    :is-draggable="true"
-    :is-resizable="true"
-    :vertical-compact="true"
-    :use-css-transforms="true"
+    is-draggable
+    is-resizable
+    vertical-compact
+    use-css-transforms
+    :draggable-handle="'.vue-grid-item'"
     @layout-updated="onLayoutUpdated"
   >
     <grid-item
       v-for="item in dashboardList"
-      :key="JSON.stringify(item)"
+      :key="item.name"
       :x="item.x"
       :y="item.y"
       :w="item.w"

@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-layout d-flex flex-column">
+  <div class="auth-layout">
     <basic-header>
       <b-navbar-nav class="ml-auto my-2 my-lg-0">
         <b-nav-item
@@ -31,7 +31,7 @@
       </b-navbar-nav>
     </basic-header>
     <main
-      class="flex-grow-1 pb-0"
+      class="pb-0 h-100"
     >
       <nuxt />
     </main>

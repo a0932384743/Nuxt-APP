@@ -52,11 +52,11 @@
         <b-form-checkbox
           :checked="
             companies?.length > 0 &&
-              form.selectedCompanies
-                .map(c => c.name)
-                .filter(c => c)
-                .sort()
-                .join(',') ===
+            form.selectedCompanies
+              .map(c => c.name)
+              .filter(c => c)
+              .sort()
+              .join(',') ===
               companies
                 .map(c => c.name)
                 .filter(c => c)
@@ -92,11 +92,11 @@
         <b-form-checkbox
           :checked="
             harbors?.length > 0 &&
-              form.selectedHarbor
-                .map(c => c.name)
-                .filter(c => c)
-                .sort()
-                .join(',') ===
+            form.selectedHarbor
+              .map(c => c.name)
+              .filter(c => c)
+              .sort()
+              .join(',') ===
               harbors
                 .map(c => c.name)
                 .filter(c => c)
@@ -124,16 +124,8 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
-    <div
-      class="d-flex"
-      style="gap: 0.5rem"
-    >
-      <b-button
-        variant="info"
-        pill
-        class="flex-grow-1"
-        @click="onApply"
-      >
+    <div class="d-flex" style="gap: 0.5rem">
+      <b-button variant="info" pill class="flex-grow-1" @click="onApply">
         {{ $t('apply') }}
       </b-button>
       <b-button
@@ -195,11 +187,12 @@ export default Vue.extend({
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
-        this.loadLoaderSummary(moment(this.form.endDate).year()),
+        this.loadLoaderSummary(moment(this.form.startDate).year()),
         this.loadLoadersByHarbor(
           this.form.selectedHarbor,
           moment(this.form.endDate).year()
         ),
+        this.loadProductGrowth(moment(this.form.startDate).year()),
         this.loadLoader(moment(this.form.startDate).year()),
         this.loadShipCount(moment(this.form.startDate).year())
       ]);
@@ -212,11 +205,12 @@ export default Vue.extend({
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
-        this.loadLoaderSummary(moment(this.form.endDate).year()),
+        this.loadLoaderSummary(moment(this.form.startDate).year()),
         this.loadLoadersByHarbor(
           this.form.selectedHarbor,
           moment(this.form.endDate).year()
         ),
+        this.loadProductGrowth(moment(this.form.startDate).year()),
         this.loadLoader(moment(this.form.startDate).year()),
         this.loadShipCount(moment(this.form.startDate).year())
       ]);
@@ -279,6 +273,13 @@ export default Vue.extend({
         .ref(`loaderSummary/${year}`)
         .once('value');
       this.$store.dispatch('dashboard/setLoaderSummary', ref.val());
+      return ref.val();
+    },
+    async loadProductGrowth(year: number) {
+      const ref = await this.$fire.database
+        .ref(`productGrowth/${year}`)
+        .once('value');
+      this.$store.dispatch('dashboard/setProductGrowth', ref.val());
       return ref.val();
     },
     async loadLoader(y: number) {

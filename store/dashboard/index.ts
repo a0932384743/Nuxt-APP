@@ -1,27 +1,36 @@
 import { ActionTree, GetterTree, Module, MutationTree } from 'vuex';
 
+export type WidgetType = {
+  [key: string]: any;
+  chartType: string;
+  dataSource: string;
+  seriesProps: {
+    [key: string]: any;
+  };
+  w?: number;
+  h?: number;
+  x?: number;
+  y?: number;
+}
+
 interface StateInterface {
   prop: boolean;
 }
 
 type State = {
-  dashboard: Array<{
-    [key: string]: any;
-    chartType: string;
-    dataSource: string;
-    seriesProps: {
-      [key: string]: any;
-    };
-    lg?: number;
-    md?: number;
-    sm?: number;
-  }>;
   topTenLoader: {
     [key: string]: {
       [key: string]: number;
     };
   };
   loaderSummary: {
+    [key: string]: {
+      change: number;
+      current: number;
+      growthRate: number;
+    };
+  };
+  productGrowth: {
     [key: string]: {
       change: number;
       current: number;
@@ -45,9 +54,6 @@ type State = {
 };
 
 const getters: GetterTree<State, StateInterface> = {
-  getDashboard(state) {
-    return state.dashboard;
-  },
   getLoader(state) {
     return state.topTenLoader;
   },
@@ -56,6 +62,9 @@ const getters: GetterTree<State, StateInterface> = {
   },
   getLoaderSummary(state) {
     return state.loaderSummary;
+  },
+  getProductGrowth(state) {
+    return state.productGrowth;
   },
   getLoaderByHarbor(state) {
     return state.loaderByHarbor;
@@ -69,9 +78,6 @@ const getters: GetterTree<State, StateInterface> = {
 };
 
 const mutations: MutationTree<State> = {
-  SET_DASHBOARD(state, dashboard = []) {
-    state.dashboard = dashboard;
-  },
   SET_LOADER(state, loader = {}) {
     state.topTenLoader = loader;
   },
@@ -80,6 +86,9 @@ const mutations: MutationTree<State> = {
   },
   SET_LOADER_SUMMARY(state, summary = {}) {
     state.loaderSummary = summary;
+  },
+  SET_PRODUCT_GROWTH(state, growth = {}) {
+    state.productGrowth = growth;
   },
   SET_LOADING(state, loading: boolean = false) {
     state.loading = loading;
@@ -108,6 +117,9 @@ const actions: ActionTree<State, StateInterface> = {
   setLoaderSummary({ commit }, summary = {}) {
     commit('SET_LOADER_SUMMARY', summary);
   },
+  setProductGrowth({ commit }, growth = {}) {
+    commit('SET_PRODUCT_GROWTH', growth);
+  },
   setShipCount({ commit }, shipCount = {}) {
     commit('SET_SHIP_COUNT', shipCount);
   },
@@ -119,10 +131,10 @@ const actions: ActionTree<State, StateInterface> = {
 const dashboardModule: Module<State, StateInterface> = {
   namespaced: true,
   state: {
-    dashboard: [],
     topTenLoader: {},
     topTenLoaderHistory: {},
     loaderSummary: {},
+    productGrowth: {},
     loaderByHarbor: {},
     shipCount: {},
     loading: false

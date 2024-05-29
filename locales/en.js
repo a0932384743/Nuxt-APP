@@ -29,6 +29,8 @@ export default {
   period: 'Period',
   'period.compare': 'Compare',
   'rate.compare': 'Rate',
+  'period.compare.rate': 'Growth Rate',
+  'period.compare.value': 'Growth',
   register: 'Register',
   'remember.me': 'Remember Me',
   reset: 'Reset',
@@ -41,5 +43,8 @@ export default {
   username: 'User Name',
   'download.pic': 'Download',
   'expand.pic': 'Expand',
-  'compress.pic': 'Compress'
+  'compress.pic': 'Compress',
+  'product.name': 'Product',
+  'export.csv': 'Export CSV',
+  favorite: 'Favorite',
 };
