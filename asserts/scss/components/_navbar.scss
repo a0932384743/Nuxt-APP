@@ -5,25 +5,25 @@
 // Global styling for the navbar
 
 .header-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: $zindex-fixed;
-  border-bottom: $border-width solid $headings-color;
   background-color: $headings-color;
+  border-bottom: $border-width solid $headings-color;
   font-family: $headings-font-family;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: $zindex-fixed;
 
   .navbar-brand {
     font-weight: $headings-font-weight;
   }
 
   .navbar-toggler {
+    color: $white;
     font-size: 0.75rem;
     font-weight: $headings-font-weight;
     padding: 0.75rem;
     text-transform: uppercase;
-    color: $white;
   }
 
   .navbar-nav {
@@ -92,6 +92,67 @@
           }
         }
       }
+    }
+  }
+}
+
+.custom-tab {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .nav-tabs{
+    margin-bottom: -1px;
+    z-index: 999;
+  }
+
+  .nav-link {
+    text-align: center;
+    font-weight: 600;
+    min-width: 100px;
+    background-color: rgba(197, 197, 197, 0.45) !important;
+    color: white;
+
+    &:hover {
+      opacity: 0.6;
+    }
+
+    &.active {
+      background-color: transparent !important;
+      color: white;
+      border-bottom: 2px solid black;
+    }
+  }
+
+  .tab-content {
+    height: 100%;
+    max-height: 100%;
+    color:white;
+    background-color: transparent;
+    margin-top: 0px !important;
+    border-right: 2px solid gray;
+    border-left: 2px solid gray;
+    border-bottom: 2px solid gray;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+    overflow: hidden;
+
+    & > .tab-pane{
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+}
+
+.custom-pill{
+  .nav-link{
+    border-radius: 0px;
+    color:lightgray;
+    background-color: rgba(153, 153, 153, 0.27);
+    &.active{
+      background-color: #999999;
+      color:white;
     }
   }
 }

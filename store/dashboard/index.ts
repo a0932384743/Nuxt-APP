@@ -18,6 +18,11 @@ interface StateInterface {
 }
 
 type State = {
+  incomeStatics: {
+    [key: string]: {
+      [key: string]: number;
+    };
+  };
   topTenLoader: {
     [key: string]: {
       [key: string]: number;
@@ -74,6 +79,9 @@ const getters: GetterTree<State, StateInterface> = {
   },
   getLoading(state) {
     return state.loading;
+  },
+  getIncomeStatics(state) {
+    return state.incomeStatics;
   }
 };
 
@@ -98,7 +106,10 @@ const mutations: MutationTree<State> = {
   },
   SET_LOADER_HARBOR(state, loader = {}) {
     state.loaderByHarbor = loader;
-  }
+  },
+  SET_INCOME_STATICS(state, income = {}) {
+    state.incomeStatics = income;
+  },
 };
 
 const actions: ActionTree<State, StateInterface> = {
@@ -125,12 +136,16 @@ const actions: ActionTree<State, StateInterface> = {
   },
   setLoaderByHarbor({ commit }, loader = {}) {
     commit('SET_LOADER_HARBOR', loader);
+  },
+  setIncomeStatics({ commit }, loader = {}) {
+    commit('SET_INCOME_STATICS', loader);
   }
 };
 
 const dashboardModule: Module<State, StateInterface> = {
   namespaced: true,
   state: {
+    incomeStatics: {},
     topTenLoader: {},
     topTenLoaderHistory: {},
     loaderSummary: {},

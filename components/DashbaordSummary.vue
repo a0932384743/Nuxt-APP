@@ -28,7 +28,7 @@
       <template v-for="data in datas">
         <b-col
           v-for="(d, index) in data.data"
-          :key="JSON.stringify(data) + d"
+          :key="JSON.stringify(data) + d + index"
           sm="4"
           style="min-width: 80px"
         >
@@ -70,7 +70,7 @@
                 icon="sort-desc"
               />
 
-              {{ d }}
+              {{ d }}  <small class="ml-2">%</small>
             </strong>
           </div>
         </b-col>

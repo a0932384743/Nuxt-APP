@@ -47,4 +47,5 @@ export default {
   'product.name': '貨品名稱',
   'export.csv': '匯出CSV',
   favorite: '我的最愛',
+  'income.text.1': '財務績效預警燈號說明'
 };

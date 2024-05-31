@@ -1,8 +1,49 @@
-//
-// Global theme styling
-//
-// Increase base font styling in the body only
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
 
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1; /* padding around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::-webkit-scrollbar-button {
+  background: #ccc;
+  display: block;
+  height: 16px;
+  width: 16px;
+}
+
+::-webkit-scrollbar-button:horizontal:decrement,
+::-webkit-scrollbar-button:horizontal:increment,
+::-webkit-scrollbar-button:vertical:decrement,
+::-webkit-scrollbar-button:vertical:increment {
+  background: #999;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+/* IE 10+ */
 body {
   font-size: $font-size-lg;
 }
@@ -18,14 +59,18 @@ hr {
 
 p {
   margin-bottom: 0.8rem;
+}
 
-  a {
-    text-decoration: none;
-  }
+a:hover {
+  text-decoration: underline;
 }
 
 small {
   font-size: 70%;
+}
+
+strong{
+  font-weight: bold;
 }
 
 .lang-flag {

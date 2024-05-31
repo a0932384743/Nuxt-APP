@@ -1,0 +1,15 @@
+.b-table-sticky-header > .table.b-table > thead > tr > th {
+  position: sticky !important;
+}
+
+.custom-table {
+  th {
+    color: white !important;
+    background: #1d1933 !important;
+  }
+
+  td {
+    color: white !important;
+    background: transparent !important;
+  }
+}

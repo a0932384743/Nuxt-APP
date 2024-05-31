@@ -22,7 +22,7 @@
       <b-tbody>
         <b-tr
           v-for="(d, index) in datas"
-          :key="JSON.stringify(d)"
+          :key="JSON.stringify(d) + index"
         >
           <b-td class="text-left text-white align-middle">
             <small class="mr-2">{{ index + 1 }}</small> {{ d.name }}

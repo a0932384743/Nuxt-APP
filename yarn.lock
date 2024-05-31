@@ -3026,6 +3026,11 @@
   "resolved" "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.7.tgz"
   "version" "1.2.7"
 
+"@types/regression@^2.0.6":
+  "integrity" "sha512-sa+sHOUxh9fywFuAFLCcyupFN0CKX654QUZGW5fAZCmV51I4e5nQy1xL2g/JMUW/PeDoF3Yq2lDXb7MoC3KDNg=="
+  "resolved" "https://registry.npmjs.org/@types/regression/-/regression-2.0.6.tgz"
+  "version" "2.0.6"
+
 "@types/relateurl@*":
   "integrity" "sha512-bTQCKsVbIdzLqZhLkF5fcJQreE4y1ro4DIyVrlDNSCJRRwHhB8Z+4zXXa8jN6eDvc2HbRsEYgbvrnGvi54EpSw=="
   "resolved" "https://registry.npmjs.org/@types/relateurl/-/relateurl-0.2.33.tgz"
@@ -10332,6 +10337,11 @@
   dependencies:
     "jsesc" "~0.5.0"
 
+"regression@^2.0.1":
+  "integrity" "sha512-A4XYsc37dsBaNOgEjkJKzfJlE394IMmUPlI/p3TTI9u3T+2a+eox5Pr/CPUqF0eszeWZJPAc6QkroAhuUpWDJQ=="
+  "resolved" "https://registry.npmjs.org/regression/-/regression-2.0.1.tgz"
+  "version" "2.0.1"
+
 "relateurl@^0.2.7":
   "integrity" "sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog=="
   "resolved" "https://registry.npmjs.org/relateurl/-/relateurl-0.2.7.tgz"
@@ -12047,6 +12057,11 @@
     "lodash" "^4.17.21"
     "semver" "^7.3.5"
 
+"vue-fragment@^1.6.0":
+  "integrity" "sha512-a5T8ZZZK/EQzgVShEl374HbobUJ0a7v12BzOzS6Z/wd/5EE/5SffcyHC+7bf9hP3L7Yc0hhY/GhMdwFQ25O/8A=="
+  "resolved" "https://registry.npmjs.org/vue-fragment/-/vue-fragment-1.6.0.tgz"
+  "version" "1.6.0"
+
 "vue-functional-data-merge@^3.1.0":
   "integrity" "sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA=="
   "resolved" "https://registry.npmjs.org/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz"
@@ -12138,7 +12153,7 @@
   "resolved" "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@*", "vue@^2.0.0", "vue@^2.4.0", "vue@^2.5.18", "vue@^2.7.14", "vue@^2.7.16", "vue@>= 2.5 < 2.7", "vue@~2":
+"vue@*", "vue@^2.0.0", "vue@^2.4.0", "vue@^2.5.16", "vue@^2.5.18", "vue@^2.7.14", "vue@^2.7.16", "vue@>= 2.5 < 2.7", "vue@~2":
   "integrity" "sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.7.16.tgz"
   "version" "2.7.16"

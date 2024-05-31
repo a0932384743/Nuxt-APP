@@ -9,10 +9,14 @@
       enlarge: isEnlarge
     }"
   >
+    <dashboard-news v-if="item?.chartType === 'news'" />
+    <dashboard-index v-else-if="item?.chartType === 'index'" />
+    <dashboard-predict v-else-if="item?.chartType === 'predict'" :data-source="item.dataSource"/>
     <b-card
+      v-else
       text-variant="white"
       header-class="py-1 px-2"
-      body-class="p-0"
+      body-class="p-0 h-100"
       class="bg-transparent h-100"
       border-variant="secondary"
     >
@@ -52,7 +56,9 @@
             </b-dropdown-item>
             <b-dropdown-item
               v-if="
-                item?.chartType !== 'summary' && item?.chartType !== 'growth'
+                item?.chartType !== 'summary' &&
+                  item?.chartType !== 'growth' &&
+                  item?.chartType !== 'card'
               "
               tag="div"
               role="button"
@@ -63,7 +69,9 @@
             </b-dropdown-item>
             <b-dropdown-item
               v-if="
-                item?.chartType !== 'summary' && item?.chartType !== 'growth'
+                item?.chartType !== 'summary' &&
+                  item?.chartType !== 'growth' &&
+                  item?.chartType !== 'card'
               "
               tag="div"
               role="button"
@@ -73,6 +81,7 @@
               {{ $t(!isEnlarge ? 'expand.pic' : 'compress.pic') }}
             </b-dropdown-item>
             <b-dropdown-item
+              v-if="item?.chartType !== 'card'"
               tag="div"
               role="button"
               @click="exportCSV"
@@ -95,36 +104,59 @@
       </template>
       <dashboard-summary
         v-if="item?.chartType === 'summary'"
-        :datas="dataSource[item.dataSource]?.series || []"
+        :datas="dataSource ? dataSource[item.dataSource]?.series || [] : []"
       />
       <dashboard-growth
         v-else-if="item?.chartType === 'growth'"
-        :datas="dataSource[item.dataSource]?.series || []"
+        :datas="dataSource ? dataSource[item.dataSource]?.series || [] : []"
+      />
+      <dashboard-card
+        v-else-if="item?.chartType === 'card'"
+        :data-source="item.dataSource"
       />
       <v-chart
         v-else
         ref="chart"
-        class="w-100"
+        class="w-100 h-100"
         :options="{
           ...option,
-          ...item,
-          xAxis: dataSource[item.dataSource]?.xAxis || item.xAxis,
-          yAxis: dataSource[item.dataSource]?.yAxis || item.yAxis,
-          series: (dataSource[item.dataSource]?.series || []).map(d => {
+          geo: item.geo ? item.geo : null,
+          tooltip: item.tooltip || option.tooltip,
+          xAxis: dataSource
+            ? dataSource[item.dataSource]?.xAxis || item.xAxis
+            : item.xAxis,
+          yAxis: dataSource
+            ? dataSource[item.dataSource]?.yAxis || item.yAxis
+            : item.yAxis,
+          series: (
+            (dataSource && dataSource[item.dataSource]?.series) ||
+            []
+          ).map(d => {
             return {
               ...d,
-              ...item.seriesProps
+              ...item.seriesProps,
+              markPoint: {
+                label: {
+                  color: 'white'
+                },
+                data: item.isAlert ? [{ type: 'max', name: 'Max' }] : []
+              }
             };
           })
         }"
         autoresize
+        @click="click"
       />
     </b-card>
   </grid-item>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
+import DashboardCard from '~/components/DashbaordCard.vue';
 import DashboardGrowth from '~/components/DashbaordGrowth.vue';
+import DashboardIndex from '~/components/DashbaordIndex.vue';
+import DashboardNews from '~/components/DashbaordNews.vue';
+import DashboardPredict from '~/components/DashbaordPredict.vue';
 import DashboardSummary from '~/components/DashbaordSummary.vue';
 import { WidgetType } from '~/store/dashboard';
 
@@ -132,12 +164,28 @@ const item: PropOptions<WidgetType> = {
   type: Object,
   required: true
 };
+const dataSource: PropOptions<{
+  [key: string]: {
+    [key: string]: number;
+  };
+}> = {
+  type: Object,
+  required: true
+};
 
 export default Vue.extend({
   name: 'DashboardWidget',
-  components: { DashboardGrowth, DashboardSummary },
+  components: {
+    DashboardPredict,
+    DashboardIndex,
+    DashboardCard,
+    DashboardNews,
+    DashboardGrowth,
+    DashboardSummary
+  },
   props: {
-    item
+    item,
+    dataSource
   },
   data() {
     return {
@@ -147,15 +195,21 @@ export default Vue.extend({
         toolbox: {
           show: true,
           feature: {
-            dataView: {
+            restore: {
               show: true,
+              title: '還原',
+              icon: '<path fill="currentColor" d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H352c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V80c0-17.7-14.3-32-32-32s-32 14.3-32 32v35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V432c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z" class=""></path>'
+            },
+            dataView: {
+              show: false,
               readOnly: false,
               title: '表格',
+              icon: '<path fill="currentColor" d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zm64 0v64h64V96H64zm384 0H192v64H448V96zM64 224v64h64V224H64zm384 0H192v64H448V224zM64 352v64h64V352H64zm384 0H192v64H448V352z" class=""></path>',
               lang: ['表格', '關閉', '刷新'],
               textareaColor: '#131022',
               backgroundColor: '#131022',
               textColor: 'white',
-              buttonColor: '#17a2b8',
+              buttonColor: '#17a2b8'
             },
             magicType: {
               show: this.item.chartType !== 'pie',
@@ -164,8 +218,7 @@ export default Vue.extend({
                 line: '折線圖',
                 bar: '柱狀圖'
               }
-            },
-
+            }
           },
           iconStyle: {
             color: 'white'
@@ -186,169 +239,11 @@ export default Vue.extend({
       }
     };
   },
-  computed: {
-    dataSource() {
-      const loader = this.$store.getters['dashboard/getLoader'];
-      const history = this.$store.getters['dashboard/getLoaderHistory'];
-      const summary = this.$store.getters['dashboard/getLoaderSummary'];
-      const byHarbor = this.$store.getters['dashboard/getLoaderByHarbor'];
-      const ships = this.$store.getters['dashboard/getShipCount'];
-      const growth = this.$store.getters['dashboard/getProductGrowth'];
 
-      const shipCount = {
-        series: []
-      };
-      if (ships && Object.keys(ships).length > 0) {
-        shipCount.series = [
-          {
-            data: Object.keys(ships).map(key => {
-              return {
-                name: key,
-                value: ships[key].data1
-              };
-            })
-          }
-        ];
-      } else {
-        shipCount.series = [];
-      }
-
-      const topTenLoader = {
-        series: []
-      };
-      if (loader && Object.keys(loader).length > 0) {
-        topTenLoader.series = [
-          {
-            data: Object.keys(loader).map(key => {
-              return {
-                name: key,
-                value: loader[key].data1
-              };
-            })
-          }
-        ];
-      } else {
-        topTenLoader.series = [];
-      }
-
-      const topTenLoaderHistory = {
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: Object.keys(history)
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter(value) {
-              if (value >= 1000) {
-                return `${value / 1000}k`;
-              }
-              return value;
-            }
-          }
-        },
-        series: []
-      };
-
-      Object.keys(history).forEach(key => {
-        Object.keys(history[key]).forEach((type, index) => {
-          if (!topTenLoaderHistory.series[index]) {
-            topTenLoaderHistory.series[index] = {
-              name: type,
-              data: []
-            };
-          }
-          topTenLoaderHistory.series[index].data.push(history[key][type].data1);
-        });
-      });
-
-      const loaderSummary = {
-        series: []
-      };
-      Object.keys(summary).forEach((key, index) => {
-        loaderSummary.series[index] = {
-          name: key,
-          data: [
-            summary[key].current,
-            summary[key].change,
-            summary[key].growthRate
-          ]
-        };
-      });
-
-      const productGrowth = {
-        series: []
-      };
-
-      Object.keys(growth).forEach((key, index) => {
-        productGrowth.series[index] = {
-          name: key,
-          data: [
-            growth[key].current,
-            growth[key].change,
-            growth[key].growthRate
-          ]
-        };
-      });
-
-      const top3ProductGrowth = {
-        series: productGrowth.series
-          .sort((a, b) => {
-            return a.data[0] - b.data[0];
-          })
-          .slice(0, 3)
-      };
-
-      const last3ProductGrowth = {
-        series: productGrowth.series
-          .sort((a, b) => {
-            return b.data[0] - a.data[0];
-          })
-          .slice(0, 3)
-      };
-
-      const keys = Object.keys(byHarbor);
-      const loaderByHarbor = {
-        legend: {
-          data: keys.length > 0 ? Object.keys(byHarbor[keys[0]]) : []
-        },
-        xAxis: [
-          {
-            type: 'category',
-            axisTick: { show: false },
-            data: keys
-          }
-        ],
-        series: []
-      };
-
-      keys.forEach(key => {
-        Object.keys(byHarbor[key]).forEach((type, index) => {
-          if (!loaderByHarbor.series[index]) {
-            loaderByHarbor.series[index] = {
-              name: type,
-              data: []
-            };
-          }
-          loaderByHarbor.series[index].data.push(byHarbor[key][type]);
-        });
-      });
-
-      return {
-        topTenLoader,
-        topTenLoaderHistory,
-        loaderSummary,
-        loaderByHarbor,
-        shipCount,
-        top3ProductGrowth,
-        last3ProductGrowth
-      };
-    }
-  },
   mounted() {
     const chart: {
       resize: () => void;
+      on: (name: string, fuc: (param: any) => void) => void;
     } = this.$refs.chart;
 
     if (chart) {
@@ -356,24 +251,29 @@ export default Vue.extend({
     }
   },
   methods: {
+    click(params) {
+      this.$emit('click', params);
+    },
     enableFavorites() {
       this.isFavorite = !this.isFavorite;
     },
     exportCSV() {
       let csvContent = '';
-      const series = this.dataSource[this.item.dataSource]?.series;
-      // Add the data rows
-      series.forEach(s => {
-        const row = `,${s.data.join(',')}`;
-        csvContent += `${row}\n`;
-      });
-      // Create a download link and trigger the download
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', `${this.item.name}.csv`);
-      document.body.appendChild(link); // Required for FF
-      link.click();
+      if (this.dataSource) {
+        const series = this.dataSource[this.item.dataSource]?.series;
+        // Add the data rows
+        series.forEach(s => {
+          const row = `,${s.data.join(',')}`;
+          csvContent += `${row}\n`;
+        });
+        // Create a download link and trigger the download
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `${this.item.name}.csv`);
+        document.body.appendChild(link); // Required for FF
+        link.click();
+      }
     },
     enlargePic() {
       this.isEnlarge = !this.isEnlarge;

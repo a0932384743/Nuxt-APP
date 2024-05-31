@@ -22,7 +22,7 @@
 import DashboardWidget from '~/components/DashboardWidget.vue';
 import Vue from 'vue';
 export default Vue.extend({
-  name: 'ShippingStatistic',
+  name: 'Knowledge',
   components: { DashboardWidget },
   layout: 'DashboardLayout',
   data() {
@@ -54,16 +54,15 @@ export default Vue.extend({
         shipCount.series = [];
       }
       return {
-        shipCount,
+        shipCount
       };
     }
-
   },
   created() {
     this.onLoadDashboard(this.$route.path);
   },
   methods: {
-    async onLoadDashboard(path:string = '') {
+    async onLoadDashboard(path: string = '') {
       const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {
         const data = snapshot.val();

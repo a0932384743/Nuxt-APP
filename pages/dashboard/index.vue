@@ -10,12 +10,12 @@
     vertical-compact
     use-css-transforms
     :draggable-handle="'.vue-grid-item'"
-    @layout-updated="onLayoutUpdated"
   >
     <dashboard-widget
       v-for="item in dashboardList"
       :key="item.name"
       :item="item"
+      :data-source="dataSource"
     />
   </grid-layout>
 </template>
@@ -35,17 +35,199 @@ export default Vue.extend({
   computed: {
     loading() {
       return this.$store.getters['dashboard/getLoading'];
+    },
+    dataSource() {
+      const loader = this.$store.getters['dashboard/getLoader'];
+      const history = this.$store.getters['dashboard/getLoaderHistory'];
+      const summary = this.$store.getters['dashboard/getLoaderSummary'];
+      const byHarbor = this.$store.getters['dashboard/getLoaderByHarbor'];
+      const growth = this.$store.getters['dashboard/getProductGrowth'];
+
+      const topTenLoader = {
+        series: []
+      };
+      if (loader && Object.keys(loader).length > 0) {
+        topTenLoader.series = [
+          {
+            data: Object.keys(loader).map(key => {
+              return {
+                name: key,
+                value: loader[key].data1
+              };
+            })
+          }
+        ];
+      } else {
+        topTenLoader.series = [];
+      }
+      const topTenLoaderHistory = {
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: Object.keys(history)
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            formatter(value) {
+              if (value >= 1000) {
+                return `${value / 1000}k`;
+              }
+              return value;
+            }
+          }
+        },
+        series: []
+      };
+
+      Object.keys(history).forEach(key => {
+        Object.keys(history[key]).forEach((type, index) => {
+          if (!topTenLoaderHistory.series[index]) {
+            topTenLoaderHistory.series[index] = {
+              name: type,
+              data: [],
+              markArea: {
+                itemStyle: {
+                  color: 'rgba(255,174,93,0.1)'
+                },
+                data:
+                  Object.keys(history).indexOf('2021') > -1 &&
+                  Object.keys(history).indexOf('2022') > -1
+                    ? [
+                        [
+                          {
+                            name: 'Warning',
+                            xAxis: '2021'
+                          },
+                          {
+                            xAxis: '2022'
+                          }
+                        ]
+                      ]
+                    : []
+              }
+            };
+          }
+          topTenLoaderHistory.series[index].data.push(history[key][type].data1);
+        });
+      });
+
+      const loaderSummary = {
+        legend: {
+          type: 'category',
+          axisTick: { show: false },
+          data: ['名稱', '同期增減', '成長率']
+        },
+        series: []
+      };
+
+      Object.keys(summary).forEach((key, index) => {
+        loaderSummary.series[index] = {
+          name: key,
+          data: [
+            summary[key].current,
+            summary[key].change,
+            summary[key].growthRate
+          ]
+        };
+      });
+
+      const productGrowth = {
+        series: []
+      };
+
+      Object.keys(growth).forEach((key, index) => {
+        productGrowth.series[index] = {
+          name: key,
+          data: [
+            growth[key].current,
+            growth[key].change,
+            growth[key].growthRate
+          ]
+        };
+      });
+
+      const top3ProductGrowth = {
+        legend: {
+          type: 'category',
+          axisTick: { show: false },
+          data: ['貨品名稱', '同期成長率', '同期增長量']
+        },
+        series: productGrowth.series
+          .sort((a, b) => {
+            return a.data[0] - b.data[0];
+          })
+          .slice(0, 3)
+      };
+
+      const last3ProductGrowth = {
+        legend: {
+          type: 'category',
+          axisTick: { show: false },
+          data: ['貨品名稱', '同期成長率', '同期增長量']
+        },
+        series: productGrowth.series
+          .sort((a, b) => {
+            return b.data[0] - a.data[0];
+          })
+          .slice(0, 3)
+      };
+
+      const keys = Object.keys(byHarbor);
+      const loaderByHarbor = {
+        legend: {
+          data: keys.length > 0 ? Object.keys(byHarbor[keys[0]]) : []
+        },
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: { show: false },
+            data: keys
+          }
+        ],
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            formatter(value) {
+              if (value >= 1000) {
+                return `${value / 1000}k`;
+              }
+              return value;
+            }
+          }
+        },
+        series: []
+      };
+
+      keys.forEach(key => {
+        Object.keys(byHarbor[key]).forEach((type, index) => {
+          if (!loaderByHarbor.series[index]) {
+            loaderByHarbor.series[index] = {
+              type: 'bar',
+              name: type,
+              data: []
+            };
+          }
+          loaderByHarbor.series[index].data.push(byHarbor[key][type]);
+        });
+      });
+
+      return {
+        topTenLoader,
+        topTenLoaderHistory,
+        loaderSummary,
+        loaderByHarbor,
+        top3ProductGrowth,
+        last3ProductGrowth
+      };
     }
   },
   created() {
-    this.onLoadDashboard();
+    this.onLoadDashboard(this.$route.path);
   },
   methods: {
-    onLayoutUpdated(list) {
-      this.$fire.database.ref('loaderWidgets').update(list);
-    },
-    async onLoadDashboard() {
-      const res = this.$fire.database.ref('loaderWidgets');
+    async onLoadDashboard(path:string = '') {
+      const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {
         const data = snapshot.val();
         this.dashboardList = data

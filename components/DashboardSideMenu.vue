@@ -52,11 +52,11 @@
         <b-form-checkbox
           :checked="
             companies?.length > 0 &&
-            form.selectedCompanies
-              .map(c => c.name)
-              .filter(c => c)
-              .sort()
-              .join(',') ===
+              form.selectedCompanies
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
               companies
                 .map(c => c.name)
                 .filter(c => c)
@@ -92,11 +92,11 @@
         <b-form-checkbox
           :checked="
             harbors?.length > 0 &&
-            form.selectedHarbor
-              .map(c => c.name)
-              .filter(c => c)
-              .sort()
-              .join(',') ===
+              form.selectedHarbor
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
               harbors
                 .map(c => c.name)
                 .filter(c => c)
@@ -124,8 +124,16 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
-    <div class="d-flex" style="gap: 0.5rem">
-      <b-button variant="info" pill class="flex-grow-1" @click="onApply">
+    <div
+      class="d-flex"
+      style="gap: 0.5rem"
+    >
+      <b-button
+        variant="info"
+        pill
+        class="flex-grow-1"
+        @click="onApply"
+      >
         {{ $t('apply') }}
       </b-button>
       <b-button
@@ -154,7 +162,7 @@ export default Vue.extend({
   data() {
     return {
       form: {
-        startDate: moment().subtract(7, 'day').format('YYYY-MM-DD'),
+        startDate: moment().subtract(5, 'years').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         selectedCompanies: [],
         selectedHarbor: [{ name: '臺北港' }]
@@ -176,7 +184,7 @@ export default Vue.extend({
   methods: {
     async onReset() {
       this.form = {
-        startDate: moment().subtract(7, 'day').format('YYYY-MM-DD'),
+        startDate: moment().subtract(5, 'years').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         selectedCompanies: [],
         selectedHarbor: [{ name: '臺北港' }]
@@ -184,6 +192,10 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setLoading', true);
       await Promise.all([
         this.loadLoaders(
+          moment(this.form.startDate).year(),
+          moment(this.form.endDate).year()
+        ),
+        this.loadIncomeStatics(
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
@@ -202,6 +214,10 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setLoading', true);
       await Promise.all([
         this.loadLoaders(
+          moment(this.form.startDate).year(),
+          moment(this.form.endDate).year()
+        ),
+        this.loadIncomeStatics(
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
@@ -312,6 +328,27 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setLoaderHistory', loaderHistory);
       return loaderHistory;
     },
+    async loadIncomeStatics(startDate: number, endDate: number) {
+      const years = Array.from(
+        {
+          length: endDate - startDate + 1
+        },
+        (_, i) => startDate + i
+      );
+      const incomeStaticsList = await Promise.all(
+        years.map(y => {
+          return this.$fire.database.ref(`incomeStatics/${y}`).once('value');
+        })
+      );
+      const incomeStatics = {};
+      const incomeStaticsArray = incomeStaticsList.map(l => l.val());
+      years.forEach((y, index) => {
+        incomeStatics[String(y)] = incomeStaticsArray[index] || {};
+      });
+      this.$store.dispatch('dashboard/setIncomeStatics', incomeStatics);
+      return incomeStatics;
+    },
+
     async loadLoadersByHarbor(harbors: Array<{ name: string }>, year: number) {
       const loaderList = await Promise.all(
         harbors.map(harbor => {

@@ -3,6 +3,7 @@
     <dashboard-header>
       <template #menu-btn>
         <b-button
+          v-if="baseMenu.find(m => m.url === currentPath)?.filter || false"
           class="mr-3 navbar-toggler d-block"
           @click="toggleMenu"
         >
@@ -20,7 +21,10 @@
       </template>
     </dashboard-header>
     <main class="masthead">
-      <dashboard-side-menu :is-show-menu="isShowMenu" />
+      <dashboard-side-menu
+        v-if="baseMenu.find(m => m.url === currentPath)?.filter || false"
+        :is-show-menu="isShowMenu"
+      />
       <div
         class="dashboard-main"
         :style="{
@@ -33,6 +37,12 @@
         >
           <b-breadcrumb-item href="/">
             {{ $t('home') }}
+          </b-breadcrumb-item>
+          <b-breadcrumb-item
+            :href="currentPath"
+            active
+          >
+            {{ baseMenu.find(m => m.url === currentPath)?.name || '' }}
           </b-breadcrumb-item>
         </b-breadcrumb>
         <nuxt />
@@ -50,18 +60,37 @@ export default Vue.extend({
   layout: 'DashboardLayout',
   data() {
     return {
-      isShowMenu: true,
-      baseMenu: []
+      isShowMenu: false,
+      baseMenu: [],
+      currentPath: ''
     };
+  },
+  watch: {
+    $route(to) {
+      this.currentPath = to.path;
+      if (this.baseMenu.find(m => m.url === this.currentPath)?.filter) {
+        this.isShowMenu = true;
+      } else {
+        this.isShowMenu = false;
+      }
+    }
   },
   created() {
     this.loadMenu();
+  },
+  mounted() {
+    this.currentPath = this.$route.path;
   },
   methods: {
     async loadMenu() {
       try {
         const res = await this.$fire.firestore.collection('menus').get();
         this.baseMenu = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        if (this.baseMenu.find(m => m.url === this.currentPath)?.filter) {
+          this.isShowMenu = true;
+        } else {
+          this.isShowMenu = false;
+        }
       } catch (e) {
         console.warn('loadMenu', e);
       }
