@@ -3,10 +3,7 @@
     <dashboard-header>
       <template #menu-btn>
         <b-button
-          v-if="
-            baseMenu.find(m => m.url.indexOf(currentPath.split('/')[0]) > -1)
-              ?.filter || false
-          "
+          v-if="isHasMenu"
           class="mr-3 navbar-toggler d-block"
           @click="toggleMenu"
         >
@@ -25,10 +22,7 @@
     </dashboard-header>
     <main class="masthead">
       <dashboard-side-menu
-        v-if="
-          baseMenu.find(m => m.url.indexOf(currentPath.split('/')[0]) > -1)
-            ?.filter || false
-        "
+        v-if="isHasMenu"
         :is-show-menu="isShowMenu"
       />
       <div
@@ -51,7 +45,7 @@
             >
               {{
                 baseMenu.find(
-                  m => m.url.indexOf(currentPath.split('/')[0]) > -1
+                  m => m.url.indexOf(currentPath.split('/').filter(s=>s)[0]) > -1
                 )?.name || ''
               }}
             </b-breadcrumb-item>
@@ -90,22 +84,24 @@ export default Vue.extend({
       isShowMenu: false,
       baseMenu: [],
       subMenu: [],
-      currentPath: ''
+      currentPath: '',
+      isHasMenu: false
     };
   },
+
   watch: {
     $route(to) {
       this.currentPath = to.path;
-      this.loadSubMenu(to.path);
-      if (
-        this.baseMenu.find(
-          m => m.url.indexOf(this.currentPath.split('/')[0]) > -1
-        )?.filter
-      ) {
+      this.isHasMenu = this.baseMenu.find(
+        m => m.url.indexOf(to.path.split('/').filter(s => s)[0]) > -1
+      )?.filter || false;
+      if (this.isHasMenu) {
         this.isShowMenu = true;
       } else {
         this.isShowMenu = false;
       }
+
+      this.loadSubMenu(to.path);
     }
   },
   created() {
@@ -132,11 +128,11 @@ export default Vue.extend({
       try {
         const res = await this.$fire.firestore.collection('menus').get();
         this.baseMenu = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        if (
-          this.baseMenu.find(
-            m => m.url.indexOf(this.currentPath.split('/')[0]) > -1
-          )?.filter
-        ) {
+        console.log(this.$route.path);
+        this.isHasMenu = this.baseMenu.find(
+          m => m.url.indexOf(this.$route.path.split('/').filter(s => s)[0]) > -1
+        )?.filter || false;
+        if (this.isHasMenu) {
           this.isShowMenu = true;
         } else {
           this.isShowMenu = false;
