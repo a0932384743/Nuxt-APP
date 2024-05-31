@@ -3,7 +3,10 @@
     <dashboard-header>
       <template #menu-btn>
         <b-button
-          v-if="baseMenu.find(m => m.url === currentPath)?.filter || false"
+          v-if="
+            baseMenu.find(m => m.url.indexOf(currentPath.split('/')[0]) > -1)
+              ?.filter || false
+          "
           class="mr-3 navbar-toggler d-block"
           @click="toggleMenu"
         >
@@ -22,7 +25,10 @@
     </dashboard-header>
     <main class="masthead">
       <dashboard-side-menu
-        v-if="baseMenu.find(m => m.url === currentPath)?.filter || false"
+        v-if="
+          baseMenu.find(m => m.url.indexOf(currentPath.split('/')[0]) > -1)
+            ?.filter || false
+        "
         :is-show-menu="isShowMenu"
       />
       <div
@@ -31,20 +37,41 @@
           width: isShowMenu ? 'calc( 100% - 350px)' : '100%'
         }"
       >
-        <b-breadcrumb
-          class="position-absolute"
+        <div
+          class="position-absolute d-flex justify-content-between w-100"
           style="top: -10px"
         >
-          <b-breadcrumb-item href="/">
-            {{ $t('home') }}
-          </b-breadcrumb-item>
-          <b-breadcrumb-item
-            :href="currentPath"
-            active
+          <b-breadcrumb>
+            <b-breadcrumb-item href="/">
+              {{ $t('home') }}
+            </b-breadcrumb-item>
+            <b-breadcrumb-item
+              :href="currentPath"
+              active
+            >
+              {{
+                baseMenu.find(
+                  m => m.url.indexOf(currentPath.split('/')[0]) > -1
+                )?.name || ''
+              }}
+            </b-breadcrumb-item>
+          </b-breadcrumb>
+
+          <b-nav
+            v-if="subMenu?.length > 0"
+            align="end"
           >
-            {{ baseMenu.find(m => m.url === currentPath)?.name || '' }}
-          </b-breadcrumb-item>
-        </b-breadcrumb>
+            <b-nav-item
+              v-for="sub in subMenu"
+              :key="sub.name"
+              tag="a"
+              :to="sub.url"
+            >
+              {{ sub.name }}
+            </b-nav-item>
+          </b-nav>
+        </div>
+
         <nuxt />
       </div>
     </main>
@@ -62,13 +89,19 @@ export default Vue.extend({
     return {
       isShowMenu: false,
       baseMenu: [],
+      subMenu: [],
       currentPath: ''
     };
   },
   watch: {
     $route(to) {
       this.currentPath = to.path;
-      if (this.baseMenu.find(m => m.url === this.currentPath)?.filter) {
+      this.loadSubMenu(to.path);
+      if (
+        this.baseMenu.find(
+          m => m.url.indexOf(this.currentPath.split('/')[0]) > -1
+        )?.filter
+      ) {
         this.isShowMenu = true;
       } else {
         this.isShowMenu = false;
@@ -80,13 +113,30 @@ export default Vue.extend({
   },
   mounted() {
     this.currentPath = this.$route.path;
+    this.loadSubMenu(this.$route.path);
   },
   methods: {
+    async loadSubMenu(path: string = '') {
+      this.$fire.database
+        .ref(`subMenu/${path}`)
+        .once('value')
+        .then(ref => {
+          if (ref && ref.val()) {
+            this.subMenu = ref.val();
+          } else {
+            this.subMenu = [];
+          }
+        });
+    },
     async loadMenu() {
       try {
         const res = await this.$fire.firestore.collection('menus').get();
         this.baseMenu = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        if (this.baseMenu.find(m => m.url === this.currentPath)?.filter) {
+        if (
+          this.baseMenu.find(
+            m => m.url.indexOf(this.currentPath.split('/')[0]) > -1
+          )?.filter
+        ) {
           this.isShowMenu = true;
         } else {
           this.isShowMenu = false;
