@@ -179,7 +179,6 @@
               </router-link>
             </div>
           </b-form>
-
         </b-card-body>
       </b-card>
     </div>
@@ -209,7 +208,7 @@ export default Vue.extend({
         return this.$i18n.t('feedback.require', {
           e: this.$i18n.t('username')
         });
-      } else if (this.form.username.length < 5) {
+      } else if (this.form?.username?.length < 5) {
         return this.$i18n.t('feedback.length.error', { e: 5 });
       }
       return false;
@@ -239,7 +238,24 @@ export default Vue.extend({
     }
   },
   methods: {
-    onSubmit() {}
+    async  onSubmit() {
+      try {
+        await this.$fire.auth.createUserWithEmailAndPassword(this.form.email, this.form.password);
+        this.$bvToast.toast('Success', {
+          title: '註冊成功',
+          variant: 'success',
+          solid: true
+        });
+      } catch (e) {
+        this.$bvToast.toast('Error', {
+          title: e.toLocaleString(),
+          variant: 'danger',
+          solid: true
+        });
+      }
+
+      // this.$router.push('/login');
+    }
   }
 });
 </script>
