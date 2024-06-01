@@ -177,12 +177,6 @@
                 return {
                   ...d,
                   ...item.seriesProps,
-                  markPoint: {
-                    label: {
-                      color: 'white'
-                    },
-                    data: item.isAlert ? [{ type: 'max', name: 'Max' }] : []
-                  }
                 };
               })
             }"
@@ -230,12 +224,6 @@
             return {
               ...d,
               ...item.seriesProps,
-              markPoint: {
-                label: {
-                  color: 'white'
-                },
-                data: item.isAlert ? [{ type: 'max', name: 'Max' }] : []
-              }
             };
           })
         }"

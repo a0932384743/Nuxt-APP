@@ -14,9 +14,15 @@
     <div style="flex: 1 1 400px">
       <b-card class="h-100 rounded-0">
         <b-card-body class="px-lg-3 py-lg-5">
-          <h5 class="text-center"><strong>{{ $t('app.welcome') }}</strong></h5>
+          <h5 class="text-center">
+            <strong>{{ $t('app.welcome') }}</strong>
+          </h5>
           <div class="text-center">
-            <img src="/img/brand/logo-3.png" height="80" alt="Logo">
+            <img
+              src="/img/brand/logo-3.png"
+              height="80"
+              alt="Logo"
+            >
           </div>
           <div
             class="text-muted d-flex flex-wrap mb-4 justify-content-center align-content-center flex-row mb-2 mt-3 flex-sm-column"
@@ -155,18 +161,21 @@
                 pill
                 variant="info"
                 style="min-width: 100px"
-                :disabled="passwordScore < 20 || !!emailValidate"
+                :disabled="passwordScore < 20 || !!emailValidate || loading"
               >
                 {{ $t('login') }}
+                <font-awesome-icon
+                  v-if="!loading"
+                  icon="sign-in"
+                />
+                <b-spinner
+                  v-if="loading"
+                  label="Loading..."
+                  small
+                />
               </b-button>
             </div>
-            <div class="d-flex justify-content-between">
-              <router-link
-                class="text-secondary"
-                to="/register"
-              >
-                <small>{{ $t('forgot.password') }}</small>
-              </router-link>
+            <div class="d-flex justify-content-end">
               <router-link
                 class="text-secondary"
                 to="/register"
@@ -189,6 +198,7 @@ export default Vue.extend({
   layout: 'BaseLayout',
   data() {
     return {
+      loading: false,
       passwordType: true,
       form: {
         email: '',
@@ -224,27 +234,50 @@ export default Vue.extend({
   },
   methods: {
     async loginByEmail() {
+      this.loading = true;
       try {
         const res = await this.$fire.auth.signInWithEmailAndPassword(
           this.form.email,
           this.form.password
         );
         this.$store.dispatch('common/setUser', res.user);
-        this.$router.push('/dashboard');
+        this.$bvToast.toast('Success', {
+          title: '已登入',
+          variant: 'success',
+          solid: true
+        });
+        this.$router.push('/');
       } catch (e) {
-        console.warn('loginByEmail Error', e);
+        this.$bvToast.toast('Error', {
+          title: e.toLocaleString(),
+          variant: 'danger',
+          solid: true
+        });
       }
+      this.loading = false;
     },
     async loginByGoogle() {
+      this.loading = true;
+
       try {
         const res = await this.$fire.auth.signInWithPopup(
           new GoogleAuthProvider()
         );
         this.$store.dispatch('common/setUser', res.user);
-        this.$router.push('/dashboard');
+        this.$bvToast.toast('Success', {
+          title: '已登入',
+          variant: 'success',
+          solid: true
+        });
+        this.$router.push('/');
       } catch (e) {
-        console.warn('loginByGoogle Error', e);
+        this.$bvToast.toast('Error', {
+          title: e.toLocaleString(),
+          variant: 'danger',
+          solid: true
+        });
       }
+      this.loading = false;
     }
   }
 });

@@ -9,7 +9,6 @@
     is-resizable
     vertical-compact
     use-css-transforms
-    :draggable-handle="'.vue-grid-item'"
   >
     <dashboard-widget
       v-for="item in dashboardList"
@@ -43,9 +42,30 @@ export default Vue.extend({
       const byHarbor = this.$store.getters['dashboard/getLoaderByHarbor'];
       const growth = this.$store.getters['dashboard/getProductGrowth'];
 
+      const legend = {
+        orient: 'horizontal',
+        textStyle: {
+          color: 'white'
+        },
+        data: []
+      };
+
+      const yAxis = {
+        type: 'value',
+        axisLabel: {
+          formatter(value) {
+            if (value >= 1000) {
+              return `${value / 1000}k`;
+            }
+            return value;
+          }
+        }
+      };
+
       const topTenLoader = {
         series: []
       };
+
       if (loader && Object.keys(loader).length > 0) {
         topTenLoader.series = [
           {
@@ -57,26 +77,15 @@ export default Vue.extend({
             })
           }
         ];
-      } else {
-        topTenLoader.series = [];
       }
+      console.log(history);
       const topTenLoaderHistory = {
         xAxis: {
           type: 'category',
           boundaryGap: false,
           data: Object.keys(history)
         },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter(value) {
-              if (value >= 1000) {
-                return `${value / 1000}k`;
-              }
-              return value;
-            }
-          }
-        },
+        yAxis,
         series: []
       };
 
@@ -85,27 +94,7 @@ export default Vue.extend({
           if (!topTenLoaderHistory.series[index]) {
             topTenLoaderHistory.series[index] = {
               name: type,
-              data: [],
-              markArea: {
-                itemStyle: {
-                  color: 'rgba(255,174,93,0.1)'
-                },
-                data:
-                  Object.keys(history).indexOf('2021') > -1 &&
-                  Object.keys(history).indexOf('2022') > -1
-                    ? [
-                        [
-                          {
-                            name: 'Warning',
-                            xAxis: '2021'
-                          },
-                          {
-                            xAxis: '2022'
-                          }
-                        ]
-                      ]
-                    : []
-              }
+              data: []
             };
           }
           topTenLoaderHistory.series[index].data.push(history[key][type].data1);
@@ -114,8 +103,7 @@ export default Vue.extend({
 
       const loaderSummary = {
         legend: {
-          type: 'category',
-          axisTick: { show: false },
+          ...legend,
           data: ['名稱', '同期增減', '成長率']
         },
         series: []
@@ -149,8 +137,7 @@ export default Vue.extend({
 
       const top3ProductGrowth = {
         legend: {
-          type: 'category',
-          axisTick: { show: false },
+          ...legend,
           data: ['貨品名稱', '同期成長率', '同期增長量']
         },
         series: productGrowth.series
@@ -162,8 +149,7 @@ export default Vue.extend({
 
       const last3ProductGrowth = {
         legend: {
-          type: 'category',
-          axisTick: { show: false },
+          ...legend,
           data: ['貨品名稱', '同期成長率', '同期增長量']
         },
         series: productGrowth.series
@@ -176,26 +162,16 @@ export default Vue.extend({
       const keys = Object.keys(byHarbor);
       const loaderByHarbor = {
         legend: {
+          ...legend,
           data: keys.length > 0 ? Object.keys(byHarbor[keys[0]]) : []
         },
         xAxis: [
           {
             type: 'category',
-            axisTick: { show: false },
             data: keys
           }
         ],
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter(value) {
-              if (value >= 1000) {
-                return `${value / 1000}k`;
-              }
-              return value;
-            }
-          }
-        },
+        yAxis,
         series: []
       };
 
@@ -226,7 +202,7 @@ export default Vue.extend({
     this.onLoadDashboard(this.$route.path);
   },
   methods: {
-    async onLoadDashboard(path:string = '') {
+    async onLoadDashboard(path: string = '') {
       const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {
         const data = snapshot.val();
@@ -243,8 +219,3 @@ export default Vue.extend({
   }
 });
 </script>
-<style>
-.vue-grid-layout {
-  min-height: 50px;
-}
-</style>

@@ -82,6 +82,7 @@ export default {
     '~/plugins/directives',
     '~/plugins/font-awesome',
     '~/plugins/echart',
+    '~/plugins/bootstrap',
     '~/plugins/draggable'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -109,6 +110,9 @@ export default {
   },
   typescript: {
     typeCheck: false
+  },
+  bootstrapVue: {
+    icons: true,
   },
   i18n: {
     locales: [

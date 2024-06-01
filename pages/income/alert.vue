@@ -1,6 +1,11 @@
 <template>
   <div class="h-100">
-    <b-modal v-model="modalShow">
+    <b-modal
+      v-model="modalShow"
+      ok-only
+      :ok-title="$t('close')"
+      ok-variant="info"
+    >
       <v-chart
         v-if="modalShow"
         class="w-100"
@@ -12,22 +17,6 @@
       class="d-flex px-2 text-white"
       style="gap: 1rem"
     >
-      <div class="d-none">
-        <font-awesome-icon
-          icon="circle"
-          :style="performance"
-          stroke-width="20"
-        />
-        績效
-      </div>
-      <div class="d-none">
-        <font-awesome-icon
-          icon="circle"
-          :style="trend"
-          stroke-width="20"
-        />
-        趨勢
-      </div>
       <div>
         <font-awesome-icon
           icon="circle"
@@ -47,7 +36,6 @@
       is-resizable
       vertical-compact
       use-css-transforms
-      :draggable-handle="'.vue-grid-item'"
     >
       <dashboard-widget
         v-for="item in dashboardList"
@@ -95,26 +83,8 @@
             >
               <font-awesome-icon
                 icon="circle"
-                color="cornflowerblue"
-              />尚佳:1~2個指標達兩年衰退但知本支出低於80億元
-            </div>
-            <div
-              class="d-flex align-content-center"
-              style="gap: 0.5rem"
-            >
-              <font-awesome-icon
-                icon="circle"
                 color="yellow"
-              />尚可:1~2個指標達兩年衰退但知本支出80億元以上
-            </div>
-            <div
-              class="d-flex align-content-center"
-              style="gap: 0.5rem"
-            >
-              <font-awesome-icon
-                icon="circle"
-                color="orange"
-              />注意:半數以上指標達兩年衰退但支本支出低於80億元上
+              />尚可:1~2個指標達兩年衰退
             </div>
             <div
               class="d-flex align-content-center"
@@ -123,7 +93,7 @@
               <font-awesome-icon
                 icon="circle"
                 color="red"
-              />警戒:半數以上指標達兩年衰退但支本支出80億元以上
+              />警戒:半數以上指標達兩年衰退
             </div>
           </div>
         </b-card>
@@ -134,14 +104,7 @@
 <script lang="ts">
 import DashboardWidget from '~/components/DashboardWidget.vue';
 import Vue from 'vue';
-const colors = [
-  'transparent',
-  'limegreen',
-  'cornflowerblue',
-  'yellow',
-  'orange',
-  'red'
-];
+const colors = ['transparent', 'limegreen', 'orange', 'red'];
 export default Vue.extend({
   name: 'Alert',
   components: { DashboardWidget },
@@ -150,8 +113,23 @@ export default Vue.extend({
     return {
       modalShow: false,
       option: {
+        grid: {
+          bottom: '8%'
+        },
         title: {
           text: ''
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          },
+          valueFormatter(value) {
+            return `${value} k`;
+          }
         },
         xAxis: {
           type: 'category',
@@ -181,14 +159,6 @@ export default Vue.extend({
         series: []
       },
       dashboardList: [],
-      performance: {
-        color: 'limegreen',
-        stroke: 'limegreen'
-      },
-      trend: {
-        color: 'limegreen',
-        stroke: 'limegreen'
-      },
       alert: {
         color: colors[0],
         stroke: 'white'
@@ -201,7 +171,6 @@ export default Vue.extend({
     },
     dataSource() {
       const incomeStatisc = this.$store.getters['dashboard/getIncomeStatics'];
-      console.log(incomeStatisc);
       const dataSource = {};
       const xAxis = {
         type: 'category',
@@ -230,21 +199,12 @@ export default Vue.extend({
                   data: [],
                   tooltip: {
                     show: false
-                  },
-                  markLine: {
-                    lineStyle: {
-                      color: colors[3]
-                    },
-                    data: [{ type: 'average', name: '平均值' }]
                   }
                 },
                 {
                   name: type,
                   type: 'line',
                   data: [],
-                  markPoint: {
-                    data: [{ type: 'min', name: '最小值' }]
-                  },
                   label: {
                     show: true,
                     position: 'top'
@@ -258,76 +218,72 @@ export default Vue.extend({
         });
       });
       // find min
-      Object.keys(dataSource).forEach((type, index) => {
-        const min = Math.min(...dataSource[type].series[0].data);
-        dataSource[type].series[0].data = (
-          dataSource[type]?.series[0]?.data || []
-        ).map(d => {
-          if (d <= min) {
+      Object.keys(dataSource).forEach(type => {
+        const result = dataSource[type].series[0].data.reduce(
+          (acc, curr, index, array) => {
+            if (index > 0 && curr < array[index - 1]) {
+              acc.push(index);
+            }
+            return acc;
+          },
+          []
+        );
+
+        dataSource[type].series[0].markPoint = {
+          data: result.map((v, index) => {
             return {
-              value: d,
-              name: type,
-              year: xAxis.data[index],
+              symbol:
+                'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
+              symbolSize: [30, 40],
               itemStyle: {
-                color: colors[5]
-              }
+                color: colors[3]
+              },
+              name: type,
+              value: dataSource[type].series[0].data[index],
+              xAxis: v,
+              yAxis: dataSource[type].series[0].data[index] / 2,
+              year: xAxis.data[index]
             };
-          }
-          return d;
+          })
+        };
+
+        result.forEach(index => {
+          dataSource[type].series[0].data[index] = {
+            value: dataSource[type].series[0].data[index],
+            name: type,
+            year: xAxis.data[index],
+            itemStyle: {
+              color: colors[2]
+            }
+          };
         });
       });
-
       return dataSource;
     }
   },
   watch: {
     dataSource: {
-      handler(newValue) {
+      handler(dataSource) {
         let trendCount: number = 0;
-        let performanceCount: number = 0;
 
-        Object.keys(newValue).forEach(type => {
-          if (
-            newValue[type].series &&
-            newValue[type].series[0]?.data?.length > 1
-          ) {
-            const total = newValue[type].series[0]?.data?.length;
-            if (
-              newValue[type].series[0]?.data[total - 1] -
-                newValue[type].series[0]?.data[0] <
-              0
-            ) {
-              trendCount++;
-            }
-
-            let diffCount: number = 0;
-            for (let i = 0; i < total - 1; i++) {
-              if (
-                newValue[type].series[0]?.data[i] >
-                newValue[type].series[0]?.data[i + 1]
-              ) {
-                diffCount++;
+        Object.keys(dataSource).forEach(type => {
+          const result = dataSource[type].series[0].data.reduce(
+            (acc, curr, index, array) => {
+              if (index > 0 && curr < array[index - 1]) {
+                acc.push(index);
               }
-            }
-            if (diffCount >= 2) {
-              performanceCount++;
-            }
+              return acc;
+            },
+            []
+          );
+
+          if (result.length > 0 && trendCount <= 4) {
+            trendCount++;
           }
         });
-
-        this.performance = {
-          color: colors[performanceCount],
-          stroke: performanceCount ? colors[performanceCount] : 'white'
-        };
-
-        this.trend = {
+        this.alert = {
           color: colors[trendCount],
           stroke: trendCount ? colors[trendCount] : 'white'
-        };
-
-        this.alert = {
-          color: colors[performanceCount],
-          stroke: performanceCount ? colors[performanceCount] : 'white'
         };
       },
       deep: false,
@@ -338,26 +294,34 @@ export default Vue.extend({
     this.onLoadDashboard(this.$route.path);
   },
   methods: {
-    click(param) {
+    async click(param) {
       if (typeof param.data === 'object') {
-        const res = this.$fire.database.ref(
-          `incomeMonthStatics/${param.data.year}/${param.data.name}`
-        );
-        res.once('value', snapshot => {
-          this.modalShow = true;
-          this.option.title.text = param.data.name;
-          this.option.series = [
-            {
-              type: 'bar',
-              showBackground: true,
-              backgroundStyle: {
-                color: 'rgba(220, 220, 220, 0.8)'
-              },
-              name: param.data.name,
-              data: snapshot.val()
-            }
-          ];
+        const res = await Promise.all([
+          this.$fire.database
+            .ref(`incomeMonthStatics/${Number(param.data.year) - 1}/${param.data.name}`)
+            .once('value'),
+          this.$fire.database
+            .ref(`incomeMonthStatics/${param.data.year}/${param.data.name}`)
+            .once('value'),
+          this.$fire.database
+            .ref(`incomeMonthStatics/${Number(param.data.year) + 1}/${param.data.name}`)
+            .once('value')
+        ]);
+
+        this.option.title.text = param.data.name;
+        this.option.series = res.map((snapshot, index) => {
+          return {
+            type: 'bar',
+            showBackground: true,
+            backgroundStyle: {
+              color: 'rgba(220, 220, 220, 0.8)'
+            },
+            name: param.data.year - 1 + index,
+            data: snapshot.val() || []
+          };
         });
+        console.log(this.option.series);
+        this.modalShow = true;
       }
     },
     async onLoadDashboard(path: string = '') {

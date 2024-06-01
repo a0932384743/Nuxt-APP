@@ -47,5 +47,8 @@ export default {
   'product.name': 'Product',
   'export.csv': 'Export CSV',
   favorite: 'Favorite',
-  'income.text.1': 'Financial Performance Warning Indicators Explanation'
+  'income.text.1': 'Financial Performance Warning Indicators Explanation',
+  confirm: 'Confirm',
+  cancel: 'Cancel',
+  close: 'Close'
 };

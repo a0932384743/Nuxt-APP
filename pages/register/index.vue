@@ -161,13 +161,22 @@
               <b-button
                 class="px-5"
                 type="submit"
-                variant="primary"
+                pill
+                variant="info"
                 :disabled="
-                  passwordScore < 20 || !!emailValidate || !!userNameValidate
+                  passwordScore < 20 || !!emailValidate || !!userNameValidate || loading
                 "
               >
                 {{ $t('signup') }}
-                <font-awesome-icon icon="fa-solid fa-arrow-right-to-bracket" />
+                <font-awesome-icon
+                  v-if="!loading"
+                  icon="fa-solid fa-arrow-right-to-bracket"
+                />
+                <b-spinner
+                  v-if="loading"
+                  label="Loading..."
+                  small
+                />
               </b-button>
             </div>
             <div class="d-flex justify-content-end">
@@ -194,6 +203,7 @@ export default Vue.extend({
   data() {
     return {
       passwordType: true,
+      loading: false,
       form: {
         username: '',
         email: '',
@@ -203,12 +213,12 @@ export default Vue.extend({
     };
   },
   computed: {
-    userNameValidate(): any {
+    userNameValidate() {
       if (!this.form.username) {
         return this.$i18n.t('feedback.require', {
           e: this.$i18n.t('username')
         });
-      } else if (this.form?.username?.length < 5) {
+      } else if ((this.form.username || '').length < 5) {
         return this.$i18n.t('feedback.length.error', { e: 5 });
       }
       return false;
@@ -238,14 +248,19 @@ export default Vue.extend({
     }
   },
   methods: {
-    async  onSubmit() {
+    async onSubmit() {
+      this.loading = true;
       try {
-        await this.$fire.auth.createUserWithEmailAndPassword(this.form.email, this.form.password);
+        await this.$fire.auth.createUserWithEmailAndPassword(
+          this.form.email,
+          this.form.password
+        );
         this.$bvToast.toast('Success', {
           title: '註冊成功',
           variant: 'success',
           solid: true
         });
+        this.$router.push('/login');
       } catch (e) {
         this.$bvToast.toast('Error', {
           title: e.toLocaleString(),
@@ -253,8 +268,7 @@ export default Vue.extend({
           solid: true
         });
       }
-
-      // this.$router.push('/login');
+      this.loading = false;
     }
   }
 });
