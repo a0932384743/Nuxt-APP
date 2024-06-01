@@ -20,7 +20,7 @@
       <div>
         <font-awesome-icon
           icon="circle"
-          :style="alert"
+          :style="trend"
           stroke-width="20"
         />
         預警
@@ -158,11 +158,7 @@ export default Vue.extend({
         },
         series: []
       },
-      dashboardList: [],
-      alert: {
-        color: colors[0],
-        stroke: 'white'
-      }
+      dashboardList: []
     };
   },
   computed: {
@@ -259,35 +255,50 @@ export default Vue.extend({
         });
       });
       return dataSource;
-    }
-  },
-  watch: {
-    dataSource: {
-      handler(dataSource) {
-        let trendCount: number = 0;
-
-        Object.keys(dataSource).forEach(type => {
-          const result = dataSource[type].series[0].data.reduce(
-            (acc, curr, index, array) => {
-              if (index > 0 && curr < array[index - 1]) {
-                acc.push(index);
-              }
-              return acc;
-            },
-            []
-          );
-
-          if (result.length > 0 && trendCount <= 4) {
-            trendCount++;
+    },
+    trend() {
+      let trendCount = 0;
+      const incomeStatisc = this.$store.getters['dashboard/getIncomeStatics'];
+      const dataSource = {};
+      Object.keys(incomeStatisc).forEach(key => {
+        Object.keys(incomeStatisc[key]).forEach(type => {
+          if (!dataSource[type]) {
+            dataSource[type] = {
+              series: [
+                {
+                  name: 'bar',
+                  type: 'bar',
+                  data: [],
+                  tooltip: {
+                    show: false
+                  }
+                }
+              ]
+            };
           }
+          dataSource[type].series[0].data.push(incomeStatisc[key][type] || 0);
         });
-        this.alert = {
-          color: colors[trendCount],
-          stroke: trendCount ? colors[trendCount] : 'white'
-        };
-      },
-      deep: false,
-      immediate: true
+      });
+      // find min
+      Object.keys(dataSource).forEach(type => {
+        const result = dataSource[type].series[0].data.reduce(
+          (acc, curr, index, array) => {
+            if (index > 0 && curr < array[index - 1]) {
+              acc.push(index);
+            }
+            return acc;
+          },
+          []
+        );
+        if (result.length > 0 && trendCount < 3) {
+          trendCount++;
+        }
+      });
+
+      return {
+        color: colors[trendCount],
+        stroke: trendCount > 0 ? colors[trendCount] : 'white'
+      };
     }
   },
   created() {
@@ -298,13 +309,17 @@ export default Vue.extend({
       if (typeof param.data === 'object') {
         const res = await Promise.all([
           this.$fire.database
-            .ref(`incomeMonthStatics/${Number(param.data.year) - 1}/${param.data.name}`)
+            .ref(
+              `incomeMonthStatics/${Number(param.data.year) - 1}/${param.data.name}`
+            )
             .once('value'),
           this.$fire.database
             .ref(`incomeMonthStatics/${param.data.year}/${param.data.name}`)
             .once('value'),
           this.$fire.database
-            .ref(`incomeMonthStatics/${Number(param.data.year) + 1}/${param.data.name}`)
+            .ref(
+              `incomeMonthStatics/${Number(param.data.year) + 1}/${param.data.name}`
+            )
             .once('value')
         ]);
 
@@ -320,7 +335,6 @@ export default Vue.extend({
             data: snapshot.val() || []
           };
         });
-        console.log(this.option.series);
         this.modalShow = true;
       }
     },
