@@ -3,9 +3,9 @@
     class="mb-4 d-flex flex-column text-secondary"
     style="gap: 0.5rem"
   >
-    <h2 class="text-center">
+    <h1 class="text-center mb-0">
       {{ data.value ?? '-' }}{{ data.unit||'' }}
-    </h2>
+    </h1>
     <p
       class="text-center"
       :class="{
@@ -28,7 +28,6 @@
 <script lang="ts">
 import moment from 'moment';
 import Vue from 'vue';
-
 export default Vue.extend({
   name: 'DashboardCard',
   props: {

@@ -195,10 +195,15 @@ export default Vue.extend({
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
-        this.loadIncomeStatics(
+        this.loadIncomeStaticsByYear(
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
+        this.loadIncomeLossByYear(
+          moment(this.form.startDate).year(),
+          moment(this.form.endDate).year()
+        ),
+        this.loadIncomeLosssByHarbor(this.form.selectedHarbor),
         this.loadLoaderSummary(moment(this.form.startDate).year()),
         this.loadLoadersByHarbor(
           this.form.selectedHarbor,
@@ -217,10 +222,15 @@ export default Vue.extend({
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
-        this.loadIncomeStatics(
+        this.loadIncomeStaticsByYear(
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year()
         ),
+        this.loadIncomeLossByYear(
+          moment(this.form.startDate).year(),
+          moment(this.form.endDate).year()
+        ),
+        this.loadIncomeLosssByHarbor(this.form.selectedHarbor),
         this.loadLoaderSummary(moment(this.form.startDate).year()),
         this.loadLoadersByHarbor(
           this.form.selectedHarbor,
@@ -328,7 +338,7 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setLoaderHistory', loaderHistory);
       return loaderHistory;
     },
-    async loadIncomeStatics(startDate: number, endDate: number) {
+    async loadIncomeStaticsByYear(startDate: number, endDate: number) {
       const years = Array.from(
         {
           length: endDate - startDate + 1
@@ -348,7 +358,49 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setIncomeStatics', incomeStatics);
       return incomeStatics;
     },
-
+    async loadIncomeLossByYear(startDate: number, endDate: number) {
+      const years = Array.from(
+        {
+          length: endDate - startDate + 1
+        },
+        (_, i) => startDate + i
+      );
+      const incomeLossList = await Promise.all(
+        years.map(y => {
+          return this.$fire.database
+            .ref(`incomeLoss/公司損益情形/${y}`)
+            .once('value');
+        })
+      );
+      const incomeLoss = {};
+      const incomeLossArray = incomeLossList.map(l => l.val());
+      years.forEach((y, index) => {
+        incomeLoss[String(y)] = incomeLossArray[index] || {};
+      });
+      this.$store.dispatch('dashboard/setIncomeLoss', {
+        公司損益情形: incomeLoss
+      });
+      return incomeLoss;
+    },
+    async loadIncomeLosssByHarbor(harbors: Array<{ name: string }>) {
+      const incomeLossList = await Promise.all(
+        harbors.map(harbor => {
+          return this.$fire.database
+            .ref(`incomeLoss/港口損益情形/${harbor.name}`)
+            .once('value');
+        })
+      );
+      const incomeLossByHarbor = {};
+      const incomeLossByHarborArray = incomeLossList.map(l => l.val());
+      harbors.forEach((harbor, index) => {
+        incomeLossByHarbor[String(harbor.name)] =
+          incomeLossByHarborArray[index] || {};
+      });
+      this.$store.dispatch('dashboard/setIncomeLoss', {
+        港口損益情形: incomeLossByHarbor
+      });
+      return incomeLossByHarbor;
+    },
     async loadLoadersByHarbor(harbors: Array<{ name: string }>, year: number) {
       const loaderList = await Promise.all(
         harbors.map(harbor => {

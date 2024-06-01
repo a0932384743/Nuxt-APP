@@ -11,7 +11,14 @@ export default {
   router: {
     base: '/',
     linkExactActiveClass: 'active',
-    middleware: ['router-auth']
+    middleware: ['router-auth'],
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'custom',
+        path: '*',
+        component: resolve('./pages/error.vue')
+      });
+    }
   },
   meta: {
     ogType: false,

@@ -4,6 +4,12 @@ interface StateInterface {
   prop: boolean;
 }
 
+type Menu = {
+  url:string;
+  name:string;
+  filter?:string;
+}
+
 type State = {
   locales: string[];
   lang: string;
@@ -13,6 +19,8 @@ type State = {
         email: string;
         password: string;
       };
+  baseMenu: Array<Menu>,
+  subMenu: Array<Menu>,
 };
 
 const getters: GetterTree<State, StateInterface> = {
@@ -24,6 +32,12 @@ const getters: GetterTree<State, StateInterface> = {
   },
   getUser(state) {
     return state.user;
+  },
+  getMenu(state) {
+    return state.baseMenu;
+  },
+  getSubmenu(state) {
+    return state.subMenu;
   },
   isLoggedIn(state) {
     return !!state.user;
@@ -42,6 +56,13 @@ const mutations: MutationTree<State> = {
     }
     state.user = user;
   },
+  SET_Menu(state, menu) {
+    localStorage.setItem('menu', JSON.stringify(menu));
+    state.baseMenu = menu;
+  },
+  SET_SUB_MENU(state, menu) {
+    state.subMenu = menu;
+  },
 };
 
 const actions: ActionTree<State, StateInterface> = {
@@ -50,6 +71,12 @@ const actions: ActionTree<State, StateInterface> = {
   },
   setUser({ commit }, user) {
     commit('SET_USER', user);
+  },
+  setMenu({ commit }, menu) {
+    commit('SET_Menu', menu);
+  },
+  setSubMenu({ commit }, menu) {
+    commit('SET_SUB_MENU', menu);
   },
   async nuxtServerInit({ dispatch }, { res }) {
     if (res && res.locals && res.locals.user) {
@@ -69,6 +96,8 @@ const commonModule: Module<State, StateInterface> = {
     locales: ['en', 'zh-tw'],
     lang: 'zh-tw',
     user: JSON.parse(String(localStorage.getItem('user'))),
+    baseMenu: JSON.parse(String(localStorage.getItem('menu'))) || [],
+    subMenu: []
   },
   getters,
   mutations,

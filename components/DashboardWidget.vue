@@ -11,7 +11,10 @@
   >
     <dashboard-news v-if="item?.chartType === 'news'" />
     <dashboard-index v-else-if="item?.chartType === 'index'" />
-    <dashboard-predict v-else-if="item?.chartType === 'predict'" :data-source="item.dataSource"/>
+    <dashboard-predict
+      v-else-if="item?.chartType === 'predict'"
+      :data-source="item.dataSource"
+    />
     <b-card
       v-else
       text-variant="white"
@@ -93,9 +96,17 @@
         </div>
         <p>
           <small
-            v-if="item.period"
+            v-if="
+              dataSource &&
+                dataSource[item.dataSource] &&
+                dataSource[item.dataSource].xAxis &&
+                dataSource[item.dataSource].xAxis[0] &&
+                dataSource[item.dataSource].xAxis[0].data?.length > 0
+            "
             class="d-block"
-          >({{ $t('period') }}: -)</small>
+          >({{ $t('period') }}:
+            {{ dataSource[item.dataSource].xAxis[0].data[0] }} -
+            {{ dataSource[item.dataSource].xAxis[0].data.slice(-1)[0] }})</small>
           <small
             v-if="item.unit"
             class="d-block"
@@ -114,20 +125,104 @@
         v-else-if="item?.chartType === 'card'"
         :data-source="item.dataSource"
       />
+      <b-row
+        v-else-if="item?.chartType === 'chartSummary'"
+        class="w-100 h-100"
+      >
+        <b-col
+          sm="12"
+          style="flex: 0 0 400px"
+        >
+          <dashboard-chart-summary />
+        </b-col>
+        <b-col
+          sm="12"
+          style="flex: 1 1 calc(100% - 400px)"
+        >
+          <v-chart
+            ref="chart"
+            class="w-100 h-100"
+            :options="{
+              ...option,
+              grid:
+                item.grid ||
+                (dataSource &&
+                  dataSource[item.dataSource] &&
+                  dataSource[item.dataSource]?.grid) ||
+                null,
+              legend:
+                item.legend ||
+                (dataSource &&
+                  dataSource[item.dataSource] &&
+                  dataSource[item.dataSource]?.legend) ||
+                null,
+              geo: item.geo ? item.geo : null,
+              tooltip: item.tooltip || option.tooltip,
+              xAxis:
+                item.xAxis ||
+                (dataSource &&
+                  dataSource[item.dataSource] &&
+                  dataSource[item.dataSource]?.xAxis) ||
+                null,
+              yAxis:
+                item.yAxis ||
+                (dataSource &&
+                  dataSource[item.dataSource] &&
+                  dataSource[item.dataSource]?.yAxis) ||
+                null,
+              series: (
+                (dataSource && dataSource[item.dataSource]?.series) ||
+                []
+              ).map(d => {
+                return {
+                  ...d,
+                  ...item.seriesProps,
+                  markPoint: {
+                    label: {
+                      color: 'white'
+                    },
+                    data: item.isAlert ? [{ type: 'max', name: 'Max' }] : []
+                  }
+                };
+              })
+            }"
+            autoresize
+            @click="click"
+          />
+        </b-col>
+      </b-row>
       <v-chart
         v-else
         ref="chart"
         class="w-100 h-100"
         :options="{
           ...option,
+          grid:
+            item.grid ||
+            (dataSource &&
+              dataSource[item.dataSource] &&
+              dataSource[item.dataSource]?.grid) ||
+            null,
+          legend:
+            item.legend ||
+            (dataSource &&
+              dataSource[item.dataSource] &&
+              dataSource[item.dataSource]?.legend) ||
+            null,
           geo: item.geo ? item.geo : null,
           tooltip: item.tooltip || option.tooltip,
-          xAxis: dataSource
-            ? dataSource[item.dataSource]?.xAxis || item.xAxis
-            : item.xAxis,
-          yAxis: dataSource
-            ? dataSource[item.dataSource]?.yAxis || item.yAxis
-            : item.yAxis,
+          xAxis:
+            item.xAxis ||
+            (dataSource &&
+              dataSource[item.dataSource] &&
+              dataSource[item.dataSource]?.xAxis) ||
+            null,
+          yAxis:
+            item.yAxis ||
+            (dataSource &&
+              dataSource[item.dataSource] &&
+              dataSource[item.dataSource]?.yAxis) ||
+            null,
           series: (
             (dataSource && dataSource[item.dataSource]?.series) ||
             []
@@ -159,6 +254,7 @@ import DashboardNews from '~/components/DashbaordNews.vue';
 import DashboardPredict from '~/components/DashbaordPredict.vue';
 import DashboardSummary from '~/components/DashbaordSummary.vue';
 import { WidgetType } from '~/store/dashboard';
+import DashboardChartSummary from '~/components/DashbaordChartSummary.vue';
 
 const item: PropOptions<WidgetType> = {
   type: Object,
@@ -176,6 +272,7 @@ const dataSource: PropOptions<{
 export default Vue.extend({
   name: 'DashboardWidget',
   components: {
+    DashboardChartSummary,
     DashboardPredict,
     DashboardIndex,
     DashboardCard,

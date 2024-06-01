@@ -35,7 +35,7 @@
           class="position-absolute d-flex justify-content-between w-100"
           style="top: -10px"
         >
-          <b-breadcrumb>
+          <b-breadcrumb class="flex-nowrap">
             <b-breadcrumb-item href="/">
               {{ $t('home') }}
             </b-breadcrumb-item>
@@ -45,7 +45,8 @@
             >
               {{
                 baseMenu.find(
-                  m => m.url.indexOf(currentPath.split('/').filter(s=>s)[0]) > -1
+                  m =>
+                    m.url.indexOf(currentPath.split('/').filter(s => s)[0]) > -1
                 )?.name || ''
               }}
             </b-breadcrumb-item>
@@ -54,10 +55,16 @@
           <b-nav
             v-if="subMenu?.length > 0"
             align="end"
+            class="flex-nowrap"
+            style="height: fit-content"
           >
             <b-nav-item
               v-for="sub in subMenu"
               :key="sub.name"
+              class="sub-menu-item"
+              :class="{
+                active: currentPath === sub.url
+              }"
               tag="a"
               :to="sub.url"
             >
@@ -72,9 +79,9 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
-import DashboardHeader from '../components/DashboardHeader.vue';
 import DashboardSideMenu from '~/components/DashboardSideMenu.vue';
+import DashboardHeader from '../components/DashboardHeader.vue';
+import Vue from 'vue';
 
 export default Vue.extend({
   components: { DashboardSideMenu, DashboardHeader },
@@ -82,26 +89,31 @@ export default Vue.extend({
   data() {
     return {
       isShowMenu: false,
-      baseMenu: [],
-      subMenu: [],
       currentPath: '',
       isHasMenu: false
     };
   },
-
+  computed: {
+    baseMenu() {
+      return this.$store.getters['common/getMenu'];
+    },
+    subMenu() {
+      return this.$store.getters['common/getSubmenu'];
+    }
+  },
   watch: {
     $route(to) {
       this.currentPath = to.path;
-      this.isHasMenu = this.baseMenu.find(
-        m => m.url.indexOf(to.path.split('/').filter(s => s)[0]) > -1
-      )?.filter || false;
+      this.isHasMenu =
+        this.baseMenu.find(
+          m => m.url.indexOf(to.path.split('/').filter(s => s)[0]) > -1
+        )?.filter || false;
       if (this.isHasMenu) {
         this.isShowMenu = true;
       } else {
         this.isShowMenu = false;
       }
-
-      this.loadSubMenu(to.path);
+      this.loadSubMenu(to.path.split('/').filter(s => s)[0]);
     }
   },
   created() {
@@ -109,7 +121,7 @@ export default Vue.extend({
   },
   mounted() {
     this.currentPath = this.$route.path;
-    this.loadSubMenu(this.$route.path);
+    this.loadSubMenu(this.$route.path.split('/').filter(s => s)[0]);
   },
   methods: {
     async loadSubMenu(path: string = '') {
@@ -117,26 +129,34 @@ export default Vue.extend({
         .ref(`subMenu/${path}`)
         .once('value')
         .then(ref => {
+          let menu = [];
           if (ref && ref.val()) {
-            this.subMenu = ref.val();
-          } else {
-            this.subMenu = [];
+            menu = ref.val();
+          }
+          this.$store.dispatch('common/setSubMenu', menu);
+          if (
+            menu.length > 0 &&
+            this.$route.path.split('/').filter(s => s).length <= 1
+          ) {
+            this.$router.push(menu[0].url);
           }
         });
     },
     async loadMenu() {
       try {
         const res = await this.$fire.firestore.collection('menus').get();
-        this.baseMenu = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log(this.$route.path);
-        this.isHasMenu = this.baseMenu.find(
-          m => m.url.indexOf(this.$route.path.split('/').filter(s => s)[0]) > -1
-        )?.filter || false;
+        const baseMenu = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        this.isHasMenu =
+          baseMenu.find(
+            m =>
+              m.url.indexOf(this.$route.path.split('/').filter(s => s)[0]) > -1
+          )?.filter || false;
         if (this.isHasMenu) {
           this.isShowMenu = true;
         } else {
           this.isShowMenu = false;
         }
+        this.$store.dispatch('common/setMenu', baseMenu);
       } catch (e) {
         console.warn('loadMenu', e);
       }
@@ -147,3 +167,19 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style lang="scss">
+.sub-menu-item {
+  color: lightgray;
+  font-size: 1rem;
+  padding: 0px;
+
+  & > a {
+    color: lightgray;
+  }
+
+  &.active {
+    border-bottom: 2px solid lightgray;
+  }
+}
+</style>

@@ -42,7 +42,7 @@
       </div>
     </b-tab>
     <b-tab title="專欄">
-      帶增加
+      待增加
     </b-tab>
   </b-tabs>
 </template>
@@ -59,7 +59,7 @@ export default Vue.extend({
     };
   },
   mounted() {
-    const date = moment().format('YYYY-MM');
+    const date = moment('2024-05-01').format('YYYY-MM');
     this.$fire.database.ref(`news/${date}`).once('value')
       .then(ref => {
         if (ref && ref.val()) {
