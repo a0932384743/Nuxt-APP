@@ -125,19 +125,17 @@
         v-else-if="item?.chartType === 'card'"
         :data-source="item.dataSource"
       />
-      <b-row
+      <div
         v-else-if="item?.chartType === 'chartSummary'"
-        class="w-100 h-100"
+        class="w-100 h-100 flex-nowrap d-flex flex-sm-row flex-column"
       >
-        <b-col
-          sm="12"
+        <div
           style="flex: 0 0 400px"
         >
           <dashboard-chart-summary />
-        </b-col>
-        <b-col
-          sm="12"
-          style="flex: 1 1 calc(100% - 400px)"
+        </div>
+        <div
+          style="flex: 1 1 calc(100% - 450px);max-width:calc(100% - 450px); "
         >
           <v-chart
             ref="chart"
@@ -183,8 +181,8 @@
             autoresize
             @click="click"
           />
-        </b-col>
-      </b-row>
+        </div>
+      </div>
       <v-chart
         v-else
         ref="chart"
