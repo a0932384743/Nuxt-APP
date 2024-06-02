@@ -129,13 +129,11 @@
         v-else-if="item?.chartType === 'chartSummary'"
         class="w-100 h-100 flex-nowrap d-flex flex-sm-row flex-column"
       >
-        <div
-          style="flex: 0 0 400px"
-        >
+        <div style="flex: 0 0 400px">
           <dashboard-chart-summary />
         </div>
         <div
-          style="flex: 1 1 calc(100% - 450px);max-width:calc(100% - 450px); "
+          style="flex: 1 1 calc(100% - 450px); max-width: calc(100% - 450px)"
         >
           <v-chart
             ref="chart"
@@ -148,13 +146,25 @@
                   dataSource[item.dataSource] &&
                   dataSource[item.dataSource]?.grid) ||
                 null,
+              visualMap: item.visualMap ||
+                (dataSource &&
+                  dataSource[item.dataSource] &&
+                  dataSource[item.dataSource]?.visualMap) ||
+                null,
               legend:
                 item.legend ||
                 (dataSource &&
                   dataSource[item.dataSource] &&
                   dataSource[item.dataSource]?.legend) ||
                 null,
-              geo: item.geo ? item.geo : null,
+              geo3D:
+                item.geo3D ||
+                (dataSource && dataSource[item.dataSource]?.geo3D) ||
+                null,
+              geo:
+                item.geo ||
+                (dataSource && dataSource[item.dataSource]?.geo) ||
+                null,
               tooltip: item.tooltip || option.tooltip,
               xAxis:
                 item.xAxis ||
@@ -174,7 +184,7 @@
               ).map(d => {
                 return {
                   ...d,
-                  ...item.seriesProps,
+                  ...item.seriesProps
                 };
               })
             }"
@@ -221,7 +231,7 @@
           ).map(d => {
             return {
               ...d,
-              ...item.seriesProps,
+              ...item.seriesProps
             };
           })
         }"
