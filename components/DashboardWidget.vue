@@ -37,16 +37,9 @@
             right
           >
             <template #button-content>
-              <font-awesome-icon
-                icon="ellipsis-v"
-                class="text-white"
-              />
+              <font-awesome-icon icon="ellipsis-v" class="text-white" />
             </template>
-            <b-dropdown-item
-              tag="div"
-              role="button"
-              @click="enableFavorites"
-            >
+            <b-dropdown-item tag="div" role="button" @click="enableFavorites">
               <font-awesome-icon
                 icon="star"
                 :style="{
@@ -60,8 +53,8 @@
             <b-dropdown-item
               v-if="
                 item?.chartType !== 'summary' &&
-                  item?.chartType !== 'growth' &&
-                  item?.chartType !== 'card'
+                item?.chartType !== 'growth' &&
+                item?.chartType !== 'card'
               "
               tag="div"
               role="button"
@@ -73,8 +66,8 @@
             <b-dropdown-item
               v-if="
                 item?.chartType !== 'summary' &&
-                  item?.chartType !== 'growth' &&
-                  item?.chartType !== 'card'
+                item?.chartType !== 'growth' &&
+                item?.chartType !== 'card'
               "
               tag="div"
               role="button"
@@ -98,19 +91,19 @@
           <small
             v-if="
               dataSource &&
-                dataSource[item.dataSource] &&
-                dataSource[item.dataSource].xAxis &&
-                dataSource[item.dataSource].xAxis[0] &&
-                dataSource[item.dataSource].xAxis[0].data?.length > 0
+              dataSource[item.dataSource] &&
+              dataSource[item.dataSource].xAxis &&
+              dataSource[item.dataSource].xAxis[0] &&
+              dataSource[item.dataSource].xAxis[0].data?.length > 0
             "
             class="d-block"
-          >({{ $t('period') }}:
+            >({{ $t('period') }}:
             {{ dataSource[item.dataSource].xAxis[0].data[0] }} -
-            {{ dataSource[item.dataSource].xAxis[0].data.slice(-1)[0] }})</small>
-          <small
-            v-if="item.unit"
-            class="d-block"
-          >({{ $t('unit') }}: {{ item.unit }})</small>
+            {{ dataSource[item.dataSource].xAxis[0].data.slice(-1)[0] }})</small
+          >
+          <small v-if="item.unit" class="d-block"
+            >({{ $t('unit') }}: {{ item.unit }})</small
+          >
         </p>
       </template>
       <dashboard-summary
@@ -146,7 +139,8 @@
                   dataSource[item.dataSource] &&
                   dataSource[item.dataSource]?.grid) ||
                 null,
-              visualMap: item.visualMap ||
+              visualMap:
+                item.visualMap ||
                 (dataSource &&
                   dataSource[item.dataSource] &&
                   dataSource[item.dataSource]?.visualMap) ||
@@ -205,13 +199,26 @@
               dataSource[item.dataSource] &&
               dataSource[item.dataSource]?.grid) ||
             null,
+          visualMap:
+            item.visualMap ||
+            (dataSource &&
+              dataSource[item.dataSource] &&
+              dataSource[item.dataSource]?.visualMap) ||
+            null,
           legend:
             item.legend ||
             (dataSource &&
               dataSource[item.dataSource] &&
               dataSource[item.dataSource]?.legend) ||
             null,
-          geo: item.geo ? item.geo : null,
+          geo3D:
+            item.geo3D ||
+            (dataSource && dataSource[item.dataSource]?.geo3D) ||
+            null,
+          geo:
+            item.geo ||
+            (dataSource && dataSource[item.dataSource]?.geo) ||
+            null,
           tooltip: item.tooltip || option.tooltip,
           xAxis:
             item.xAxis ||
