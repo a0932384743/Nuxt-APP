@@ -6,7 +6,7 @@ export default function ({ store, route, redirect }) {
       if (menu.length > 0) {
         return redirect(menu[0].url);
       } else {
-        return redirect('/');
+        return redirect('/dashboard');
       }
     }
   }

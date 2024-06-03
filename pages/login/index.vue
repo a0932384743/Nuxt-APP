@@ -246,7 +246,7 @@ export default Vue.extend({
           variant: 'success',
           solid: true
         });
-        this.$router.push('/');
+        this.$router.push('/dashboard');
       } catch (e) {
         this.$bvToast.toast('Error', {
           title: e.toLocaleString(),
@@ -269,7 +269,7 @@ export default Vue.extend({
           variant: 'success',
           solid: true
         });
-        this.$router.push('/');
+        this.$router.push('/dashboard');
       } catch (e) {
         this.$bvToast.toast('Error', {
           title: e.toLocaleString(),
