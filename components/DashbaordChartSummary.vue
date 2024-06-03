@@ -1,5 +1,23 @@
 <template>
-  <div class="px-2" style="font-size: 1rem">
+  <div
+    class="px-2"
+    style="font-size: 1rem"
+  >
+    <div
+      class="d-flex px-2 text-white mb-2 px-2"
+      style="gap: 1rem;font-size: 1.2rem"
+    >
+      <div>
+        <font-awesome-icon
+          icon="circle"
+          stroke-width="20"
+          :style="{
+            color: trend
+          }"
+        />
+        預警
+      </div>
+    </div>
     <b-row class="w-100 m-0 flex-wrap">
       <template v-for="key in Object.keys(data)">
         <b-col
@@ -37,8 +55,14 @@
                 'text-success': d < 0
               }"
             >
-              <font-awesome-icon v-if="d > 0" icon="sort-asc" />
-              <font-awesome-icon v-if="d < 0" icon="sort-desc" />
+              <font-awesome-icon
+                v-if="d > 0"
+                icon="sort-asc"
+              />
+              <font-awesome-icon
+                v-if="d < 0"
+                icon="sort-desc"
+              />
 
               {{ d }} <small class="ml-2">%</small>
             </strong>
@@ -50,13 +74,31 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+const colors = ['limegreen', 'orange', 'red'];
 
 export default Vue.extend({
   name: 'DashboardChartSummary',
+  props: {
+    options: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      data: {}
+      data: {},
+      trend: ''
     };
+  },
+  watch: {
+    options(options) {
+      if (options && options?.series && options?.series.length > 0) {
+        const series = options?.series.slice(-1)[0];
+        if (series.markPoint && series.markPoint.data) {
+          this.trend = colors[series.markPoint.data.length];
+        }
+      }
+    }
   },
   mounted() {
     this.$fire.database
@@ -67,6 +109,13 @@ export default Vue.extend({
           this.data = ref.val();
         }
       });
+    const options = { series: [], ...this.options };
+    if (options && options?.series && options?.series.length > 0) {
+      const series = options?.series.slice(-1)[0];
+      if (series.markPoint && series.markPoint.data) {
+        this.trend = colors[series.markPoint.data.length];
+      }
+    }
   }
 });
 </script>

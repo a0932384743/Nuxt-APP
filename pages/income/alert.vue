@@ -174,6 +174,7 @@ export default Vue.extend({
           key => Object.keys(incomeStatisc[key]).length > 0
         )
       };
+
       const yAxis = {
         type: 'value',
         axisLabel: {
@@ -242,6 +243,7 @@ export default Vue.extend({
             };
           })
         };
+        console.log(xAxis);
 
         result.forEach(index => {
           dataSource[type].series[0].data[index] = {
@@ -279,7 +281,7 @@ export default Vue.extend({
           dataSource[type].series[0].data.push(incomeStatisc[key][type] || 0);
         });
       });
-      // find min
+
       Object.keys(dataSource).forEach(type => {
         const result = dataSource[type].series[0].data.reduce(
           (acc, curr, index, array) => {
@@ -306,7 +308,7 @@ export default Vue.extend({
   },
   methods: {
     async click(param) {
-      if (typeof param.data === 'object') {
+      if (param.componentType === 'markPoint') {
         const res = await Promise.all([
           this.$fire.database
             .ref(
