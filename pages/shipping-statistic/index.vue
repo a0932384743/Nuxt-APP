@@ -93,22 +93,6 @@ export default Vue.extend({
         },
         series: [
           {
-            name: 'World Population',
-            type: 'map',
-            mapType: 'world',
-            roam: true,
-            itemStyle: {
-              emphasis: { label: { show: true } }
-            },
-            data: [
-              { name: 'China', value: 1380000000 },
-              { name: 'India', value: 1310000000 },
-              { name: 'United States', value: 324000000 },
-              { name: 'Indonesia', value: 263000000 },
-              { name: 'Brazil', value: 207000000 }
-            ]
-          },
-          {
             type: 'lines',
             coordinateSystem: 'geo',
             data: this.flightRoutes, // 航运轨迹数据
