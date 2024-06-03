@@ -136,7 +136,7 @@ export default Vue.extend({
         geo: {
           center: [120.2885, 22.6163],
           zoom: 20,
-          map: 'kaoMap',
+          map: 'world',
           roam: true,
           label: {
             emphasis: {
@@ -157,7 +157,7 @@ export default Vue.extend({
         series: [
           {
             type: 'map',
-            map: 'kaoMap',
+            map: 'world',
             geoIndex: 0,
             roam: true,
             emphasis: {
