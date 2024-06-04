@@ -2,6 +2,7 @@ import Vue from 'vue';
 import ECharts from 'vue-echarts';
 import kaoMap from 'static/geo/高雄市鄉鎮.json';
 import 'echarts';
+import 'echarts-wordcloud';
 import 'echarts/lib/component/geo';
 import 'echarts/lib/component/markLine';
 import 'echarts/lib/component/markPoint';

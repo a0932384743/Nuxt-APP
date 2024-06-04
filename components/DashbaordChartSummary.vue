@@ -74,22 +74,16 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-const colors = ['limegreen', 'orange', 'red'];
+import { colors } from '~/utils/constants';
 
 export default Vue.extend({
-  name: 'DashboardChartSummary',
-  props: {
-    options: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
       data: {},
       trend: ''
     };
   },
+  name: 'DashboardChartSummary',
   watch: {
     options(options) {
       if (options && options?.series && options?.series.length > 0) {
@@ -115,6 +109,12 @@ export default Vue.extend({
       if (series.markPoint && series.markPoint.data) {
         this.trend = colors[series.markPoint.data.length];
       }
+    }
+  },
+  props: {
+    options: {
+      required: true,
+      type: Object
     }
   }
 });

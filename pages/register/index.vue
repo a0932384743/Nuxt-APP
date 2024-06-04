@@ -200,29 +200,7 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Register',
   layout: 'BaseLayout',
-  data() {
-    return {
-      passwordType: true,
-      loading: false,
-      form: {
-        username: '',
-        email: '',
-        password: '',
-        agreement: false
-      }
-    };
-  },
   computed: {
-    userNameValidate() {
-      if (!this.form.username) {
-        return this.$i18n.t('feedback.require', {
-          e: this.$i18n.t('username')
-        });
-      } else if ((this.form.username || '').length < 5) {
-        return this.$i18n.t('feedback.length.error', { e: 5 });
-      }
-      return false;
-    },
     emailValidate(): any {
       if (!this.form.email) {
         return this.$i18n.t('feedback.require', { e: this.$i18n.t('email') });
@@ -237,6 +215,16 @@ export default Vue.extend({
       }
       return false;
     },
+    userNameValidate() {
+      if (!this.form.username) {
+        return this.$i18n.t('feedback.require', {
+          e: this.$i18n.t('username')
+        });
+      } else if ((this.form.username || '').length < 5) {
+        return this.$i18n.t('feedback.length.error', { e: 5 });
+      }
+      return false;
+    },
     passwordScore(): number {
       const password = this.form.password;
       let score = password.length;
@@ -247,6 +235,18 @@ export default Vue.extend({
       return score;
     }
   },
+  data() {
+    return {
+      loading: false,
+      passwordType: true,
+      form: {
+        email: '',
+        username: '',
+        agreement: false,
+        password: ''
+      }
+    };
+  },
   methods: {
     async onSubmit() {
       this.loading = true;
@@ -256,16 +256,16 @@ export default Vue.extend({
           this.form.password
         );
         this.$bvToast.toast('Success', {
+          solid: true,
           title: '註冊成功',
-          variant: 'success',
-          solid: true
+          variant: 'success'
         });
         this.$router.push('/login');
       } catch (e) {
         this.$bvToast.toast('Error', {
+          solid: true,
           title: e.toLocaleString(),
-          variant: 'danger',
-          solid: true
+          variant: 'danger'
         });
       }
       this.loading = false;

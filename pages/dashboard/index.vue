@@ -25,16 +25,13 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Dashboard',
   components: { DashboardWidget },
-  layout: 'DashboardLayout',
   data() {
     return {
       dashboardList: []
     };
   },
+  layout: 'DashboardLayout',
   computed: {
-    loading() {
-      return this.$store.getters['dashboard/getLoading'];
-    },
     dataSource() {
       const loader = this.$store.getters['dashboard/getLoader'];
       const history = this.$store.getters['dashboard/getLoaderHistory'];
@@ -43,15 +40,14 @@ export default Vue.extend({
       const growth = this.$store.getters['dashboard/getProductGrowth'];
 
       const legend = {
+        data: [],
         orient: 'horizontal',
         textStyle: {
           color: 'white'
-        },
-        data: []
+        }
       };
 
       const yAxis = {
-        type: 'value',
         axisLabel: {
           formatter(value) {
             if (value >= 1000) {
@@ -59,7 +55,8 @@ export default Vue.extend({
             }
             return value;
           }
-        }
+        },
+        type: 'value'
       };
 
       const topTenLoader = {
@@ -80,21 +77,21 @@ export default Vue.extend({
       }
       console.log(history);
       const topTenLoaderHistory = {
+        series: [],
         xAxis: {
-          type: 'category',
           boundaryGap: false,
-          data: Object.keys(history)
+          data: Object.keys(history),
+          type: 'category'
         },
-        yAxis,
-        series: []
+        yAxis
       };
 
       Object.keys(history).forEach(key => {
         Object.keys(history[key]).forEach((type, index) => {
           if (!topTenLoaderHistory.series[index]) {
             topTenLoaderHistory.series[index] = {
-              name: type,
-              data: []
+              data: [],
+              name: type
             };
           }
           topTenLoaderHistory.series[index].data.push(history[key][type].data1);
@@ -111,12 +108,12 @@ export default Vue.extend({
 
       Object.keys(summary).forEach((key, index) => {
         loaderSummary.series[index] = {
-          name: key,
           data: [
             summary[key].current,
             summary[key].change,
             summary[key].growthRate
-          ]
+          ],
+          name: key
         };
       });
 
@@ -126,12 +123,12 @@ export default Vue.extend({
 
       Object.keys(growth).forEach((key, index) => {
         productGrowth.series[index] = {
-          name: key,
           data: [
             growth[key].current,
             growth[key].change,
             growth[key].growthRate
-          ]
+          ],
+          name: key
         };
       });
 
@@ -165,23 +162,23 @@ export default Vue.extend({
           ...legend,
           data: keys.length > 0 ? Object.keys(byHarbor[keys[0]]) : []
         },
+        series: [],
         xAxis: [
           {
-            type: 'category',
-            data: keys
+            data: keys,
+            type: 'category'
           }
         ],
-        yAxis,
-        series: []
+        yAxis
       };
 
       keys.forEach(key => {
         Object.keys(byHarbor[key]).forEach((type, index) => {
           if (!loaderByHarbor.series[index]) {
             loaderByHarbor.series[index] = {
-              type: 'bar',
+              data: [],
               name: type,
-              data: []
+              type: 'bar'
             };
           }
           loaderByHarbor.series[index].data.push(byHarbor[key][type]);
@@ -189,13 +186,16 @@ export default Vue.extend({
       });
 
       return {
-        topTenLoader,
-        topTenLoaderHistory,
-        loaderSummary,
+        last3ProductGrowth,
         loaderByHarbor,
+        loaderSummary,
         top3ProductGrowth,
-        last3ProductGrowth
+        topTenLoader,
+        topTenLoaderHistory
       };
+    },
+    loading() {
+      return this.$store.getters['dashboard/getLoading'];
     }
   },
   created() {

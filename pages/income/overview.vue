@@ -35,18 +35,17 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
 import DashboardWidget from '~/components/DashboardWidget.vue';
-const colors = ['transparent', 'limegreen', 'orange', 'red'];
+import Vue from 'vue';
+import { colors } from '~/utils/constants';
 
 export default Vue.extend({
   name: 'Income',
   components: { DashboardWidget },
-  layout: 'DashboardLayout',
   data() {
     return {
-      modalShow: false,
       dashboardList: [],
+      modalShow: false,
       option: {
         grid: {
           bottom: '8%'
@@ -55,19 +54,18 @@ export default Vue.extend({
           text: ''
         },
         tooltip: {
-          trigger: 'axis',
           axisPointer: {
             type: 'cross',
             crossStyle: {
               color: '#999'
             }
           },
+          trigger: 'axis',
           valueFormatter(value) {
             return `${value} k`;
           }
         },
         xAxis: {
-          type: 'category',
           data: [
             '一月',
             '二月',
@@ -81,8 +79,10 @@ export default Vue.extend({
             '十月',
             '十一月',
             '十二月'
-          ]
+          ],
+          type: 'category'
         },
+        series: [],
         yAxis: {
           type: 'value',
           axisLabel: {
@@ -90,15 +90,12 @@ export default Vue.extend({
               return `${value} k`;
             }
           }
-        },
-        series: []
+        }
       }
     };
   },
+  layout: 'DashboardLayout',
   computed: {
-    loading() {
-      return this.$store.getters['dashboard/getLoading'];
-    },
     dataSource() {
       const dataSource = {};
       const incomeLoss = this.$store.getters['dashboard/getIncomeLoss'];
@@ -108,33 +105,33 @@ export default Vue.extend({
       };
       const yAxis = [
         {
-          type: 'value',
-          name: '億元'
+          name: '億元',
+          type: 'value'
         }
       ];
 
       Object.keys(incomeLoss).forEach(key => {
         const xAxis = [
           {
-            type: 'category',
             axisLabel: { interval: 0 },
             data: Object.keys(incomeLoss[key]),
-            splitLine: { show: false }
+            splitLine: { show: false },
+            type: 'category'
           }
         ];
         const options = {
           grid,
-          yAxis,
-          xAxis,
           legend: {
-            orient: 'horizontal',
             bottom: 10,
+            data: [],
+            orient: 'horizontal',
             textStyle: {
               color: 'white'
-            },
-            data: []
+            }
           },
-          series: []
+          series: [],
+          xAxis,
+          yAxis
         };
 
         Object.keys(incomeLoss[key]).forEach(type => {
@@ -143,18 +140,18 @@ export default Vue.extend({
             (category, index, array) => {
               if (!options.series[index]) {
                 options.series[index] = {
-                  name: category,
+                  data: [],
                   label: {
-                    show: true,
-                    position: 'top'
+                    position: 'top',
+                    show: true
                   },
-                  type: array.length - 1 > index ? 'bar' : 'line',
-                  data: []
+                  name: category,
+                  type: array.length - 1 > index ? 'bar' : 'line'
                 };
               }
               options.series[index].data.push({
-                value: incomeLoss[key][type][category],
-                name: type
+                name: type,
+                value: incomeLoss[key][type][category]
               });
             }
           );
@@ -174,13 +171,13 @@ export default Vue.extend({
           options.series[options.series.length - 1].markPoint = {
             data: result.map((v, index) => {
               return {
-                symbol:
-                  'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
-                symbolSize: [30, 40],
                 itemStyle: {
                   color: colors[3]
                 },
                 name: key,
+                symbol:
+                  'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
+                symbolSize: [30, 40],
                 value:
                   options.series[options.series.length - 1].data[index].value,
                 xAxis: v,
@@ -194,16 +191,19 @@ export default Vue.extend({
           result.forEach(index => {
             options.series[options.series.length - 1].data[index] = {
               ...options.series[options.series.length - 1].data[index],
-              year: options.xAxis[0].data[index],
               itemStyle: {
                 color: colors[2]
-              }
+              },
+              year: options.xAxis[0].data[index]
             };
           });
         }
         dataSource[key] = options;
       });
       return dataSource;
+    },
+    loading() {
+      return this.$store.getters['dashboard/getLoading'];
     }
   },
   created() {
@@ -232,13 +232,13 @@ export default Vue.extend({
         this.option.title.text = param.data.name;
         this.option.series = res.map((snapshot, index) => {
           return {
-            type: 'bar',
-            showBackground: true,
             backgroundStyle: {
               color: 'rgba(220, 220, 220, 0.8)'
             },
+            data: snapshot.val() || [],
             name: param.data.year - 1 + index,
-            data: snapshot.val() || []
+            showBackground: true,
+            type: 'bar'
           };
         });
         this.modalShow = true;

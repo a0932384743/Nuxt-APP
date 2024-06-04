@@ -104,14 +104,15 @@
 <script lang="ts">
 import DashboardWidget from '~/components/DashboardWidget.vue';
 import Vue from 'vue';
-const colors = ['transparent', 'limegreen', 'orange', 'red'];
+import { colors } from '~/utils/constants';
+
 export default Vue.extend({
   name: 'Alert',
   components: { DashboardWidget },
-  layout: 'DashboardLayout',
   data() {
     return {
       modalShow: false,
+      dashboardList: [],
       option: {
         grid: {
           bottom: '8%'
@@ -157,57 +158,54 @@ export default Vue.extend({
           }
         },
         series: []
-      },
-      dashboardList: []
+      }
     };
   },
+  layout: 'DashboardLayout',
   computed: {
-    loading() {
-      return this.$store.getters['dashboard/getLoading'];
-    },
     dataSource() {
       const incomeStatisc = this.$store.getters['dashboard/getIncomeStatics'];
       const dataSource = {};
       const xAxis = {
-        type: 'category',
         data: Object.keys(incomeStatisc).filter(
           key => Object.keys(incomeStatisc[key]).length > 0
-        )
+        ),
+        type: 'category'
       };
 
       const yAxis = {
-        type: 'value',
         axisLabel: {
           formatter(value) {
             return `${value}%`;
           }
-        }
+        },
+        type: 'value'
       };
       Object.keys(incomeStatisc).forEach(key => {
         Object.keys(incomeStatisc[key]).forEach(type => {
           if (!dataSource[type]) {
             dataSource[type] = {
-              xAxis,
-              yAxis,
               series: [
                 {
-                  name: 'bar',
-                  type: 'bar',
                   data: [],
+                  name: 'bar',
                   tooltip: {
                     show: false
-                  }
+                  },
+                  type: 'bar'
                 },
                 {
-                  name: type,
-                  type: 'line',
                   data: [],
                   label: {
-                    show: true,
-                    position: 'top'
-                  }
+                    position: 'top',
+                    show: true
+                  },
+                  name: type,
+                  type: 'line'
                 }
-              ]
+              ],
+              xAxis,
+              yAxis
             };
           }
           dataSource[type].series[0].data.push(incomeStatisc[key][type] || 0);
@@ -229,13 +227,13 @@ export default Vue.extend({
         dataSource[type].series[0].markPoint = {
           data: result.map((v, index) => {
             return {
-              symbol:
-                'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
-              symbolSize: [30, 40],
               itemStyle: {
                 color: colors[3]
               },
               name: type,
+              symbol:
+                'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
+              symbolSize: [30, 40],
               value: dataSource[type].series[0].data[index],
               xAxis: v,
               yAxis: dataSource[type].series[0].data[index] / 2,
@@ -247,16 +245,19 @@ export default Vue.extend({
 
         result.forEach(index => {
           dataSource[type].series[0].data[index] = {
-            value: dataSource[type].series[0].data[index],
-            name: type,
-            year: xAxis.data[index],
             itemStyle: {
               color: colors[2]
-            }
+            },
+            name: type,
+            value: dataSource[type].series[0].data[index],
+            year: xAxis.data[index]
           };
         });
       });
       return dataSource;
+    },
+    loading() {
+      return this.$store.getters['dashboard/getLoading'];
     },
     trend() {
       let trendCount = 0;
@@ -268,12 +269,12 @@ export default Vue.extend({
             dataSource[type] = {
               series: [
                 {
-                  name: 'bar',
-                  type: 'bar',
                   data: [],
+                  name: 'bar',
                   tooltip: {
                     show: false
-                  }
+                  },
+                  type: 'bar'
                 }
               ]
             };
@@ -328,13 +329,13 @@ export default Vue.extend({
         this.option.title.text = param.data.name;
         this.option.series = res.map((snapshot, index) => {
           return {
-            type: 'bar',
-            showBackground: true,
             backgroundStyle: {
               color: 'rgba(220, 220, 220, 0.8)'
             },
+            data: snapshot.val() || [],
             name: param.data.year - 1 + index,
-            data: snapshot.val() || []
+            showBackground: true,
+            type: 'bar'
           };
         });
         this.modalShow = true;

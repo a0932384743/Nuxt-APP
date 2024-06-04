@@ -196,17 +196,6 @@ import { GoogleAuthProvider } from 'firebase/auth';
 export default Vue.extend({
   name: 'Login',
   layout: 'BaseLayout',
-  data() {
-    return {
-      loading: false,
-      passwordType: true,
-      form: {
-        email: '',
-        password: '',
-        remember: false
-      }
-    };
-  },
   computed: {
     emailValidate(): any {
       if (!this.form.email) {
@@ -232,6 +221,17 @@ export default Vue.extend({
       return score;
     }
   },
+  data() {
+    return {
+      loading: false,
+      form: {
+        email: '',
+        password: '',
+        remember: false
+      },
+      passwordType: true
+    };
+  },
   methods: {
     async loginByEmail() {
       this.loading = true;
@@ -242,16 +242,16 @@ export default Vue.extend({
         );
         this.$store.dispatch('common/setUser', res.user);
         this.$bvToast.toast('Success', {
+          solid: true,
           title: '已登入',
-          variant: 'success',
-          solid: true
+          variant: 'success'
         });
         this.$router.push('/dashboard');
       } catch (e) {
         this.$bvToast.toast('Error', {
+          solid: true,
           title: e.toLocaleString(),
-          variant: 'danger',
-          solid: true
+          variant: 'danger'
         });
       }
       this.loading = false;
@@ -265,16 +265,16 @@ export default Vue.extend({
         );
         this.$store.dispatch('common/setUser', res.user);
         this.$bvToast.toast('Success', {
+          solid: true,
           title: '已登入',
-          variant: 'success',
-          solid: true
+          variant: 'success'
         });
         this.$router.push('/dashboard');
       } catch (e) {
         this.$bvToast.toast('Error', {
+          solid: true,
           title: e.toLocaleString(),
-          variant: 'danger',
-          solid: true
+          variant: 'danger'
         });
       }
       this.loading = false;

@@ -24,16 +24,13 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Knowledge',
   components: { DashboardWidget },
-  layout: 'DashboardLayout',
   data() {
     return {
       dashboardList: []
     };
   },
+  layout: 'DashboardLayout',
   computed: {
-    loading() {
-      return this.$store.getters['dashboard/getLoading'];
-    },
     dataSource() {
       const ships = this.$store.getters['dashboard/getShipCount'];
       const shipCount = {
@@ -56,6 +53,9 @@ export default Vue.extend({
       return {
         shipCount
       };
+    },
+    loading() {
+      return this.$store.getters['dashboard/getLoading'];
     }
   },
   created() {
