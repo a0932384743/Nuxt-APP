@@ -18,7 +18,7 @@
           <hr>
         </template>
         <b-form-input
-          v-model="keyword"
+          v-model="filter.keyword"
           placeholder="請輸入關鍵字"
         />
         <v-chart
@@ -46,7 +46,7 @@
     </b-col>
     <b-col
       sm="12"
-      style="max-width: calc(100% - 350px); flex: 1 1 calc(100% - 350px);"
+      style="max-width: calc(100% - 350px); flex: 1 1 calc(100% - 350px)"
     >
       <b-card
         text-variant="white"
@@ -61,6 +61,95 @@
           </div>
         </template>
         <b-row>
+          <b-col
+            sm="12"
+            class="mb-2"
+          >
+            <div
+              class="d-inline-flex flex-wrap mb-1 align-items-center"
+              style="gap: 0.8rem"
+            >
+              <b-button
+                v-for="c in condition.date"
+                :key="JSON.stringify(c)"
+                pill
+                style="min-width: 80px"
+                :variant="filter.date === c.value? 'info' : 'outline-secondary'"
+                size="sm"
+                @click="search({ date: c.value })"
+              >
+                {{ c.name }}
+              </b-button>
+              <font-awesome-icon
+                id="date-button"
+                icon="question-circle"
+                class="mr-2"
+              />
+              <b-tooltip
+                target="date-button"
+                title="可依照需求篩選本日或本周新聞，其中本周新聞指的是七日內的新聞"
+                triggers="hover"
+              >
+                可依照需求篩選本日或本周新聞，其中本周新聞指的是七日內的新聞
+              </b-tooltip>
+            </div>
+            <div
+              class="d-inline-flex flex-wrap mb-1 align-items-center"
+              style="gap: 0.8rem"
+            >
+              <b-button
+                v-for="c in condition.range"
+                :key="JSON.stringify(c)"
+                pill
+                style="min-width: 80px"
+                :variant="filter.range === c.value? 'info' : 'outline-secondary'"
+                size="sm"
+                @click="search({ range: c.value })"
+              >
+                {{ c.name }}
+              </b-button>
+              <font-awesome-icon
+                id="range-button"
+                icon="question-circle"
+                class="mr-2"
+              />
+              <b-tooltip
+                target="range-button"
+                title="可依照需求篩選國內或國外的新聞，區分方式為新聞資料來源網站為國內或國外"
+                triggers="hover"
+              >
+                可依照需求篩選國內或國外的新聞，區分方式為新聞資料來源網站為國內或國外
+              </b-tooltip>
+            </div>
+            <div
+              class="d-inline-flex flex-wrap mb-1 align-items-center"
+              style="gap: 0.8rem"
+            >
+              <b-button
+                v-for="c in condition.type"
+                :key="JSON.stringify(c)"
+                pill
+                style="min-width: 80px"
+                :variant="filter.type === c.value? 'info' : 'outline-secondary'"
+                size="sm"
+                @click="search({ type: c.value })"
+              >
+                {{ c.name }}
+              </b-button>
+              <font-awesome-icon
+                id="type-button"
+                icon="question-circle"
+                class="mr-2"
+              />
+              <b-tooltip
+                target="type-button"
+                title="可依照需求篩選各類型的新聞，會依照新聞內文關鍵字進行過濾"
+                triggers="hover"
+              >
+                可依照需求篩選各類型的新聞，會依照新聞內文關鍵字進行過濾
+              </b-tooltip>
+            </div>
+          </b-col>
           <b-col
             v-for="news in newsList"
             :key="JSON.stringify(news)"
@@ -82,9 +171,9 @@
             >
               <div class="d-flex align-items-center">
                 <img
-                  :src="news.url "
+                  :src="news.url"
                   :alt="news.title"
-                  style="width: 100px;"
+                  style="width: 100px"
                 >
                 <div class="px-1">
                   <b-card-text class="text-overflow">
@@ -113,8 +202,32 @@ export default Vue.extend({
       colWidth: '33%',
       loading: false,
       updateTime: moment().format('YYYY/MM/DD HH:mm'),
-      keyword: '',
       newsList: [],
+      filter: {
+        keyword: '',
+        date: 'day',
+        range: '',
+        type: ''
+      },
+      condition: {
+        date: [
+          { name: '本日', value: 'day' },
+          { name: '本周', value: 'week' }
+        ],
+        range: [
+          { name: '國內', value: '國內' },
+          { name: '國外', value: '國外' },
+          { name: '不限', value: '' }
+        ],
+        type: [
+          { name: '全部', value: '' },
+          { name: '港口', value: '港口' },
+          { name: '航商', value: '航商' },
+          { name: '船員', value: '船員' },
+          { name: '船舶', value: '船舶' },
+          { name: '環境', value: '環境' }
+        ]
+      },
       options: {
         grid: {
           left: '5%',
@@ -153,7 +266,7 @@ export default Vue.extend({
   },
   created() {
     this.loadKeyword();
-    this.search();
+    this.search(this.filter);
   },
   mounted() {
     this.$nextTick(() => {
@@ -183,15 +296,15 @@ export default Vue.extend({
         });
     },
     click(params) {
-      this.keyword = params.data.name;
+      this.filter.keyword = params.data.name;
     },
-    async search() {
+    async search(filter) {
+      this.filter = { ...this.filter, ...filter };
       this.loading = true;
       const res = await this.$fire.database.ref('news/2024-05').once('value');
-
       this.newsList = res
         .val()
-        .filter(r => JSON.stringify(r).indexOf(this.keyword) > -1);
+        .filter(r => JSON.stringify(r).indexOf(this.filter.keyword) > -1);
       this.updateTime = moment().format('YYYY/MM/DD HH:mm');
       this.loading = false;
     }
