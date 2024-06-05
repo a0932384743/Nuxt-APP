@@ -25,7 +25,22 @@
     >
       <template #header>
         <div class="d-flex pr-5 position-relative">
-          <div><font-awesome-icon icon="chart-bar" /> {{ item.name }}</div>
+          <div>
+            <font-awesome-icon icon="chart-bar" />
+            {{ item.name }}
+            <font-awesome-icon
+              v-if="dataSource && dataSource[item.dataSource]?.info"
+              :id="item.name"
+              icon="info-circle"
+              width="15px"
+              height="15px"
+            />
+            <b-tooltip
+              v-if="dataSource && dataSource[item.dataSource]?.info"
+              :target="item.name"
+              :title="dataSource && dataSource[item.dataSource]?.info"
+            />
+          </div>
           <b-dropdown
             variant="link"
             toggle-class="text-decoration-none"

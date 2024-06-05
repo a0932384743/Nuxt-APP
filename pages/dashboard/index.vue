@@ -25,12 +25,12 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Dashboard',
   components: { DashboardWidget },
+  layout: 'DashboardLayout',
   data() {
     return {
       dashboardList: []
     };
   },
-  layout: 'DashboardLayout',
   computed: {
     dataSource() {
       const loader = this.$store.getters['dashboard/getLoader'];

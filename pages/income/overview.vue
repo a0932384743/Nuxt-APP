@@ -6,12 +6,7 @@
       :ok-title="$t('close')"
       ok-variant="info"
     >
-      <v-chart
-        v-if="modalShow"
-        class="w-100"
-        :options="option"
-        autoresize
-      />
+      <v-chart v-if="modalShow" class="w-100" :options="option" autoresize />
     </b-modal>
     <grid-layout
       :show="!loading"
@@ -42,6 +37,7 @@ import { colors } from '~/utils/constants';
 export default Vue.extend({
   name: 'Income',
   components: { DashboardWidget },
+  layout: 'DashboardLayout',
   data() {
     return {
       dashboardList: [],
@@ -94,7 +90,6 @@ export default Vue.extend({
       }
     };
   },
-  layout: 'DashboardLayout',
   computed: {
     dataSource() {
       const dataSource = {};
@@ -109,7 +104,6 @@ export default Vue.extend({
           type: 'value'
         }
       ];
-
       Object.keys(incomeLoss).forEach(key => {
         const xAxis = [
           {
@@ -121,6 +115,7 @@ export default Vue.extend({
         ];
         const options = {
           grid,
+          info: '點擊告警圖示可以查看詳細每月同期數值比較圖表',
           legend: {
             bottom: 10,
             data: [],
@@ -211,7 +206,6 @@ export default Vue.extend({
   },
   methods: {
     async click(param) {
-      console.log(param);
       if (param.componentType === 'markPoint') {
         const res = await Promise.all([
           this.$fire.database
