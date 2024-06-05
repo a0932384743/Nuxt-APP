@@ -53,5 +53,10 @@ export default {
   username: 'User Name',
   'product.name': 'Product',
   search: 'Search',
-  'last.update.time': 'Last Update Time'
+  'last.update.time': 'Last Update Time',
+  save: 'Save',
+  'add.chart': 'New Chart',
+  'add.text': 'New Text',
+  'add.pic': 'New Picture',
+  add: 'Add'
 };

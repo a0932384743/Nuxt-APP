@@ -53,5 +53,10 @@ export default {
   username: '帳戶名稱',
   'product.name': '貨品名稱',
   search: '搜尋',
-  'last.update.time': '最後更新時間'
+  'last.update.time': '最後更新時間',
+  save: '儲存',
+  'add.chart': '新增圖表',
+  'add.text': '新增文字',
+  'add.pic': '新增圖片',
+  add: '新增'
 };

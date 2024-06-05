@@ -12,7 +12,7 @@
       </template>
       <template #menu>
         <b-nav-item
-          v-for="menu in baseMenu"
+          v-for="menu in (baseMenu || []).filter(m => !m.hidden)"
           :key="menu.name"
           :to="menu.url"
         >
