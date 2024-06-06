@@ -75,7 +75,7 @@ export default Vue.extend({
           }
         ];
       }
-      console.log(history);
+
       const topTenLoaderHistory = {
         series: [],
         xAxis: {
@@ -184,7 +184,6 @@ export default Vue.extend({
           loaderByHarbor.series[index].data.push(byHarbor[key][type]);
         });
       });
-
       return {
         last3ProductGrowth,
         loaderByHarbor,
@@ -206,6 +205,8 @@ export default Vue.extend({
       const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {
         const data = snapshot.val();
+        console.log(JSON.stringify(data));
+
         this.dashboardList = data
           .filter(d => d)
           .map((d, index) => {
