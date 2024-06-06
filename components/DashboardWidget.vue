@@ -211,6 +211,7 @@
           />
         </div>
       </div>
+      <slot v-else-if="item?.chartType === 'text'" />
       <v-chart
         v-else
         ref="chart"

@@ -8,4 +8,3 @@ export default Vue.extend({
   layout: 'DashboardLayout'
 });
 </script>
-<style>
