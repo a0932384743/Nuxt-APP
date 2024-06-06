@@ -6,6 +6,50 @@
     class="bg-transparent h-100"
     border-variant="secondary"
   >
+    <template #header>
+      <div class="d-flex pl-2 pr-5 position-relative">
+        <div>
+          <strong>貨櫃吞吐量預測</strong>
+        </div>
+        <b-dropdown
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          menu-class="custom-dropdown-menu"
+          class="position-absolute"
+          style="right: 0px; top: 0px"
+          right
+        >
+          <template #button-content>
+            <font-awesome-icon
+              icon="gear"
+              class="text-white"
+            />
+          </template>
+        </b-dropdown>
+      </div>
+    </template>
+    <b-tabs
+      pills
+      class="custom-pill"
+      content-class="mt-3"
+      nav-wrapper-class="mt-0"
+      justified
+    >
+      <b-tab
+        title="營運效率"
+        active
+      />
+      <b-tab
+        title="成本管理"
+      />
+      <b-tab
+        title="安全合規"
+      />
+      <b-tab
+        title="環境影響"
+      />
+    </b-tabs>
     <b-row class="h-100">
       <b-col
         sm="12"
@@ -255,13 +299,6 @@ export default Vue.extend({
         textStyle: {
           color: 'white'
         },
-        title: {
-          show: false,
-          text: '貨櫃吞吐量預測',
-          textStyle: {
-            color: 'white'
-          }
-        },
         tooltip: {
           trigger: 'axis'
         },
@@ -397,12 +434,6 @@ export default Vue.extend({
       const option = {
         textStyle: {
           color: 'white'
-        },
-        title: {
-          text: '貨櫃吞吐量預測',
-          textStyle: {
-            color: 'white'
-          }
         },
         tooltip: {
           trigger: 'axis'

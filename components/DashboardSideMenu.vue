@@ -124,6 +124,56 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
+    <hr>
+    <div
+      v-if="isShowSubMenu"
+      class="text-white mb-2"
+    >
+      單頁篩選器
+    </div>
+    <div
+      v-if="isShowSubMenu"
+      class="text-white mb-2 d-flex"
+    >
+      <div class="flex-grow-1">
+        收入別
+      </div>
+      <div class="flex-grow-1">
+        <b-form-checkbox
+          :checked="
+            types?.length > 0 &&
+              form.selectedType
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
+              types
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',')
+          "
+          @change="toggleAllTypes"
+        >
+          全選
+        </b-form-checkbox>
+      </div>
+    </div>
+    <b-row class="mx-0 mb-3 w-100">
+      <b-form-group
+        v-for="type in types"
+        :key="type.name"
+        class="col-sm-12 col-md-6"
+      >
+        <b-form-checkbox
+          v-model="form.selectedType"
+          :value="type"
+          :aria-describedby="type.name"
+        >
+          {{ type.name }}
+        </b-form-checkbox>
+      </b-form-group>
+    </b-row>
     <div
       class="d-flex"
       style="gap: 0.5rem"
@@ -161,14 +211,17 @@ export default Vue.extend({
   },
   data() {
     return {
+      isShowSubMenu: false,
       form: {
         startDate: moment().subtract(5, 'years').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         selectedCompanies: [],
+        selectedType: [],
         selectedHarbor: [{ name: '臺北港' }]
       },
       companies: [],
-      harbors: []
+      harbors: [],
+      types: [{ name: '營業外收入' }, { name: '營業外費用' }, { name: '營業成本及費用' }, { name: '營業收入' }, { name: '稅前淨利' }],
     };
   },
   computed: {
@@ -187,6 +240,7 @@ export default Vue.extend({
         startDate: moment().subtract(5, 'years').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         selectedCompanies: [],
+        selectedType: [],
         selectedHarbor: [{ name: '臺北港' }]
       };
       this.$store.dispatch('dashboard/setLoading', true);
@@ -258,6 +312,24 @@ export default Vue.extend({
         this.form.selectedCompanies = [];
       } else {
         this.form.selectedCompanies = [...this.companies];
+      }
+    },
+    toggleAllTypes() {
+      if (
+        this.form.selectedType
+          .map(c => c.name)
+          .filter(c => c)
+          .sort()
+          .join(',') ===
+        this.types
+          .map(c => c.name)
+          .filter(c => c)
+          .sort()
+          .join(',')
+      ) {
+        this.form.selectedType = [];
+      } else {
+        this.form.selectedType = [...this.types];
       }
     },
     toggleAllHarbors() {
@@ -375,7 +447,13 @@ export default Vue.extend({
       const incomeLoss = {};
       const incomeLossArray = incomeLossList.map(l => l.val());
       years.forEach((y, index) => {
-        incomeLoss[String(y)] = incomeLossArray[index] || {};
+        const obj = {};
+        this.form.selectedType.forEach(type => {
+          if (incomeLossArray[index][type.name]) {
+            obj[type.name] = incomeLossArray[index][type.name];
+          }
+        });
+        incomeLoss[String(y)] = obj;
       });
       this.$store.dispatch('dashboard/setIncomeLoss', {
         公司損益情形: incomeLoss
