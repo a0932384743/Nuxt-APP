@@ -55,12 +55,16 @@
               <b-input-group>
                 <template #prepend>
                   <div class="input-group-text bg-light">
-                    <font-awesome-icon icon="fa-solid fa-envelope" />
+                    <font-awesome-icon
+                      icon="fa-solid fa-envelope"
+                      class="text-dark"
+                    />
                   </div>
                 </template>
                 <b-form-input
                   id="email-input"
                   v-model="form.email"
+                  class="text-dark"
                   autocomplete="off"
                   name="email"
                   :placeholder="$t('email')"
@@ -79,17 +83,17 @@
             <b-form-group label-for="password-input">
               <b-input-group>
                 <template #prepend>
-                  <div
-                    class="input-group-text"
-                  >
+                  <div class="input-group-text">
                     <font-awesome-icon
                       icon="fa-solid fa-lock"
+                      class="text-dark"
                     />
                   </div>
                 </template>
                 <b-form-input
                   id="password-input"
                   v-model="form.password"
+                  class="text-dark"
                   autocomplete="off"
                   :type="passwordType ? 'password' : 'text'"
                   name="password"
@@ -103,6 +107,7 @@
                     @click="passwordType = !passwordType"
                   >
                     <font-awesome-icon
+                      class="text-dark"
                       :icon="
                         passwordType
                           ? 'fa-solid fa-eye-slash'
@@ -196,6 +201,17 @@ import { GoogleAuthProvider } from 'firebase/auth';
 export default Vue.extend({
   name: 'Login',
   layout: 'BaseLayout',
+  data() {
+    return {
+      loading: false,
+      form: {
+        email: '',
+        password: '',
+        remember: false
+      },
+      passwordType: true
+    };
+  },
   computed: {
     emailValidate(): any {
       if (!this.form.email) {
@@ -220,17 +236,6 @@ export default Vue.extend({
       if (/[A-Z]/.test(this.form.password)) score *= 1.25;
       return score;
     }
-  },
-  data() {
-    return {
-      loading: false,
-      form: {
-        email: '',
-        password: '',
-        remember: false
-      },
-      passwordType: true
-    };
   },
   methods: {
     async loginByEmail() {
@@ -288,6 +293,6 @@ export default Vue.extend({
   height: 100%;
   width: 100%;
   object-fit: cover;
-  max-height: calc( 100vh - $header-height);
+  max-height: calc(100vh - $header-height);
 }
 </style>

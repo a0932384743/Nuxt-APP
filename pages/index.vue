@@ -8,7 +8,7 @@
         sm="{12}"
         class="align-self-end"
       >
-        <h1 class="text-white font-weight-bold">
+        <h1 class=" font-weight-bold">
           Your Favorite Place for Free Bootstrap Themes
         </h1>
         <hr class="divider">
@@ -18,7 +18,7 @@
         sm="{12}"
         class="align-self-baseline"
       >
-        <p class="text-light mb-5">
+        <p class="mb-5">
           Start Bootstrap can help you build better websites using the Bootstrap
           framework! Just download a theme and start customizing, no strings
           attached!

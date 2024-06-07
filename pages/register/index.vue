@@ -39,12 +39,16 @@
               <b-input-group>
                 <template #prepend>
                   <div class="input-group-text bg-light">
-                    <font-awesome-icon icon="fa-solid fa-user" />
+                    <font-awesome-icon
+                      icon="fa-solid fa-user"
+                      class="text-dark"
+                    />
                   </div>
                 </template>
                 <b-form-input
                   id="username-input"
                   v-model="form.username"
+                  class="text-dark"
                   autofocus
                   autocomplete="off"
                   type="text"
@@ -66,12 +70,16 @@
               <b-input-group>
                 <template #prepend>
                   <div class="input-group-text bg-light">
-                    <font-awesome-icon icon="fa-solid fa-envelope" />
+                    <font-awesome-icon
+                      icon="fa-solid fa-envelope"
+                      class="text-dark"
+                    />
                   </div>
                 </template>
                 <b-form-input
                   id="email-input"
                   v-model="form.email"
+                  class="text-dark"
                   autocomplete="off"
                   type="email"
                   name="email"
@@ -96,6 +104,7 @@
                     @click="passwordType = !passwordType"
                   >
                     <font-awesome-icon
+                      class="text-dark"
                       :icon="
                         passwordType ? 'fa-solid fa-lock' : 'fa-solid fa-unlock'
                       "
@@ -200,6 +209,18 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Register',
   layout: 'BaseLayout',
+  data() {
+    return {
+      loading: false,
+      passwordType: true,
+      form: {
+        email: '',
+        username: '',
+        agreement: false,
+        password: ''
+      }
+    };
+  },
   computed: {
     emailValidate(): any {
       if (!this.form.email) {
@@ -234,18 +255,6 @@ export default Vue.extend({
       if (/[A-Z]/.test(this.form.password)) score *= 1.25;
       return score;
     }
-  },
-  data() {
-    return {
-      loading: false,
-      passwordType: true,
-      form: {
-        email: '',
-        username: '',
-        agreement: false,
-        password: ''
-      }
-    };
   },
   methods: {
     async onSubmit() {

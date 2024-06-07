@@ -317,6 +317,7 @@ export default Vue.extend({
       option: {
         toolbox: {
           show: true,
+          itemSize: 25,
           feature: {
             restore: {
               show: true,
@@ -430,7 +431,7 @@ export default Vue.extend({
   min-width: 100% !important;
   height: 100% !important;
   z-index: 99999 !important;
-  background-color: rgb(43 38 66) !important;
+  background-color: white !important;
   transform: translate3d(0px, 0px, 0px) !important;
 
   .card {

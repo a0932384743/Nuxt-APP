@@ -43,7 +43,7 @@
       >
         <b-card
           text-variant="white"
-          header-class="py-1 px-2"
+          header-class="pt-1 pb-4  px-2"
           body-class="p-2 overflow-auto"
           class="bg-transparent h-100"
           border-variant="secondary"
@@ -294,15 +294,15 @@ export default Vue.extend({
         const res = await Promise.all([
           this.$fire.database
             .ref(
-              `incomeMonthStatics/${Number(param.data.year) - 1}/${param.data.name}`
+              `incomeMonthStatics/${param.data.name}/${Number(param.data.year) - 1}`
             )
             .once('value'),
           this.$fire.database
-            .ref(`incomeMonthStatics/${param.data.year}/${param.data.name}`)
+            .ref(`incomeMonthStatics/${param.data.name}/${param.data.year}`)
             .once('value'),
           this.$fire.database
             .ref(
-              `incomeMonthStatics/${Number(param.data.year) + 1}/${param.data.name}`
+              `incomeMonthStatics/${param.data.name}/${Number(param.data.year) + 1}`
             )
             .once('value')
         ]);
@@ -339,8 +339,3 @@ export default Vue.extend({
   }
 });
 </script>
-<style>
-.vue-grid-layout {
-  min-height: 50px;
-}
-</style>
