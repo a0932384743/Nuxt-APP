@@ -52,11 +52,11 @@
         <b-form-checkbox
           :checked="
             companies?.length > 0 &&
-              form.selectedCompanies
-                .map(c => c.name)
-                .filter(c => c)
-                .sort()
-                .join(',') ===
+            form.selectedCompanies
+              .map(c => c.name)
+              .filter(c => c)
+              .sort()
+              .join(',') ===
               companies
                 .map(c => c.name)
                 .filter(c => c)
@@ -92,11 +92,11 @@
         <b-form-checkbox
           :checked="
             harbors?.length > 0 &&
-              form.selectedHarbor
-                .map(c => c.name)
-                .filter(c => c)
-                .sort()
-                .join(',') ===
+            form.selectedHarbor
+              .map(c => c.name)
+              .filter(c => c)
+              .sort()
+              .join(',') ===
               harbors
                 .map(c => c.name)
                 .filter(c => c)
@@ -124,29 +124,19 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
-    <hr>
-    <div
-      v-if="isShowSubMenu"
-      class="text-white mb-2"
-    >
-      單頁篩選器
-    </div>
-    <div
-      v-if="isShowSubMenu"
-      class="text-white mb-2 d-flex"
-    >
-      <div class="flex-grow-1">
-        收入別
-      </div>
+    <hr />
+    <div v-if="isShowSubMenu" class="text-white mb-2">單頁篩選器</div>
+    <div v-if="isShowSubMenu" class="text-white mb-2 d-flex">
+      <div class="flex-grow-1">收入別</div>
       <div class="flex-grow-1">
         <b-form-checkbox
           :checked="
             types?.length > 0 &&
-              form.selectedType
-                .map(c => c.name)
-                .filter(c => c)
-                .sort()
-                .join(',') ===
+            form.selectedType
+              .map(c => c.name)
+              .filter(c => c)
+              .sort()
+              .join(',') ===
               types
                 .map(c => c.name)
                 .filter(c => c)
@@ -159,7 +149,7 @@
         </b-form-checkbox>
       </div>
     </div>
-    <b-row class="mx-0 mb-3 w-100">
+    <b-row class="mx-0 mb-3 w-100" v-if="isShowSubMenu">
       <b-form-group
         v-for="type in types"
         :key="type.name"
@@ -174,20 +164,12 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
-    <div
-      class="d-flex"
-      style="gap: 0.5rem"
-    >
-      <b-button
-        variant="info"
-        pill
-        class="flex-grow-1"
-        @click="onApply"
-      >
+    <div class="d-flex" style="gap: 0.5rem">
+      <b-button variant="info" pill class="flex-grow-1" @click="onApply">
         {{ $t('apply') }}
       </b-button>
       <b-button
-        variant="outline-secondary"
+        variant="outline-light"
         pill
         class="flex-grow-1"
         @click="onReset"
@@ -211,7 +193,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      isShowSubMenu: false,
+      isShowSubMenu: true,
       form: {
         startDate: moment().subtract(5, 'years').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
@@ -221,7 +203,13 @@ export default Vue.extend({
       },
       companies: [],
       harbors: [],
-      types: [{ name: '營業外收入' }, { name: '營業外費用' }, { name: '營業成本及費用' }, { name: '營業收入' }, { name: '稅前淨利' }],
+      types: [
+        { name: '營業外收入' },
+        { name: '營業外費用' },
+        { name: '營業成本及費用' },
+        { name: '營業收入' },
+        { name: '稅前淨利' }
+      ]
     };
   },
   computed: {

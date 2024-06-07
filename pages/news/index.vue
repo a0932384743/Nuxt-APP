@@ -2,7 +2,7 @@
   <b-row class="w-100 h-100">
     <b-col
       sm="12"
-      style="max-width: 350px; flex: 0 0 350px"
+      style="max-width: 350px; flex: 0 0 400px"
     >
       <b-card
         text-variant="white"
@@ -15,7 +15,6 @@
           <div class="d-flex pr-5 position-relative">
             <div><font-awesome-icon icon="key" /> {{ $t('keyword') }}</div>
           </div>
-          <hr>
         </template>
         <b-form-input
           v-model="filter.keyword"
@@ -46,7 +45,7 @@
     </b-col>
     <b-col
       sm="12"
-      style="max-width: calc(100% - 350px); flex: 1 1 calc(100% - 350px)"
+      style="max-width: calc(100% - 350px); flex: 1 1 calc(100% - 400px)"
     >
       <b-card
         text-variant="white"

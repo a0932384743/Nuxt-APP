@@ -1,8 +1,5 @@
 <template>
-  <b-container
-    fluid
-    class="h-100"
-  >
+  <b-container fluid class="h-100">
     <b-modal
       v-model="modalShow"
       ok-only
@@ -38,16 +35,16 @@
             id="圖表類型"
             v-model="form.type"
             class="text-secondary"
-            :options="['折線圖','柱狀圖','圓餅圖','點陣圖'].map(s=>({
-              value: s,
-              text: s
-            }))"
+            :options="
+              ['折線圖', '柱狀圖', '圓餅圖', '點陣圖'].map(s => ({
+                value: s,
+                text: s
+              }))
+            "
             placeholder="請選擇圖表類型"
             style="max-width: 300px"
           >
-            <b-form-select-option :value="''">
-              請選擇
-            </b-form-select-option>
+            <b-form-select-option :value="''"> 請選擇 </b-form-select-option>
           </b-form-select>
         </b-form-group>
         <b-form-group
@@ -62,16 +59,16 @@
             id="時間區間"
             v-model="form.date"
             class="text-secondary"
-            :options="['每天','每月','每年'].map(s=>({
-              value: s,
-              text: s
-            }))"
+            :options="
+              ['每天', '每月', '每年'].map(s => ({
+                value: s,
+                text: s
+              }))
+            "
             placeholder="請選擇時間區間"
             style="max-width: 300px"
           >
-            <b-form-select-option :value="''">
-              請選擇
-            </b-form-select-option>
+            <b-form-select-option :value="''"> 請選擇 </b-form-select-option>
           </b-form-select>
         </b-form-group>
         <b-form-group
@@ -86,16 +83,16 @@
             id="時間層級"
             v-model="form.year"
             class="text-secondary"
-            :options="['月份'].map(s=>({
-              value: s,
-              text: s
-            }))"
+            :options="
+              ['月份'].map(s => ({
+                value: s,
+                text: s
+              }))
+            "
             placeholder="請選擇時間層級"
             style="max-width: 300px"
           >
-            <b-form-select-option :value="''">
-              請選擇
-            </b-form-select-option>
+            <b-form-select-option :value="''"> 請選擇 </b-form-select-option>
           </b-form-select>
         </b-form-group>
         <b-form-group
@@ -110,16 +107,20 @@
             id="主要Y軸"
             v-model="form.mainY"
             class="text-secondary"
-            :options="['經人採購指數[PMI]', '消費者物價指數[CPI]' , '全球經濟成長率[IMF]'].map(s=>({
-              value: s,
-              text: s
-            }))"
+            :options="
+              [
+                '經人採購指數[PMI]',
+                '消費者物價指數[CPI]',
+                '全球經濟成長率[IMF]'
+              ].map(s => ({
+                value: s,
+                text: s
+              }))
+            "
             placeholder="請選擇主要Y軸"
             style="max-width: 300px"
           >
-            <b-form-select-option :value="''">
-              請選擇
-            </b-form-select-option>
+            <b-form-select-option :value="''"> 請選擇 </b-form-select-option>
           </b-form-select>
         </b-form-group>
         <b-form-group
@@ -134,16 +135,20 @@
             id="次要Y軸"
             v-model="form.subY"
             class="text-secondary"
-            :options="['經人採購指數[PMI]', '消費者物價指數[CPI]' , '全球經濟成長率[IMF]'].map(s=>({
-              value: s,
-              text: s
-            }))"
+            :options="
+              [
+                '經人採購指數[PMI]',
+                '消費者物價指數[CPI]',
+                '全球經濟成長率[IMF]'
+              ].map(s => ({
+                value: s,
+                text: s
+              }))
+            "
             placeholder="請選擇次要Y軸"
             style="max-width: 300px"
           >
-            <b-form-select-option :value="''">
-              請選擇
-            </b-form-select-option>
+            <b-form-select-option :value="''"> 請選擇 </b-form-select-option>
           </b-form-select>
         </b-form-group>
         <b-form-group
@@ -192,22 +197,13 @@
           class="justify-content-md-end justify-content-start d-flex mb-1"
           style="gap: 1rem"
         >
-          <b-button
-            variant="info"
-            @click="toggleModal"
-          >
+          <b-button variant="info" @click="toggleModal">
             {{ $t('add.chart') }}
           </b-button>
-          <b-button
-            variant="info"
-            @click="toggleModal"
-          >
+          <b-button variant="info" @click="toggleModal">
             {{ $t('add.text') }}
           </b-button>
-          <b-button
-            variant="info"
-            @click="toggleModal"
-          >
+          <b-button variant="info" @click="toggleModal">
             {{ $t('add.pic') }}
           </b-button>
         </b-col>
@@ -218,13 +214,13 @@
       label="主題名稱"
       label-for="MenuName"
       label-cols="3"
-      label-class="text-right text-white pr-2"
+      label-class="text-right pr-2"
       content-cols="8"
-      description="請輸入主題名稱"
     >
       <b-form-input
         id="MenuName"
         v-model="menuName"
+        placeholder="請輸入主題名稱"
         type="text"
         required
       />
@@ -245,7 +241,11 @@
         :item="item"
         :data-source="dataSource"
       >
-        了解如何使用Excel 函數來擷取一或多個儲存格中的文字，並將它分割至多個儲存格中。 此動作稱為剖析，作用與串連相反。 觀看此影片以深入了解。
+        <div class="px-2">
+          了解如何使用Excel
+          函數來擷取一或多個儲存格中的文字，並將它分割至多個儲存格中。
+          此動作稱為剖析，作用與串連相反。 觀看此影片以深入了解。
+        </div>
       </dashboard-widget>
     </grid-layout>
   </b-container>
@@ -264,7 +264,7 @@ export default Vue.extend({
         year: '',
         mainY: '',
         subY: '',
-        value: '',
+        value: ''
       },
       modalShow: false,
       dashboardList: [

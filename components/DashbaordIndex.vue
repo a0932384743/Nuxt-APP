@@ -32,7 +32,7 @@
       style="max-height: max-content"
     >
       <template #cell(type)="data">
-        <span class="bg-danger">{{ data.item.type }}</span>
+        <span class="bg-danger text-white">{{ data.item.type }}</span>
       </template>
       <template #cell(value)="data">
         <div class="w-100">{{ data.item.value }} {{ data.item.unit }}</div>

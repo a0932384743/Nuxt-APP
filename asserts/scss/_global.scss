@@ -1,6 +1,6 @@
 ::-webkit-scrollbar {
-  width: 12px;
   height: 12px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -10,8 +10,8 @@
 
 ::-webkit-scrollbar-thumb {
   background: #888;
-  border-radius: 10px;
   border: 3px solid #f1f1f1; /* padding around thumb */
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -38,9 +38,9 @@
 
 /* Firefox */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
   -ms-overflow-style: -ms-autohiding-scrollbar;
+  scrollbar-color: #888 #f1f1f1;
+  scrollbar-width: thin;
 }
 
 /* IE 10+ */
@@ -69,7 +69,7 @@ small {
   font-size: 70%;
 }
 
-strong{
+strong {
   font-weight: bold;
 }
 
@@ -117,34 +117,25 @@ strong{
 
 .auth-layout > main {
   /* Permalink - use to edit and share this gradient. 固定鏈接 - 用於編輯和分享此漸變： https://colorzilla.com/gradient-editor/#042510+1,272243+63,373240+100 */
-  background: linear-gradient(
-    to bottom,
-    #000000 10%,
-    #272243 63%,
-    #373240 100%
-  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: white; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   min-height: 100%;
   padding-bottom: 20px;
   padding-top: $header-height;
 }
 
 .auth-layout > header {
-  background: #000000;
+  background: #004085;
   min-height: $header-height;
+  color: lightgrey;
 
   &.is-fixed {
-    background: #000000;
-    border-bottom: 1px solid #393939;
+    background: #004085;
+    border-bottom: 1px solid #282828;
   }
 }
 
 aside.side-menu {
-  background: linear-gradient(
-    to bottom,
-    #000000 1%,
-    #272243 63%,
-    #373240 100%
-  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: #27609d; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   border: 1px solid #363636;
   color: white;
   flex: 350px 0 0;

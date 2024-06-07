@@ -32,7 +32,7 @@
         >
           <template #button-content>
             <font-awesome-icon icon="user-circle" />
-            <span>{{ currentUser?.email || '-' }} | </span>
+            <span>{{ 'User' }} </span>
           </template>
           <b-dropdown-header> {{ $t('language') }} </b-dropdown-header>
           <b-dropdown-item

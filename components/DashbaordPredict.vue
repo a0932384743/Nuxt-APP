@@ -2,7 +2,7 @@
   <b-card
     text-variant="white"
     header-class="py-1 px-2"
-    body-class="p-2 h-100 d-flex flex-column"
+    body-class="p-2 h-100 d-flex flex-column position-relative"
     class="bg-transparent h-100"
     border-variant="secondary"
   >
@@ -23,12 +23,13 @@
           <template #button-content>
             <font-awesome-icon
               icon="gear"
-              class="text-white"
+              class="text-dark"
             />
           </template>
         </b-dropdown>
       </div>
     </template>
+
     <b-tabs
       pills
       class="custom-pill"
@@ -72,6 +73,13 @@
         />
       </b-col>
     </b-row>
+    <img
+      src="/img/robot-icon.png"
+      alt="告警機器人"
+      width="50px"
+      class="position-absolute"
+      style="right: 10px;bottom: 10px"
+    >
   </b-card>
 </template>
 <script lang="ts">
@@ -296,9 +304,6 @@ export default Vue.extend({
       const predictedSeriesData3 = [...originalData3.map((item, index, array) => (index === array.length - 1) ? item : null), ...predictedData3.map(item => item.value)];
 
       const option = {
-        textStyle: {
-          color: 'white'
-        },
         tooltip: {
           trigger: 'axis'
         },
@@ -432,9 +437,6 @@ export default Vue.extend({
       const predictedSeriesData = [...originalData.map((item, index, array) => (index === array.length - 1) ? item : null), ...predictedData.map(item => item.value)];
 
       const option = {
-        textStyle: {
-          color: 'white'
-        },
         tooltip: {
           trigger: 'axis'
         },

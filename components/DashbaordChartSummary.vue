@@ -1,7 +1,7 @@
 <template>
   <div
     class="px-2"
-    style="font-size: 1rem"
+    style="font-size: 1.5rem"
   >
     <div
       class="d-flex px-2 text-white mb-2 px-2"

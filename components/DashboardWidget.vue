@@ -144,13 +144,13 @@
         v-else-if="item?.chartType === 'chartSummary'"
         class="w-100 h-100 flex-nowrap d-flex flex-sm-row flex-column"
       >
-        <div style="flex: 0 0 400px">
+        <div style="flex: 0 0 500px">
           <dashboard-chart-summary
             :options="(dataSource && dataSource[item.dataSource]) || {}"
           />
         </div>
         <div
-          style="flex: 1 1 calc(100% - 450px); max-width: calc(100% - 450px)"
+          style="flex: 1 1 calc(100% - 450px); max-width: calc(100% - 500px)"
         >
           <v-chart
             ref="chart"
@@ -333,7 +333,6 @@ export default Vue.extend({
               lang: ['表格', '關閉', '刷新'],
               textareaColor: '#131022',
               backgroundColor: '#131022',
-              textColor: 'white',
               buttonColor: '#17a2b8'
             },
             magicType: {
@@ -345,9 +344,7 @@ export default Vue.extend({
               }
             }
           },
-          iconStyle: {
-            color: 'white'
-          }
+
         },
         tooltip: {
           trigger: 'axis',
@@ -358,9 +355,6 @@ export default Vue.extend({
             }
           }
         },
-        textStyle: {
-          color: 'white'
-        }
       }
     };
   },

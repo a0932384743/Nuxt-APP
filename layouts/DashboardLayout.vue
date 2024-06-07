@@ -32,7 +32,7 @@
         }"
       >
         <div
-          class="position-absolute d-flex justify-content-between w-100"
+          class="position-absolute d-flex justify-content-between w-100 align-items-center"
           style="top: -10px"
         >
           <b-breadcrumb class="flex-nowrap">
@@ -175,11 +175,11 @@ export default Vue.extend({
   padding: 0px;
 
   & > a {
-    color: lightgray;
+    color: gray;
   }
 
   &.active {
-    border-bottom: 2px solid lightgray;
+    border-bottom: 2px solid gray;
   }
 }
 </style>

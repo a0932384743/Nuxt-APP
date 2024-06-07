@@ -42,9 +42,6 @@ export default Vue.extend({
       const legend = {
         data: [],
         orient: 'horizontal',
-        textStyle: {
-          color: 'white'
-        }
       };
 
       const yAxis = {
@@ -205,8 +202,6 @@ export default Vue.extend({
       const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {
         const data = snapshot.val();
-        console.log(JSON.stringify(data));
-
         this.dashboardList = data
           .filter(d => d)
           .map((d, index) => {

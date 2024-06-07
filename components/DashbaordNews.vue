@@ -18,7 +18,7 @@
           </h4>
           <p><small>{{ newsList[index]?.time || '-' }}</small></p>
           <div
-            class="overflow-auto flex-grow-1 text-white"
+            class="overflow-auto flex-grow-1"
             style="font-size: 1rem;"
           >
             {{ newsList[index]?.content || '-' }}
