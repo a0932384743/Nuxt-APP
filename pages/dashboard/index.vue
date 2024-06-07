@@ -9,6 +9,7 @@
     is-resizable
     vertical-compact
     use-css-transforms
+    @layout-updated="onLayoutUpdated"
   >
     <dashboard-widget
       v-for="item in dashboardList"
@@ -33,17 +34,78 @@ export default Vue.extend({
   },
   computed: {
     dataSource() {
-      const loader = this.$store.getters['dashboard/getLoader'];
-      const history = this.$store.getters['dashboard/getLoaderHistory'];
-      const summary = this.$store.getters['dashboard/getLoaderSummary'];
-      const byHarbor = this.$store.getters['dashboard/getLoaderByHarbor'];
-      const growth = this.$store.getters['dashboard/getProductGrowth'];
-
+      const loaders = this.$store.getters['dashboard/getLoaders'];
+      const dataSource = {};
+      Object.keys(loaders).forEach(type => {
+        let key = type;
+        const data = loaders[type];
+        if (type === '歷年裝卸量') {
+          key = '散雜貨前十大貨品歷年裝卸量';
+          dataSource[key] = this.convertToLine(data);
+        }
+        if (type === '各港貨物裝卸量') {
+          dataSource[key] = this.convertToBar(
+            data[Object.keys(data).slice(-1)[0]]
+          );
+        }
+        if (type === '歷年裝卸量') {
+          key = '前十大貨物裝卸量';
+          dataSource[key] = this.convertToPie(
+            data[Object.keys(data).slice(-1)[0]]
+          );
+        }
+        if (type === '貨物裝卸量') {
+          dataSource[key] = this.convertToPie(
+            data[Object.keys(data).slice(-1)[0]]
+          );
+        }
+        if (type === '貨品成長數') {
+          const options = this.convertToPie(
+            data[Object.keys(data).slice(-1)[0]]
+          );
+          key = '成長前三大貨品';
+          dataSource[key] = {
+            ...options,
+            series: [{
+              ...options.series[0],
+              data: options
+                .series[0].data
+                ?.sort((a, b) => {
+                  return b.value[2] - a.value[2];
+                })
+                .slice(0, 3)
+            }]
+          };
+          key = '衰退前三大貨品';
+          dataSource[key] = {
+            ...options,
+            series: [{
+              ...options.series[0],
+              data: options
+                .series[0].data
+                ?.sort((a, b) => {
+                  return a.value[2] - b.value[2];
+                })
+                .slice(0, 3)
+            }]
+          };
+        }
+      });
+      return dataSource;
+    },
+    loading() {
+      return this.$store.getters['dashboard/getLoading'];
+    }
+  },
+  created() {
+    this.onLoadDashboard(this.$route.path);
+  },
+  methods: {
+    convertToLine(data) {
       const legend = {
-        data: [],
         orient: 'horizontal',
+        bottom: 0
       };
-
       const yAxis = {
         axisLabel: {
           formatter(value) {
@@ -56,148 +118,101 @@ export default Vue.extend({
         type: 'value'
       };
 
-      const topTenLoader = {
-        series: []
-      };
-
-      if (loader && Object.keys(loader).length > 0) {
-        topTenLoader.series = [
-          {
-            data: Object.keys(loader).map(key => {
-              return {
-                name: key,
-                value: loader[key].data1
-              };
-            })
-          }
-        ];
-      }
-
-      const topTenLoaderHistory = {
+      const option = {
+        yAxis,
+        legend,
         series: [],
         xAxis: {
           boundaryGap: false,
-          data: Object.keys(history),
-          type: 'category'
-        },
-        yAxis
+          type: 'category',
+          data: Object.keys(data)
+        }
       };
-
-      Object.keys(history).forEach(key => {
-        Object.keys(history[key]).forEach((type, index) => {
-          if (!topTenLoaderHistory.series[index]) {
-            topTenLoaderHistory.series[index] = {
-              data: [],
-              name: type
-            };
-          }
-          topTenLoaderHistory.series[index].data.push(history[key][type].data1);
+      const categories = Object.keys(data);
+      const legends = Object.keys(data[Object.keys(data)[0]]);
+      legends.forEach(legend => {
+        const seriesItem = {
+          name: legend,
+          type: 'line',
+          data: []
+        };
+        categories.forEach(category => {
+          seriesItem.data.push(data[category][legend]);
         });
+        option.series.push(seriesItem);
       });
-
-      const loaderSummary = {
-        legend: {
-          ...legend,
-          data: ['名稱', '同期增減', '成長率']
-        },
-        series: []
-      };
-
-      Object.keys(summary).forEach((key, index) => {
-        loaderSummary.series[index] = {
-          data: [
-            summary[key].current,
-            summary[key].change,
-            summary[key].growthRate
-          ],
-          name: key
-        };
-      });
-
-      const productGrowth = {
-        series: []
-      };
-
-      Object.keys(growth).forEach((key, index) => {
-        productGrowth.series[index] = {
-          data: [
-            growth[key].current,
-            growth[key].change,
-            growth[key].growthRate
-          ],
-          name: key
-        };
-      });
-
-      const top3ProductGrowth = {
-        legend: {
-          ...legend,
-          data: ['貨品名稱', '同期成長率', '同期增長量']
-        },
-        series: productGrowth.series
-          .sort((a, b) => {
-            return a.data[0] - b.data[0];
-          })
-          .slice(0, 3)
-      };
-
-      const last3ProductGrowth = {
-        legend: {
-          ...legend,
-          data: ['貨品名稱', '同期成長率', '同期增長量']
-        },
-        series: productGrowth.series
-          .sort((a, b) => {
-            return b.data[0] - a.data[0];
-          })
-          .slice(0, 3)
-      };
-
-      const keys = Object.keys(byHarbor);
-      const loaderByHarbor = {
-        legend: {
-          ...legend,
-          data: keys.length > 0 ? Object.keys(byHarbor[keys[0]]) : []
-        },
-        series: [],
-        xAxis: [
-          {
-            data: keys,
-            type: 'category'
-          }
-        ],
-        yAxis
-      };
-
-      keys.forEach(key => {
-        Object.keys(byHarbor[key]).forEach((type, index) => {
-          if (!loaderByHarbor.series[index]) {
-            loaderByHarbor.series[index] = {
+      return option;
+    },
+    convertToBar(data) {
+      const portNames = Object.keys(data);
+      const series = [];
+      portNames.forEach(port => {
+        Object.keys(data[port]).forEach((type, index) => {
+          if (!series[index]) {
+            series[index] = {
               data: [],
               name: type,
-              type: 'bar'
+              type: 'bar',
+              label: {
+                show: true,
+                position: 'top'
+              }
             };
           }
-          loaderByHarbor.series[index].data.push(byHarbor[key][type]);
+          series[index].data.push(data[port][type]);
         });
       });
-      return {
-        last3ProductGrowth,
-        loaderByHarbor,
-        loaderSummary,
-        top3ProductGrowth,
-        topTenLoader,
-        topTenLoaderHistory
+      const option = {
+        legend: {
+          orient: 'horizontal',
+          bottom: 0,
+          data: Object.keys(data[portNames[0]])
+        },
+        xAxis: {
+          type: 'category',
+          axisTick: { show: false },
+          data: portNames
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series
       };
+
+      return option;
     },
-    loading() {
-      return this.$store.getters['dashboard/getLoading'];
-    }
-  },
-  created() {
-    this.onLoadDashboard(this.$route.path);
-  },
-  methods: {
+    convertToPie(data = {}) {
+      const pieData = [];
+      Object.keys(data)
+        .slice(0, 10)
+        .forEach(key => {
+          pieData.push({ value: data[key], name: key });
+        });
+
+      const option = {
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: Object.keys(data)
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: pieData
+          }
+        ]
+      };
+      return option;
+    },
+    onLayoutUpdated(list) {
+      this.$fire.database.ref(`widgets${this.$route.path}`).update(list);
+    },
     async onLoadDashboard(path: string = '') {
       const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {

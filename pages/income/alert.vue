@@ -14,7 +14,7 @@
       />
     </b-modal>
     <div
-      class="d-flex px-2 text-white"
+      class="d-flex px-2"
       style="gap: 1rem"
     >
       <div>
@@ -60,9 +60,7 @@
           border-variant="secondary"
         >
           <template #header>
-            <h5 class="text-white">
-              {{ $t('income.text.1') }}:
-            </h5>
+            {{ $t('income.text.1') }}:
           </template>
           <div
             class="d-flex flex-column bg-white text-dark py-2 px-1"
@@ -109,6 +107,7 @@ import { colors } from '~/utils/constants';
 export default Vue.extend({
   name: 'Alert',
   components: { DashboardWidget },
+  layout: 'DashboardLayout',
   data() {
     return {
       modalShow: false,
@@ -161,7 +160,6 @@ export default Vue.extend({
       }
     };
   },
-  layout: 'DashboardLayout',
   computed: {
     dataSource() {
       const incomeStatisc = this.$store.getters['dashboard/getIncomeStatics'];

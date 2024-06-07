@@ -52,10 +52,7 @@
             right
           >
             <template #button-content>
-              <font-awesome-icon
-                icon="ellipsis-v"
-                class="text-white"
-              />
+              <font-awesome-icon icon="ellipsis-v" />
             </template>
             <b-dropdown-item
               tag="div"
@@ -130,11 +127,11 @@
       </template>
       <dashboard-summary
         v-if="item?.chartType === 'summary'"
-        :datas="dataSource ? dataSource[item.dataSource]?.series || [] : []"
+        :options="dataSource ? dataSource[item.dataSource] : { series: [] }"
       />
       <dashboard-growth
         v-else-if="item?.chartType === 'growth'"
-        :datas="dataSource ? dataSource[item.dataSource]?.series || [] : []"
+        :options="dataSource ? dataSource[item.dataSource] : { series: [] }"
       />
       <dashboard-card
         v-else-if="item?.chartType === 'card'"
@@ -145,8 +142,8 @@
         class="w-100 h-100 flex-nowrap d-flex flex-sm-row flex-column"
       >
         <div style="flex: 0 0 500px">
-          <dashboard-chart-summary
-            :options="(dataSource && dataSource[item.dataSource]) || {}"
+          <dashboard-summary
+            :options="dataSource ? dataSource[`${item.dataSource}總覽`] : { series: [] }"
           />
         </div>
         <div
@@ -282,7 +279,6 @@ import DashboardNews from '~/components/DashbaordNews.vue';
 import DashboardPredict from '~/components/DashbaordPredict.vue';
 import DashboardSummary from '~/components/DashbaordSummary.vue';
 import { WidgetType } from '~/store/dashboard';
-import DashboardChartSummary from '~/components/DashbaordChartSummary.vue';
 
 const item: PropOptions<WidgetType> = {
   type: Object,
@@ -300,7 +296,6 @@ const dataSource: PropOptions<{
 export default Vue.extend({
   name: 'DashboardWidget',
   components: {
-    DashboardChartSummary,
     DashboardPredict,
     DashboardIndex,
     DashboardCard,
@@ -343,8 +338,7 @@ export default Vue.extend({
                 bar: '柱狀圖'
               }
             }
-          },
-
+          }
         },
         tooltip: {
           trigger: 'axis',
@@ -354,7 +348,7 @@ export default Vue.extend({
               backgroundColor: '#6a7985'
             }
           }
-        },
+        }
       }
     };
   },

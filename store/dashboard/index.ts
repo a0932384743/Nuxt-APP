@@ -11,33 +11,18 @@ export type WidgetType = {
   h?: number;
   x?: number;
   y?: number;
-}
+};
 
 interface StateInterface {
   prop: boolean;
 }
 
 type State = {
-  incomeStatics: {
+  income: {
     [key: string]: {
-      [key: string]: number;
-    };
-  };
-  topTenLoader: {
-    [key: string]: {
-      [key: string]: number;
-    };
-  };
-  incomeLoss: {
-    [key: string]: {
-      [key: string]: number;
-    };
-  };
-  loaderSummary: {
-    [key: string]: {
-      change: number;
-      current: number;
-      growthRate: number;
+      [key: string]: {
+        [key: string]: number;
+      };
     };
   };
   productGrowth: {
@@ -47,9 +32,11 @@ type State = {
       growthRate: number;
     };
   };
-  loaderByHarbor: {
+  loaders: {
     [key: string]: {
-      [key: string]: number;
+      [key: string]: {
+        [key: string]: number;
+      };
     };
   };
   shipCount: {
@@ -57,30 +44,15 @@ type State = {
       [key: string]: number;
     };
   };
-  topTenLoaderHistory: {
-    [key: string]: number;
-  };
   loading: boolean;
 };
 
 const getters: GetterTree<State, StateInterface> = {
-  getIncomeLoss(state) {
-    return state.incomeLoss;
+  getIncome(state) {
+    return state.income;
   },
-  getIncomeStatics(state) {
-    return state.incomeStatics;
-  },
-  getLoader(state) {
-    return state.topTenLoader;
-  },
-  getLoaderByHarbor(state) {
-    return state.loaderByHarbor;
-  },
-  getLoaderHistory(state) {
-    return state.topTenLoaderHistory;
-  },
-  getLoaderSummary(state) {
-    return state.loaderSummary;
+  getLoaders(state) {
+    return state.loaders;
   },
   getLoading(state) {
     return state.loading;
@@ -94,23 +66,11 @@ const getters: GetterTree<State, StateInterface> = {
 };
 
 const mutations: MutationTree<State> = {
-  SET_INCOME_LOSS(state, income = {}) {
-    state.incomeLoss = { ...state.incomeLoss, ...income };
+  SET_INCOME(state, income = {}) {
+    state.income = income;
   },
-  SET_INCOME_STATICS(state, income = {}) {
-    state.incomeStatics = income;
-  },
-  SET_LOADER(state, loader = {}) {
-    state.topTenLoader = loader;
-  },
-  SET_LOADER_HARBOR(state, loader = {}) {
-    state.loaderByHarbor = loader;
-  },
-  SET_LOADER_HISTORY(state, loader = {}) {
-    state.topTenLoaderHistory = loader;
-  },
-  SET_LOADER_SUMMARY(state, summary = {}) {
-    state.loaderSummary = summary;
+  SET_LOADERS(state, loaders = {}) {
+    state.loaders = loaders;
   },
   SET_LOADING(state, loading: boolean = false) {
     state.loading = loading;
@@ -120,30 +80,18 @@ const mutations: MutationTree<State> = {
   },
   SET_SHIP_COUNT(state, shipCount = {}) {
     state.shipCount = shipCount;
-  },
+  }
 };
 
 const actions: ActionTree<State, StateInterface> = {
   setDashboard({ commit }, dashboard = []) {
     commit('SET_DASHBOARD', dashboard);
   },
-  setIncomeLoss({ commit }, income = {}) {
-    commit('SET_INCOME_LOSS', income);
+  setIncome({ commit }, income = {}) {
+    commit('SET_INCOME', income);
   },
-  setIncomeStatics({ commit }, income = {}) {
-    commit('SET_INCOME_STATICS', income);
-  },
-  setLoader({ commit }, loader = {}) {
-    commit('SET_LOADER', loader);
-  },
-  setLoaderByHarbor({ commit }, loader = {}) {
-    commit('SET_LOADER_HARBOR', loader);
-  },
-  setLoaderHistory({ commit }, loaderHistory = {}) {
-    commit('SET_LOADER_HISTORY', loaderHistory);
-  },
-  setLoaderSummary({ commit }, summary = {}) {
-    commit('SET_LOADER_SUMMARY', summary);
+  setLoaders({ commit }, loaders = {}) {
+    commit('SET_LOADERS', loaders);
   },
   setLoading({ commit }, loading = false) {
     commit('SET_LOADING', loading);
@@ -162,15 +110,11 @@ const dashboardModule: Module<State, StateInterface> = {
   mutations,
   namespaced: true,
   state: {
-    incomeLoss: {},
-    incomeStatics: {},
-    loaderByHarbor: {},
-    loaderSummary: {},
+    income: {},
+    loaders: {},
     loading: false,
     productGrowth: {},
-    shipCount: {},
-    topTenLoader: {},
-    topTenLoaderHistory: {}
+    shipCount: {}
   }
 };
 

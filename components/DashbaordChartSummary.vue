@@ -4,7 +4,7 @@
     style="font-size: 1.5rem"
   >
     <div
-      class="d-flex px-2 text-white mb-2 px-2"
+      class="d-flex px-2 mb-2 px-2"
       style="gap: 1rem;font-size: 1.2rem"
     >
       <div>

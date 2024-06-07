@@ -52,11 +52,11 @@
         <b-form-checkbox
           :checked="
             companies?.length > 0 &&
-            form.selectedCompanies
-              .map(c => c.name)
-              .filter(c => c)
-              .sort()
-              .join(',') ===
+              form.selectedCompanies
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
               companies
                 .map(c => c.name)
                 .filter(c => c)
@@ -92,11 +92,11 @@
         <b-form-checkbox
           :checked="
             harbors?.length > 0 &&
-            form.selectedHarbor
-              .map(c => c.name)
-              .filter(c => c)
-              .sort()
-              .join(',') ===
+              form.selectedHarbor
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
               harbors
                 .map(c => c.name)
                 .filter(c => c)
@@ -124,19 +124,29 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
-    <hr />
-    <div v-if="isShowSubMenu" class="text-white mb-2">單頁篩選器</div>
-    <div v-if="isShowSubMenu" class="text-white mb-2 d-flex">
-      <div class="flex-grow-1">收入別</div>
+    <hr>
+    <div
+      v-if="isShowSubMenu"
+      class="text-white mb-2"
+    >
+      單頁篩選器
+    </div>
+    <div
+      v-if="isShowSubMenu"
+      class="text-white mb-2 d-flex"
+    >
+      <div class="flex-grow-1">
+        收入別
+      </div>
       <div class="flex-grow-1">
         <b-form-checkbox
           :checked="
             types?.length > 0 &&
-            form.selectedType
-              .map(c => c.name)
-              .filter(c => c)
-              .sort()
-              .join(',') ===
+              form.selectedType
+                .map(c => c.name)
+                .filter(c => c)
+                .sort()
+                .join(',') ===
               types
                 .map(c => c.name)
                 .filter(c => c)
@@ -149,7 +159,10 @@
         </b-form-checkbox>
       </div>
     </div>
-    <b-row class="mx-0 mb-3 w-100" v-if="isShowSubMenu">
+    <b-row
+      v-if="isShowSubMenu"
+      class="mx-0 mb-3 w-100"
+    >
       <b-form-group
         v-for="type in types"
         :key="type.name"
@@ -164,8 +177,16 @@
         </b-form-checkbox>
       </b-form-group>
     </b-row>
-    <div class="d-flex" style="gap: 0.5rem">
-      <b-button variant="info" pill class="flex-grow-1" @click="onApply">
+    <div
+      class="d-flex"
+      style="gap: 0.5rem"
+    >
+      <b-button
+        variant="info"
+        pill
+        class="flex-grow-1"
+        @click="onApply"
+      >
         {{ $t('apply') }}
       </b-button>
       <b-button
@@ -193,7 +214,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      isShowSubMenu: true,
+      isShowSubMenu: false,
       form: {
         startDate: moment().subtract(5, 'years').format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
@@ -217,10 +238,19 @@ export default Vue.extend({
       return moment().endOf('day').toDate();
     }
   },
+  watch: {
+    $route(to) {
+      this.isShowSubMenu = to.path.indexOf('overview') > -1;
+    }
+  },
   created() {
     this.loadCompanies();
     this.loadHarbors();
     this.onApply();
+  },
+  mounted() {
+    const path = this.$route.path;
+    this.isShowSubMenu = path.indexOf('overview') > -1;
   },
   methods: {
     async onReset() {
@@ -235,24 +265,15 @@ export default Vue.extend({
       await Promise.all([
         this.loadLoaders(
           moment(this.form.startDate).year(),
-          moment(this.form.endDate).year()
+          moment(this.form.endDate).year(),
+          this.form.selectedHarbor
         ),
-        this.loadIncomeStaticsByYear(
+        this.loadIncome(
           moment(this.form.startDate).year(),
-          moment(this.form.endDate).year()
-        ),
-        this.loadIncomeLossByYear(
-          moment(this.form.startDate).year(),
-          moment(this.form.endDate).year()
-        ),
-        this.loadIncomeLosssByHarbor(this.form.selectedHarbor),
-        this.loadLoaderSummary(moment(this.form.startDate).year()),
-        this.loadLoadersByHarbor(
-          this.form.selectedHarbor,
-          moment(this.form.endDate).year()
+          moment(this.form.endDate).year(),
+          this.form.selectedHarbor
         ),
         this.loadProductGrowth(moment(this.form.startDate).year()),
-        this.loadLoader(moment(this.form.startDate).year()),
         this.loadShipCount(moment(this.form.startDate).year())
       ]);
       this.$store.dispatch('dashboard/setLoading', false);
@@ -262,24 +283,15 @@ export default Vue.extend({
       await Promise.all([
         this.loadLoaders(
           moment(this.form.startDate).year(),
-          moment(this.form.endDate).year()
+          moment(this.form.endDate).year(),
+          this.form.selectedHarbor
         ),
-        this.loadIncomeStaticsByYear(
+        this.loadIncome(
           moment(this.form.startDate).year(),
-          moment(this.form.endDate).year()
-        ),
-        this.loadIncomeLossByYear(
-          moment(this.form.startDate).year(),
-          moment(this.form.endDate).year()
-        ),
-        this.loadIncomeLosssByHarbor(this.form.selectedHarbor),
-        this.loadLoaderSummary(moment(this.form.startDate).year()),
-        this.loadLoadersByHarbor(
-          this.form.selectedHarbor,
-          moment(this.form.endDate).year()
+          moment(this.form.endDate).year(),
+          this.form.selectedHarbor
         ),
         this.loadProductGrowth(moment(this.form.startDate).year()),
-        this.loadLoader(moment(this.form.startDate).year()),
         this.loadShipCount(moment(this.form.startDate).year())
       ]);
       this.$store.dispatch('dashboard/setLoading', false);
@@ -338,14 +350,6 @@ export default Vue.extend({
         this.form.selectedHarbor = [...this.harbors];
       }
     },
-    async loadCompanies() {
-      try {
-        const res = await this.$fire.firestore.collection('company').get();
-        this.companies = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      } catch (e) {
-        console.warn('loadCompanies', e);
-      }
-    },
     async loadHarbors() {
       try {
         const res = await this.$fire.firestore.collection('harbor').get();
@@ -354,12 +358,13 @@ export default Vue.extend({
         console.warn('loadHarbors', e);
       }
     },
-    async loadLoaderSummary(year: number) {
-      const ref = await this.$fire.database
-        .ref(`loaderSummary/${year}`)
-        .once('value');
-      this.$store.dispatch('dashboard/setLoaderSummary', ref.val());
-      return ref.val();
+    async loadCompanies() {
+      try {
+        const res = await this.$fire.firestore.collection('company').get();
+        this.companies = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      } catch (e) {
+        console.warn('loadCompanies', e);
+      }
     },
     async loadProductGrowth(year: number) {
       const ref = await this.$fire.database
@@ -368,121 +373,105 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setProductGrowth', ref.val());
       return ref.val();
     },
-    async loadLoader(y: number) {
-      const ref = await this.$fire.database.ref(`loader/${y}`).once('value');
-      this.$store.dispatch('dashboard/setLoader', ref.val());
-      return ref.val();
-    },
     async loadShipCount(y: number) {
       const ref = await this.$fire.database.ref(`shipCount/${y}`).once('value');
       this.$store.dispatch('dashboard/setShipCount', ref.val());
       return ref.val();
     },
-    async loadLoaders(startDate: number, endDate: number) {
+    async loadLoaders(startDate: number, endDate: number, habors = []) {
+      const keys = await this.$fire.database.ref('loaders/keys').once('value');
+      const loaders = {};
       const years = Array.from(
         {
           length: endDate - startDate + 1
         },
         (_, i) => startDate + i
       );
-      const loaderList = await Promise.all(
-        years.map(y => {
-          return this.$fire.database.ref(`loader/${y}`).once('value');
-        })
-      );
-      const loaderHistory = {};
-      const loaderHistoryArray = loaderList.map(l => l.val());
-      years.forEach((y, index) => {
-        loaderHistory[String(y)] = loaderHistoryArray[index] || {};
-      });
-      this.$store.dispatch('dashboard/setLoaderHistory', loaderHistory);
-      return loaderHistory;
-    },
-    async loadIncomeStaticsByYear(startDate: number, endDate: number) {
-      const years = Array.from(
-        {
-          length: endDate - startDate + 1
-        },
-        (_, i) => startDate + i
-      );
-      const incomeStaticsList = await Promise.all(
-        years.map(y => {
-          return this.$fire.database.ref(`incomeStatics/${y}`).once('value');
-        })
-      );
-      const incomeStatics = {};
-      const incomeStaticsArray = incomeStaticsList.map(l => l.val());
-      years.forEach((y, index) => {
-        incomeStatics[String(y)] = incomeStaticsArray[index] || {};
-      });
-      this.$store.dispatch('dashboard/setIncomeStatics', incomeStatics);
-      return incomeStatics;
-    },
-    async loadIncomeLossByYear(startDate: number, endDate: number) {
-      const years = Array.from(
-        {
-          length: endDate - startDate + 1
-        },
-        (_, i) => startDate + i
-      );
-      const incomeLossList = await Promise.all(
-        years.map(y => {
-          return this.$fire.database
-            .ref(`incomeLoss/公司損益情形/${y}`)
-            .once('value');
-        })
-      );
-      const incomeLoss = {};
-      const incomeLossArray = incomeLossList.map(l => l.val());
-      years.forEach((y, index) => {
-        const obj = {};
-        this.form.selectedType.forEach(type => {
-          if (incomeLossArray[index][type.name]) {
-            obj[type.name] = incomeLossArray[index][type.name];
+      await Promise.all(
+        keys.val().map(async key => {
+          if (!loaders[key.name]) {
+            loaders[key.name] = {};
           }
-        });
-        incomeLoss[String(y)] = obj;
-      });
-      this.$store.dispatch('dashboard/setIncomeLoss', {
-        公司損益情形: incomeLoss
-      });
-      return incomeLoss;
-    },
-    async loadIncomeLosssByHarbor(harbors: Array<{ name: string }>) {
-      const incomeLossList = await Promise.all(
-        harbors.map(harbor => {
-          return this.$fire.database
-            .ref(`incomeLoss/港口損益情形/${harbor.name}`)
-            .once('value');
+          if (key.column.indexOf('habor') > -1) {
+            return await Promise.all(
+              years.map(async year => {
+                return await Promise.all(
+                  habors.map(async habor => {
+                    const ref = await this.$fire.database
+                      .ref(`loaders/${key.name}/${year}/${habor.name}`)
+                      .once('value');
+                    if (!loaders[key.name][year]) {
+                      loaders[key.name][year] = {};
+                    }
+                    loaders[key.name][year][habor.name] = ref.val();
+                    return ref;
+                  })
+                );
+              })
+            );
+          } else {
+            return await Promise.all(
+              years.map(async year => {
+                const ref = await this.$fire.database
+                  .ref(`loaders/${key.name}/${year}`)
+                  .once('value');
+                loaders[key.name][year] = ref.val();
+                return ref;
+              })
+            );
+          }
         })
       );
-      const incomeLossByHarbor = {};
-      const incomeLossByHarborArray = incomeLossList.map(l => l.val());
-      harbors.forEach((harbor, index) => {
-        incomeLossByHarbor[String(harbor.name)] =
-          incomeLossByHarborArray[index] || {};
-      });
-      this.$store.dispatch('dashboard/setIncomeLoss', {
-        港口損益情形: incomeLossByHarbor
-      });
-      return incomeLossByHarbor;
+      this.$store.dispatch('dashboard/setLoaders', loaders);
+      return loaders;
     },
-    async loadLoadersByHarbor(harbors: Array<{ name: string }>, year: number) {
-      const loaderList = await Promise.all(
-        harbors.map(harbor => {
-          return this.$fire.database
-            .ref(`loaderByHarbor/${harbor.name}/${year}`)
-            .once('value');
+    async loadIncome(startDate: number, endDate: number, habors = []) {
+      const keys = await this.$fire.database.ref('income/keys').once('value');
+      const loaders = {};
+      const years = Array.from(
+        {
+          length: endDate - startDate + 1
+        },
+        (_, i) => startDate + i
+      );
+      await Promise.all(
+        keys.val().map(async key => {
+          if (!loaders[key.name]) {
+            loaders[key.name] = {};
+          }
+          if (key.column.indexOf('habor') > -1) {
+            return await Promise.all(
+              years.map(async year => {
+                return await Promise.all(
+                  habors.map(async habor => {
+                    const ref = await this.$fire.database
+                      .ref(`income/${key.name}/${year}/${habor.name}`)
+                      .once('value');
+                    if (!loaders[key.name][year]) {
+                      loaders[key.name][year] = {};
+                    }
+                    loaders[key.name][year][habor.name] = ref.val();
+                    return ref;
+                  })
+                );
+              })
+            );
+          } else {
+            return await Promise.all(
+              years.map(async year => {
+                const ref = await this.$fire.database
+                  .ref(`income/${key.name}/${year}`)
+                  .once('value');
+                loaders[key.name][year] = ref.val();
+                return ref;
+              })
+            );
+          }
         })
       );
-      const loaderByHarbor = {};
-      const loaderByHarborArray = loaderList.map(l => l.val());
-      harbors.forEach((harbor, index) => {
-        loaderByHarbor[String(harbor.name)] = loaderByHarborArray[index] || {};
-      });
-      this.$store.dispatch('dashboard/setLoaderByHarbor', loaderByHarbor);
-      return loaderByHarbor;
-    }
+      this.$store.dispatch('dashboard/setIncome', loaders);
+      return loaders;
+    },
   }
 });
 </script>
