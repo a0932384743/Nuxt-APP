@@ -1,58 +1,39 @@
 <template>
-  <div
-    class="mb-4 d-flex flex-column text-secondary"
-    style="gap: 0.5rem"
-  >
+  <div class="mb-4 d-flex flex-column text-secondary" style="gap: 0.5rem">
     <h1 class="text-center mb-0">
-      {{ data.value ?? '-' }}{{ data.unit||'' }}
+      {{ { ...obj, ...data }.value ?? '-' }}{{ { ...obj, ...data }.unit || '' }}
     </h1>
     <p
       class="text-center"
       :class="{
-        'text-danger': data.rate > 0,
-        'text-success': data.rate < 0
+        'text-danger': { ...obj, ...data }.rate > 0,
+        'text-success': { ...obj, ...data }.rate < 0
       }"
     >
-      {{ data.rate ?? '-' }}%
-      <font-awesome-icon
-        v-if="data.rate > 0"
-        icon="sort-asc"
-      />
-      <font-awesome-icon
-        v-if="data.rate < 0"
-        icon="sort-desc"
-      />
+      {{ { ...obj, ...data }.rate ?? '-' }}%
+      <font-awesome-icon v-if="{ ...obj, ...data }.rate > 0" icon="sort-asc" />
+      <font-awesome-icon v-if="{ ...obj, ...data }.rate < 0" icon="sort-desc" />
     </p>
   </div>
 </template>
 <script lang="ts">
-import moment from 'moment';
 import Vue from 'vue';
 export default Vue.extend({
   name: 'DashboardCard',
   props: {
-    dataSource: {
-      type: String,
+    data: {
+      type: Object,
       required: true
     }
   },
   data() {
     return {
-      data: {
-        value: 0,
+      obj: {
         rate: 0,
-        unit: ''
+        value: 0,
+        unit: 0
       }
     };
-  },
-  mounted() {
-    const year = moment().year();
-    this.$fire.database
-      .ref(`economic/${year}/${this.dataSource}`)
-      .once('value')
-      .then(ref => {
-        this.data = ref.val();
-      });
   }
 });
 </script>

@@ -97,21 +97,18 @@ export default Vue.extend({
       const income = this.$store.getters['dashboard/getIncome'];
       Object.keys(income).forEach(key => {
         const data = income[key];
-
         if (data) {
           if (key === '港口損益情形') {
             dataSource[key] = this.convertToBar(
+              data[Object.keys(data).slice(-1)[0]],
+              key
+            );
+          } else if (key === '公司損益情形總覽') {
+            dataSource[key] = this.convertToPie(
               data[Object.keys(data).slice(-1)[0]]
             );
           } else {
-            dataSource[key] = this.convertToBar(data);
-
-            const pieData = income[`${key}總覽`];
-            if (pieData) {
-              console.log(
-                this.convertToPie(pieData[Object.keys(pieData).slice(-1)[0]])
-              );
-            }
+            dataSource[key] = this.convertToBar(data, key);
           }
         }
       });
@@ -152,7 +149,7 @@ export default Vue.extend({
       };
       return option;
     },
-    convertToBar(data) {
+    convertToBar(data, name) {
       const grid = {
         left: '5%',
         right: '5%'
@@ -161,7 +158,9 @@ export default Vue.extend({
         axisLabel: {
           formatter(value) {
             if (value >= 1000) {
-              return `${value / 1000}`;
+              return `${value / 1000}k`;
+            } else {
+              return value;
             }
           }
         },
@@ -178,6 +177,7 @@ export default Vue.extend({
       ];
 
       const options = {
+        trend: {},
         grid,
         info: '點擊告警圖示可以查看詳細每月同期數值比較圖表',
         legend: {
@@ -228,7 +228,7 @@ export default Vue.extend({
               itemStyle: {
                 color: colors[3]
               },
-              name: '',
+              name,
               symbol:
                 'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
               symbolSize: [30, 40],
@@ -241,6 +241,11 @@ export default Vue.extend({
               year: options.xAxis[0].data[v]
             };
           })
+        };
+
+        options.trend = {
+          color: colors[result.length],
+          stroke: result.length > 0 ? colors[result.length] : 'white'
         };
 
         result.forEach(index => {
@@ -260,15 +265,15 @@ export default Vue.extend({
         const res = await Promise.all([
           this.$fire.database
             .ref(
-              `incomeMonthStatics/${Number(param.data.year) - 1}/${param.data.name}`
+              `incomeMonthStatics/${param.data.name}/${Number(param.data.year) - 1}`
             )
             .once('value'),
           this.$fire.database
-            .ref(`incomeMonthStatics/${param.data.year}/${param.data.name}`)
+            .ref(`incomeMonthStatics/${param.data.name}/${param.data.year}`)
             .once('value'),
           this.$fire.database
             .ref(
-              `incomeMonthStatics/${Number(param.data.year) + 1}/${param.data.name}`
+              `incomeMonthStatics/${param.data.name}/${Number(param.data.year) + 1}`
             )
             .once('value')
         ]);

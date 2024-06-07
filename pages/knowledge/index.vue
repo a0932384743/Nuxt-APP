@@ -9,6 +9,7 @@
     :is-resizable="true"
     :vertical-compact="true"
     :use-css-transforms="true"
+    @layout-updated="onLayoutUpdated"
   >
     <dashboard-widget
       v-for="item in dashboardList"
@@ -24,44 +25,39 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Knowledge',
   components: { DashboardWidget },
+  layout: 'DashboardLayout',
   data() {
     return {
-      dashboardList: []
+      dashboardList: [],
+      dataSource: {}
     };
   },
-  layout: 'DashboardLayout',
   computed: {
-    dataSource() {
-      const ships = this.$store.getters['dashboard/getShipCount'];
-      const shipCount = {
-        series: []
-      };
-      if (ships && Object.keys(ships).length > 0) {
-        shipCount.series = [
-          {
-            data: Object.keys(ships).map(key => {
-              return {
-                name: key,
-                value: ships[key].data1
-              };
-            })
-          }
-        ];
-      } else {
-        shipCount.series = [];
-      }
-      return {
-        shipCount
-      };
-    },
     loading() {
       return this.$store.getters['dashboard/getLoading'];
     }
   },
   created() {
     this.onLoadDashboard(this.$route.path);
+    this.$fire.database
+      .ref('card/keys')
+      .once('value')
+      .then(ref => {
+        const keys = ref.val();
+        keys.forEach(key => {
+          this.$fire.database
+            .ref(`card/${key}`)
+            .once('value')
+            .then(ref2 => {
+              this.dataSource = { ...this.dataSource, [key]: ref2.val() };
+            });
+        });
+      });
   },
   methods: {
+    onLayoutUpdated(list) {
+      this.$fire.database.ref(`widgets${this.$route.path}`).update(list);
+    },
     async onLoadDashboard(path: string = '') {
       const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {

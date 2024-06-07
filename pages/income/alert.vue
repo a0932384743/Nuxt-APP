@@ -13,19 +13,7 @@
         autoresize
       />
     </b-modal>
-    <div
-      class="d-flex px-2"
-      style="gap: 1rem"
-    >
-      <div>
-        <font-awesome-icon
-          icon="circle"
-          :style="trend"
-          stroke-width="20"
-        />
-        預警
-      </div>
-    </div>
+    <dashbaord-alert :trend="trend" />
     <grid-layout
       :show="!loading"
       :layout="dashboardList"
@@ -36,6 +24,7 @@
       is-resizable
       vertical-compact
       use-css-transforms
+      @layout-updated="onLayoutUpdated"
     >
       <dashboard-widget
         v-for="item in dashboardList"
@@ -81,7 +70,7 @@
             >
               <font-awesome-icon
                 icon="circle"
-                color="yellow"
+                color="orange"
               />尚可:1~2個指標達兩年衰退
             </div>
             <div
@@ -110,6 +99,7 @@ export default Vue.extend({
   layout: 'DashboardLayout',
   data() {
     return {
+      trend: {},
       modalShow: false,
       dashboardList: [],
       option: {
@@ -162,143 +152,31 @@ export default Vue.extend({
   },
   computed: {
     dataSource() {
-      const incomeStatisc = this.$store.getters['dashboard/getIncomeStatics'];
       const dataSource = {};
-      const xAxis = {
-        data: Object.keys(incomeStatisc).filter(
-          key => Object.keys(incomeStatisc[key]).length > 0
-        ),
-        type: 'category'
-      };
-
-      const yAxis = {
-        axisLabel: {
-          formatter(value) {
-            return `${value}%`;
+      const income = this.$store.getters['dashboard/getIncome'];
+      Object.keys(income).forEach(key => {
+        if (key.indexOf('率') > -1) {
+          const data = income[key];
+          if (data) {
+            dataSource[key] = this.convertToBar(data, key);
           }
-        },
-        type: 'value'
-      };
-      Object.keys(incomeStatisc).forEach(key => {
-        Object.keys(incomeStatisc[key]).forEach(type => {
-          if (!dataSource[type]) {
-            dataSource[type] = {
-              series: [
-                {
-                  data: [],
-                  name: 'bar',
-                  tooltip: {
-                    show: false
-                  },
-                  type: 'bar'
-                },
-                {
-                  data: [],
-                  label: {
-                    position: 'top',
-                    show: true
-                  },
-                  name: type,
-                  type: 'line'
-                }
-              ],
-              xAxis,
-              yAxis
-            };
-          }
-          dataSource[type].series[0].data.push(incomeStatisc[key][type] || 0);
-          dataSource[type].series[1].data.push(incomeStatisc[key][type] || 0);
-        });
-      });
-      // find min
-      Object.keys(dataSource).forEach(type => {
-        const result = dataSource[type].series[0].data.reduce(
-          (acc, curr, index, array) => {
-            if (index > 0 && curr < array[index - 1]) {
-              acc.push(index);
-            }
-            return acc;
-          },
-          []
-        );
-
-        dataSource[type].series[0].markPoint = {
-          data: result.map((v, index) => {
-            return {
-              itemStyle: {
-                color: colors[3]
-              },
-              name: type,
-              symbol:
-                'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
-              symbolSize: [30, 40],
-              value: dataSource[type].series[0].data[index],
-              xAxis: v,
-              yAxis: dataSource[type].series[0].data[index] / 2,
-              year: xAxis.data[index]
-            };
-          })
-        };
-        console.log(xAxis);
-
-        result.forEach(index => {
-          dataSource[type].series[0].data[index] = {
-            itemStyle: {
-              color: colors[2]
-            },
-            name: type,
-            value: dataSource[type].series[0].data[index],
-            year: xAxis.data[index]
-          };
-        });
+        }
       });
       return dataSource;
     },
     loading() {
       return this.$store.getters['dashboard/getLoading'];
-    },
-    trend() {
-      let trendCount = 0;
-      const incomeStatisc = this.$store.getters['dashboard/getIncomeStatics'];
-      const dataSource = {};
-      Object.keys(incomeStatisc).forEach(key => {
-        Object.keys(incomeStatisc[key]).forEach(type => {
-          if (!dataSource[type]) {
-            dataSource[type] = {
-              series: [
-                {
-                  data: [],
-                  name: 'bar',
-                  tooltip: {
-                    show: false
-                  },
-                  type: 'bar'
-                }
-              ]
-            };
-          }
-          dataSource[type].series[0].data.push(incomeStatisc[key][type] || 0);
-        });
-      });
+    }
+  },
+  watch: {
+    dataSource(dataSource) {
+      const length = Object.keys(dataSource).filter(
+        key => dataSource[key].alertNum > 0
+      ).length;
 
-      Object.keys(dataSource).forEach(type => {
-        const result = dataSource[type].series[0].data.reduce(
-          (acc, curr, index, array) => {
-            if (index > 0 && curr < array[index - 1]) {
-              acc.push(index);
-            }
-            return acc;
-          },
-          []
-        );
-        if (result.length > 0 && trendCount < 3) {
-          trendCount++;
-        }
-      });
-
-      return {
-        color: colors[trendCount],
-        stroke: trendCount > 0 ? colors[trendCount] : 'white'
+      this.trend = {
+        color: colors[length >= 3 ? 3 : length],
+        stroke: length > 0 ? colors[length >= 3 ? 3 : length] : 'white'
       };
     }
   },
@@ -306,6 +184,111 @@ export default Vue.extend({
     this.onLoadDashboard(this.$route.path);
   },
   methods: {
+    convertToBar(data, name) {
+      const grid = {
+        left: '15%',
+        right: '15%'
+      };
+      const yAxis = {
+        axisLabel: {
+          formatter(value) {
+            return `${value} %`;
+          }
+        },
+        type: 'value'
+      };
+
+      const xAxis = [
+        {
+          axisLabel: { interval: 0 },
+          data: Object.keys(data),
+          splitLine: { show: false },
+          type: 'category'
+        }
+      ];
+
+      const options = {
+        grid,
+        alertNum: 0,
+        info: '點擊告警圖示可以查看詳細每月同期數值比較圖表',
+        legend: {
+          bottom: 10,
+          data: [],
+          orient: 'horizontal'
+        },
+        series: [],
+        xAxis,
+        yAxis
+      };
+
+      options.series.push({
+        data: Object.keys(data).map(key => data[key]),
+        label: {
+          position: 'top',
+          show: true
+        },
+        tooltip: {
+          show: false
+        },
+        type: 'bar'
+      });
+
+      options.series.push({
+        data: Object.keys(data).map(key => data[key]),
+        label: {
+          show: false
+        },
+        tooltip: {
+          show: true
+        },
+        type: 'line'
+      });
+
+      if (options.series.length > 0) {
+        const result = Object.keys(data)
+          .map(key => data[key])
+          .reduce((acc, curr, index, array) => {
+            if (index > 0 && curr < array[index - 1]) {
+              acc.push(index);
+            }
+            return acc;
+          }, []);
+
+        options.series[0].markPoint = {
+          data: result.map((v, index) => {
+            return {
+              itemStyle: {
+                color: colors[3]
+              },
+              name,
+              symbol:
+                'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
+              symbolSize: [30, 40],
+              value: options.series[0].data[index],
+              xAxis: v,
+              yAxis: options.series[0].data[index],
+              year: options.xAxis[0].data[v]
+            };
+          })
+        };
+
+        result.forEach(index => {
+          options.series[options.series.length - 1].data[index] = {
+            ...options.series[options.series.length - 1].data[index],
+            value: options.series[options.series.length - 1].data[index],
+            itemStyle: {
+              color: colors[3]
+            },
+            year: options.xAxis[0].data[index]
+          };
+        });
+        options.alertNum = result.length;
+      }
+      return options;
+    },
+    onLayoutUpdated(list) {
+      this.$fire.database.ref(`widgets${this.$route.path}`).update(list);
+    },
     async click(param) {
       if (param.componentType === 'markPoint') {
         const res = await Promise.all([

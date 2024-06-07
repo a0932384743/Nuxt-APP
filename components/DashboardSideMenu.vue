@@ -271,7 +271,8 @@ export default Vue.extend({
         this.loadIncome(
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year(),
-          this.form.selectedHarbor
+          this.form.selectedHarbor,
+          this.form.selectedType,
         ),
         this.loadProductGrowth(moment(this.form.startDate).year()),
         this.loadShipCount(moment(this.form.startDate).year())
@@ -289,7 +290,8 @@ export default Vue.extend({
         this.loadIncome(
           moment(this.form.startDate).year(),
           moment(this.form.endDate).year(),
-          this.form.selectedHarbor
+          this.form.selectedHarbor,
+          this.form.selectedType,
         ),
         this.loadProductGrowth(moment(this.form.startDate).year()),
         this.loadShipCount(moment(this.form.startDate).year())
@@ -425,7 +427,7 @@ export default Vue.extend({
       this.$store.dispatch('dashboard/setLoaders', loaders);
       return loaders;
     },
-    async loadIncome(startDate: number, endDate: number, habors = []) {
+    async loadIncome(startDate: number, endDate: number, habors = [], types = []) {
       const keys = await this.$fire.database.ref('income/keys').once('value');
       const loaders = {};
       const years = Array.from(
@@ -451,6 +453,23 @@ export default Vue.extend({
                       loaders[key.name][year] = {};
                     }
                     loaders[key.name][year][habor.name] = ref.val();
+                    return ref;
+                  })
+                );
+              })
+            );
+          } else if (key.column.indexOf('type') > -1) {
+            return await Promise.all(
+              years.map(async year => {
+                return await Promise.all(
+                  types.map(async type => {
+                    const ref = await this.$fire.database
+                      .ref(`income/${key.name}/${year}/${type.name}`)
+                      .once('value');
+                    if (!loaders[key.name][year]) {
+                      loaders[key.name][year] = {};
+                    }
+                    loaders[key.name][year][type.name] = ref.val();
                     return ref;
                   })
                 );

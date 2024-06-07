@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2">
+  <div class="px-2 py-2">
     <div
       class="d-flex justify-content-end"
       style="gap: 10px"
@@ -34,7 +34,7 @@
         >
           <div
             class="d-flex"
-            style="font-size: 1.2rem"
+            style="font-size: 1.1rem"
             :class="{
               'justify-content-start': index === 0,
               'justify-content-center': index === 1,

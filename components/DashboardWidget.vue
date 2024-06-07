@@ -11,10 +11,7 @@
   >
     <dashboard-news v-if="item?.chartType === 'news'" />
     <dashboard-index v-else-if="item?.chartType === 'index'" />
-    <dashboard-predict
-      v-else-if="item?.chartType === 'predict'"
-      :data-source="item.dataSource"
-    />
+    <dashboard-predict v-else-if="item?.chartType === 'predict'" />
     <b-card
       v-else
       text-variant="white"
@@ -45,7 +42,6 @@
             variant="link"
             toggle-class="text-decoration-none"
             no-caret
-            menu-class="custom-dropdown-menu"
             class="position-absolute"
             style="right: 0px; top: 0px"
             :dropright="isEnlarge"
@@ -63,7 +59,7 @@
                 icon="star"
                 :style="{
                   color: isFavorite ? 'orange' : 'transparent',
-                  stroke: isFavorite ? 'transparent' : 'white'
+                  stroke: isFavorite ? 'transparent' : 'gray'
                 }"
                 style="stroke-width: 20px"
               />
@@ -135,15 +131,20 @@
       />
       <dashboard-card
         v-else-if="item?.chartType === 'card'"
-        :data-source="item.dataSource"
+        :data="dataSource ? dataSource[item.dataSource] || {} : {}"
       />
       <div
         v-else-if="item?.chartType === 'chartSummary'"
         class="w-100 h-100 flex-nowrap d-flex flex-sm-row flex-column"
       >
         <div style="flex: 0 0 500px">
+          <dashboard-alert
+            :trend="dataSource ? dataSource[item.dataSource].trend : null"
+          />
           <dashboard-summary
-            :options="dataSource ? dataSource[`${item.dataSource}總覽`] : { series: [] }"
+            :options="
+              dataSource ? dataSource[`${item.dataSource}總覽`] : { series: [] }
+            "
           />
         </div>
         <div
@@ -279,6 +280,7 @@ import DashboardNews from '~/components/DashbaordNews.vue';
 import DashboardPredict from '~/components/DashbaordPredict.vue';
 import DashboardSummary from '~/components/DashbaordSummary.vue';
 import { WidgetType } from '~/store/dashboard';
+import DashboardAlert from '~/components/DashbaordAlert.vue';
 
 const item: PropOptions<WidgetType> = {
   type: Object,
@@ -296,6 +298,7 @@ const dataSource: PropOptions<{
 export default Vue.extend({
   name: 'DashboardWidget',
   components: {
+    DashboardAlert,
     DashboardPredict,
     DashboardIndex,
     DashboardCard,

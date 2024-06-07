@@ -41,15 +41,9 @@
         title="營運效率"
         active
       />
-      <b-tab
-        title="成本管理"
-      />
-      <b-tab
-        title="安全合規"
-      />
-      <b-tab
-        title="環境影響"
-      />
+      <b-tab title="成本管理" />
+      <b-tab title="安全合規" />
+      <b-tab title="環境影響" />
     </b-tabs>
     <b-row class="h-100">
       <b-col
@@ -78,7 +72,7 @@
       alt="告警機器人"
       width="50px"
       class="position-absolute"
-      style="right: 10px;bottom: 10px"
+      style="right: 10px; bottom: 10px"
     >
   </b-card>
 </template>
@@ -87,12 +81,6 @@ import Vue from 'vue';
 import regression from 'regression';
 export default Vue.extend({
   name: 'DashboardPredict',
-  props: {
-    dataSource: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       option: {}
@@ -161,7 +149,6 @@ export default Vue.extend({
           date: '2024-03-01',
           value: 7832
         }
-
       ];
       const originalData2 = [
         {
@@ -224,7 +211,6 @@ export default Vue.extend({
           date: '2024-03-01',
           value: 41430
         }
-
       ];
       const originalData3 = [
         {
@@ -287,7 +273,6 @@ export default Vue.extend({
           date: '2024-03-01',
           value: 13203
         }
-
       ];
       const originalSeriesData1 = originalData1.map(item => item.value);
       const originalSeriesData2 = originalData2.map(item => item.value);
@@ -299,9 +284,24 @@ export default Vue.extend({
         .map(item => item.date)
         .concat(predictedData1.map(item => item.date));
 
-      const predictedSeriesData1 = [...originalData1.map((item, index, array) => (index === array.length - 1) ? item : null), ...predictedData1.map(item => item.value)];
-      const predictedSeriesData2 = [...originalData2.map((item, index, array) => (index === array.length - 1) ? item : null), ...predictedData2.map(item => item.value)];
-      const predictedSeriesData3 = [...originalData3.map((item, index, array) => (index === array.length - 1) ? item : null), ...predictedData3.map(item => item.value)];
+      const predictedSeriesData1 = [
+        ...originalData1.map((item, index, array) =>
+          index === array.length - 1 ? item : null
+        ),
+        ...predictedData1.map(item => item.value)
+      ];
+      const predictedSeriesData2 = [
+        ...originalData2.map((item, index, array) =>
+          index === array.length - 1 ? item : null
+        ),
+        ...predictedData2.map(item => item.value)
+      ];
+      const predictedSeriesData3 = [
+        ...originalData3.map((item, index, array) =>
+          index === array.length - 1 ? item : null
+        ),
+        ...predictedData3.map(item => item.value)
+      ];
 
       const option = {
         tooltip: {
@@ -427,14 +427,18 @@ export default Vue.extend({
           date: '2024-03-01',
           value: 130
         }
-
       ];
       const predictedData = this.genPredictedData(originalData);
       const xAxisData = originalData
         .map(item => item.date)
         .concat(predictedData.map(item => item.date));
       const originalSeriesData = originalData.map(item => item.value);
-      const predictedSeriesData = [...originalData.map((item, index, array) => (index === array.length - 1) ? item : null), ...predictedData.map(item => item.value)];
+      const predictedSeriesData = [
+        ...originalData.map((item, index, array) =>
+          index === array.length - 1 ? item : null
+        ),
+        ...predictedData.map(item => item.value)
+      ];
 
       const option = {
         tooltip: {
@@ -445,6 +449,14 @@ export default Vue.extend({
           data: xAxisData
         },
         yAxis: {
+          axisLabel: {
+            formatter(value) {
+              if (value >= 1000) {
+                return `${value / 1000}k`;
+              }
+              return value;
+            }
+          },
           type: 'value'
         },
         series: [
@@ -493,7 +505,6 @@ export default Vue.extend({
       return predictedData;
     }
   }
-
 });
 </script>
 <style></style>
