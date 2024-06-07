@@ -18,6 +18,7 @@
         </template>
         <b-form-input
           v-model="filter.keyword"
+          class="text-dark"
           placeholder="請輸入關鍵字"
         />
         <v-chart
@@ -291,7 +292,13 @@ export default Vue.extend({
         .ref('keywords')
         .once('value')
         .then(res => {
-          this.options.series[0].data = res.val();
+          console.log(res.val());
+          this.options.series[0].data = res.val().map(w => {
+            return {
+              name: w,
+              value: (Math.random() * 100) % 30,
+            };
+          });
         });
     },
     click(params) {
