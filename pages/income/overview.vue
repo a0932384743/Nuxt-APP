@@ -6,12 +6,7 @@
       :ok-title="$t('close')"
       ok-variant="info"
     >
-      <v-chart
-        v-if="modalShow"
-        class="w-100"
-        :options="option"
-        autoresize
-      />
+      <v-chart v-if="modalShow" class="w-100" :options="option" autoresize />
     </b-modal>
     <grid-layout
       :show="!loading"
@@ -102,7 +97,6 @@ export default Vue.extend({
       const income = this.$store.getters['dashboard/getIncome'];
       Object.keys(income).forEach(key => {
         const data = income[key];
-        console.log(data);
 
         if (data) {
           if (key === '港口損益情形') {
@@ -111,9 +105,11 @@ export default Vue.extend({
             );
           } else {
             dataSource[key] = this.convertToBar(data);
-            if (data[Object.keys(data).slice(-1)[0]]) {
-              dataSource[`${key}總覽`] = this.convertToPie(
-                data[Object.keys(data).slice(-1)[0]]
+
+            const pieData = income[`${key}總覽`];
+            if (pieData) {
+              console.log(
+                this.convertToPie(pieData[Object.keys(pieData).slice(-1)[0]])
               );
             }
           }
@@ -132,12 +128,9 @@ export default Vue.extend({
   methods: {
     convertToPie(data = {}) {
       const pieData = [];
-      Object.keys(data)
-        .slice(0, 10)
-        .forEach(key => {
-          pieData.push({ value: data[key], name: key });
-        });
-
+      Object.keys(data).forEach(key => {
+        pieData.push({ value: data[key], name: key });
+      });
       const option = {
         tooltip: {
           trigger: 'item',
@@ -159,7 +152,6 @@ export default Vue.extend({
       };
       return option;
     },
-
     convertToBar(data) {
       const grid = {
         left: '5%',
