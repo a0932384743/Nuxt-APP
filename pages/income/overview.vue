@@ -112,7 +112,6 @@ export default Vue.extend({
           }
         }
       });
-
       return dataSource;
     },
     loading() {
@@ -179,7 +178,7 @@ export default Vue.extend({
       const options = {
         trend: {},
         grid,
-        info: '點擊告警圖示可以查看詳細每月同期數值比較圖表',
+        info: '此圖表呈現每座港口損益數值，點擊告警圖示可以查看詳細每月同期數值比較圖表',
         legend: {
           bottom: 10,
           data: [],
@@ -236,8 +235,7 @@ export default Vue.extend({
                 options.series[options.series.length - 1].data[index].value,
               xAxis: v,
               yAxis:
-                options.series[options.series.length - 1].data[index].value *
-                1.5,
+                options.series[options.series.length - 1].data[index].value,
               year: options.xAxis[0].data[v]
             };
           })

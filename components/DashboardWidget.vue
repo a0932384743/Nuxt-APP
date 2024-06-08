@@ -139,7 +139,7 @@
       >
         <div style="flex: 0 0 500px">
           <dashboard-alert
-            :trend="dataSource ? dataSource[item.dataSource].trend : null"
+            :trend="dataSource ? dataSource[item.dataSource]?.trend || {} : {}"
           />
           <dashboard-summary
             :options="
@@ -375,21 +375,33 @@ export default Vue.extend({
       this.isFavorite = !this.isFavorite;
     },
     exportCSV() {
-      let csvContent = '';
       if (this.dataSource) {
-        const series = this.dataSource[this.item.dataSource]?.series;
-        // Add the data rows
-        series.forEach(s => {
-          const row = `,${s.data.join(',')}`;
-          csvContent += `${row}\n`;
+        const option = this.dataSource[this.item.dataSource];
+        let csvContent = '年分,數值\n';
+
+        // 获取 X 轴数据
+        const xAxisData = option.xAxis[0].data;
+
+        // 获取系列数据
+        option.series.forEach(series => {
+          series.data.forEach((data, index) => {
+            const value = typeof data === 'object' ? data.value : data;
+            csvContent += `${xAxisData[index]},${value}\n`;
+          });
         });
-        // Create a download link and trigger the download
-        const encodedUri = encodeURI(csvContent);
+
+        // 创建并下载 CSV 文件
+        const blob = new Blob([csvContent], {
+          type: 'text/csv;charset=utf-8;'
+        });
         const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
         link.setAttribute('download', `${this.item.name}.csv`);
-        document.body.appendChild(link); // Required for FF
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
       }
     },
     enlargePic() {

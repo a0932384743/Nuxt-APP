@@ -1,3 +1,4 @@
+<script src="../../../Downloads/test.js"></script>
 <template>
   <div class="h-100">
     <b-modal
@@ -6,12 +7,7 @@
       :ok-title="$t('close')"
       ok-variant="info"
     >
-      <v-chart
-        v-if="modalShow"
-        class="w-100"
-        :options="option"
-        autoresize
-      />
+      <v-chart v-if="modalShow" class="w-100" :options="option" autoresize />
     </b-modal>
     <dashbaord-alert :trend="trend" />
     <grid-layout
@@ -33,14 +29,7 @@
         :data-source="dataSource"
         @click="click"
       />
-      <grid-item
-        :x="2"
-        :y="1"
-        :w="1"
-        :h="1"
-        :i="6"
-        :is-draggable="false"
-      >
+      <grid-item :x="2" :y="1" :w="1" :h="1" :i="6" :is-draggable="false">
         <b-card
           text-variant="white"
           header-class="pt-1 pb-4  px-2"
@@ -48,35 +37,24 @@
           class="bg-transparent h-100"
           border-variant="secondary"
         >
-          <template #header>
-            {{ $t('income.text.1') }}:
-          </template>
+          <template #header> {{ $t('income.text.1') }}: </template>
           <div
             class="d-flex flex-column bg-white text-dark py-2 px-1"
             style="font-size: 1rem; gap: 0.8rem"
           >
-            <div
-              class="d-flex align-content-center"
-              style="gap: 0.5rem"
-            >
+            <div class="d-flex align-content-center" style="gap: 0.5rem">
               <font-awesome-icon
                 icon="circle"
                 color="limegreen"
               />良好:無指標達2年衰退
             </div>
-            <div
-              class="d-flex align-content-center"
-              style="gap: 0.5rem"
-            >
+            <div class="d-flex align-content-center" style="gap: 0.5rem">
               <font-awesome-icon
                 icon="circle"
                 color="orange"
               />尚可:1~2個指標達兩年衰退
             </div>
-            <div
-              class="d-flex align-content-center"
-              style="gap: 0.5rem"
-            >
+            <div class="d-flex align-content-center" style="gap: 0.5rem">
               <font-awesome-icon
                 icon="circle"
                 color="red"
@@ -162,6 +140,8 @@ export default Vue.extend({
           }
         }
       });
+      console.log(JSON.stringify(dataSource));
+
       return dataSource;
     },
     loading() {
@@ -322,7 +302,7 @@ export default Vue.extend({
         this.modalShow = true;
       }
     },
-    async onLoadDashboard(path: string = '') {
+    async onLoadDashboard(path = '') {
       const res = this.$fire.database.ref(`widgets${path}`);
       res.once('value', snapshot => {
         const data = snapshot.val();
