@@ -67,13 +67,24 @@
         />
       </b-col>
     </b-row>
-    <img
-      src="/img/robot-icon.png"
-      alt="告警機器人"
-      width="50px"
-      class="position-absolute"
-      style="right: 10px; bottom: 10px"
+    <b-button
+      pill
+      size="sm"
+      class="position-absolute bg-white p-0 border-0"
+      style="right: 10px; bottom: 10px; width: 50px; height: 50px"
+      @click="toggleIsChatRoom"
     >
+      <img
+        width="100%"
+        src="/img/robot-icon.png"
+        alt="告警機器人"
+      >
+    </b-button>
+    <chat-room
+      v-if="isShowChatRoom"
+      class="position-absolute"
+      style="right: 60px; bottom: 10px;"
+    />
   </b-card>
 </template>
 <script lang="ts">
@@ -83,7 +94,8 @@ export default Vue.extend({
   name: 'DashboardPredict',
   data() {
     return {
-      option: {}
+      option: {},
+      isShowChatRoom: false
     };
   },
   computed: {
@@ -482,6 +494,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    toggleIsChatRoom() {
+      this.isShowChatRoom = !this.isShowChatRoom;
+    },
     genPredictedData(originalData = []) {
       const dataForRegression = originalData.map((item, index) => [
         index,

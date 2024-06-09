@@ -8,6 +8,7 @@
     :class="{
       enlarge: isEnlarge
     }"
+    drag-allow-from=".card-header"
   >
     <dashboard-news v-if="item?.chartType === 'news'" />
     <dashboard-index v-else-if="item?.chartType === 'index'" />
