@@ -380,8 +380,13 @@ export default Vue.extend({
         const option = this.dataSource[this.item.dataSource];
         let csvContent = '年分,數值\n';
 
-        // 获取 X 轴数据
-        const xAxisData = option.xAxis[0].data;
+        let xAxisData = [];
+
+        if (option.xAxis instanceof Array) {
+          xAxisData = option.xAxis[0].data;
+        } else {
+          xAxisData = option.xAxis.data;
+        }
 
         // 获取系列数据
         option.series.forEach(series => {
