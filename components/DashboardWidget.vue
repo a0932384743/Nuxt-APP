@@ -378,26 +378,48 @@ export default Vue.extend({
     exportCSV() {
       if (this.dataSource) {
         const option = this.dataSource[this.item.dataSource];
-        let csvContent = '年分,數值\n';
 
-        let xAxisData = [];
+        let csvContent = `,${option.series.map(
+          (d, index) => d?.name || `Value${index + 1}`
+        )}\n`;
 
-        if (option.xAxis instanceof Array) {
-          xAxisData = option.xAxis[0].data;
+        if (option?.xAxis) {
+          let xAxisData = [];
+          if (option.xAxis instanceof Array) {
+            xAxisData = option.xAxis[0].data;
+          } else {
+            xAxisData = option?.xAxis?.data || [];
+          }
+          // Line Bar圖
+          xAxisData.forEach((year, index) => {
+            csvContent += year;
+            option.series.forEach(series => {
+              const value =
+                typeof (series.data || [])[index] === 'object'
+                  ? (series.data || [])[index].value
+                  : (series.data || [])[index];
+              csvContent += `,${value}`;
+            });
+            csvContent += '\n';
+          });
         } else {
-          xAxisData = option.xAxis.data;
+          // Pie圖
+          option.series.forEach(series => {
+            series.data.forEach((data, index) => {
+              csvContent += data?.name || index;
+              let value = 0;
+              if (typeof data === 'object') {
+                value = data.value;
+              } else {
+                value = data;
+              }
+              csvContent += `,${value}`;
+              csvContent += '\n';
+            });
+          });
         }
 
-        // 获取系列数据
-        option.series.forEach(series => {
-          series.data.forEach((data, index) => {
-            const value = typeof data === 'object' ? data.value : data;
-            csvContent += `${xAxisData[index]},${value}\n`;
-          });
-        });
-
-        // 创建并下载 CSV 文件
-        const blob = new Blob([csvContent], {
+        const blob = new Blob([`\ufeff${csvContent}`], {
           type: 'text/csv;charset=utf-8;'
         });
         const link = document.createElement('a');
