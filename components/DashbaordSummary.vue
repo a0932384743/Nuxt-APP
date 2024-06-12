@@ -1,30 +1,25 @@
 <template>
   <div class="px-2 py-2">
-    <div
-      class="d-flex justify-content-end"
-      style="gap: 10px"
-    >
+    <div class="d-flex justify-content-end mb-2" style="gap: 10px">
       <font-awesome-icon
         role="button"
         icon="table-list"
-        width="15px"
-        height="15px"
+        width="25px"
+        height="25px"
         @click="chartType = 'table'"
       />
       <font-awesome-icon
         role="button"
         icon="pie-chart"
-        width="15px"
-        height="15px"
+        width="25px"
+        height="25px"
         @click="chartType = 'pie'"
       />
     </div>
-    <b-row
-      v-if="chartType === 'table'"
-      class="w-100 m-0 flex-wrap"
-    >
+    <b-row v-if="chartType === 'table'" class="w-100 m-0 flex-wrap fade-in">
       <template
-        v-for="data in { series: [{data:[]}], ...options }.series[0]?.data || []"
+        v-for="data in { series: [{ data: [] }], ...options }.series[0]?.data ||
+        []"
       >
         <b-col
           v-for="(d, index) in data.value"
@@ -53,9 +48,7 @@
               'justify-content-end': index === 2
             }"
           >
-            <strong v-if="index === 0">{{
-              Number(d).toLocaleString()
-            }}</strong>
+            <strong v-if="index === 0">{{ Number(d).toLocaleString() }}</strong>
             <strong v-if="index === 1">{{ d }}</strong>
             <strong
               v-if="index === 2"
@@ -64,14 +57,8 @@
                 'text-success': d < 0
               }"
             >
-              <font-awesome-icon
-                v-if="d > 0"
-                icon="sort-asc"
-              />
-              <font-awesome-icon
-                v-if="d < 0"
-                icon="sort-desc"
-              />
+              <font-awesome-icon v-if="d > 0" icon="sort-asc" />
+              <font-awesome-icon v-if="d < 0" icon="sort-desc" />
 
               {{ d }} <small class="ml-2">%</small>
             </strong>
@@ -79,13 +66,7 @@
         </b-col>
       </template>
     </b-row>
-    <v-chart
-      v-else
-      ref="chart"
-      class="w-100"
-      :options="options"
-      autoresize
-    />
+    <v-chart v-else ref="chart" class="w-100" :options="options" autoresize />
   </div>
 </template>
 <script lang="ts">
@@ -105,4 +86,17 @@ export default Vue.extend({
   }
 });
 </script>
-<style></style>
+<style scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s forwards;
+}
+</style>

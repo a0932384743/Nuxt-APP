@@ -232,10 +232,10 @@ export default Vue.extend({
                 'path://M10 10 L20 30 L0 30 Z M10 15 L10 25 M10 35 L10 40',
               symbolSize: [30, 40],
               value:
-                options.series[options.series.length - 1].data[index].value,
+              options.series[options.series.length - 1].data[index].value,
               xAxis: v,
               yAxis:
-                options.series[options.series.length - 1].data[index].value,
+              options.series[options.series.length - 1].data[index].value,
               year: options.xAxis[0].data[v]
             };
           })

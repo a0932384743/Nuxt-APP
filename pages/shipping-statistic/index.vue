@@ -188,6 +188,7 @@ export default Vue.extend({
           {
             name: 'CO2',
             type: 'line',
+            smooth: 0.8,
             data: Array.from(
               { length: 12 },
               () => Math.floor(Math.random() * 801) + 400
@@ -196,6 +197,7 @@ export default Vue.extend({
           {
             name: 'NOx',
             type: 'line',
+            smooth: 0.8,
             data: Array.from(
               { length: 12 },
               () => Math.floor(Math.random() * 801) + 400
@@ -204,6 +206,7 @@ export default Vue.extend({
           {
             name: 'SOx',
             type: 'line',
+            smooth: 0.8,
             data: Array.from(
               { length: 12 },
               () => Math.floor(Math.random() * 801) + 400
@@ -212,6 +215,7 @@ export default Vue.extend({
           {
             name: 'PM2.5',
             type: 'line',
+            smooth: 0.8,
             data: Array.from(
               { length: 12 },
               () => Math.floor(Math.random() * 801) + 400
